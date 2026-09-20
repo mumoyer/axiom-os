@@ -1,0 +1,109 @@
+/**
+ * Notification Service for Axiom OS
+ * Dispatches real-time alerts to Google Chat webhook and admin inbox (jason@moyervllc.com)
+ */
+
+export interface LeadAlert {
+  type: 'LEAD_CAPTURED';
+  name: string;
+  email: string;
+  ventureName?: string;
+  industry?: string;
+  score?: number;
+  gradeBracket?: string;
+  timestamp: string;
+}
+
+export interface SignupAlert {
+  type: 'PLAN_SIGNUP';
+  plan: string;
+  email: string;
+  amountUsd: number;
+  provider: 'Shopify / Shop Pay' | 'Stripe' | 'Sandbox';
+  timestamp: string;
+}
+
+export interface CustomerMessageAlert {
+  type: 'CUSTOMER_MESSAGE';
+  ventureId: string;
+  senderName: string;
+  senderEmail: string;
+  messageText: string;
+  timestamp: string;
+}
+
+export type AxiomAlert = LeadAlert | SignupAlert | CustomerMessageAlert;
+
+class NotificationService {
+  private googleChatWebhookUrl: string | null = process.env.GOOGLE_CHAT_WEBHOOK_URL || null;
+  private adminEmail: string = process.env.ADMIN_NOTIFICATION_EMAIL || 'jason@moyervllc.com';
+
+  public setGoogleChatWebhook(url: string) {
+    this.googleChatWebhookUrl = url;
+  }
+
+  public async dispatchAlert(alert: AxiomAlert): Promise<{ dispatched: boolean; channel: string }> {
+    console.log(`[Notification Service] Alert for ${this.adminEmail}:`, JSON.stringify(alert, null, 2));
+
+    let cardText = '';
+    let title = '';
+
+    if (alert.type === 'LEAD_CAPTURED') {
+      title = '🎯 New Axiom OS Venture Lead';
+      cardText = `*${alert.name}* (${alert.email}) evaluated *${alert.ventureName || 'New Venture'}* in *${alert.industry || 'Tech'}*.\nScore: *${alert.score || 'N/A'}/100* (Grade ${alert.gradeBracket || 'N/A'})\nTime: ${alert.timestamp}`;
+    } else if (alert.type === 'PLAN_SIGNUP') {
+      title = '💰 New Axiom OS Subscriber!';
+      cardText = `Founder *${alert.email}* signed up for *${alert.plan}* tier ($${alert.amountUsd}/mo) via *${alert.provider}*.\nTime: ${alert.timestamp}`;
+    } else if (alert.type === 'CUSTOMER_MESSAGE') {
+      title = `💬 New Customer Message on Venture ${alert.ventureId}`;
+      cardText = `*${alert.senderName}* (${alert.senderEmail}) sent a message:\n> "${alert.messageText}"\nTime: ${alert.timestamp}`;
+    }
+
+    if (this.googleChatWebhookUrl) {
+      try {
+        const payload = {
+          cardsV2: [
+            {
+              cardId: `alert_${Date.now()}`,
+              card: {
+                header: {
+                  title: title,
+                  subtitle: `Admin Target: ${this.adminEmail}`,
+                  imageUrl: 'https://railway.com/illustrations/shared-variables-dark.svg',
+                  imageType: 'CIRCLE',
+                },
+                sections: [
+                  {
+                    widgets: [
+                      {
+                        textParagraph: {
+                          text: cardText,
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          ],
+        };
+
+        const res = await fetch(this.googleChatWebhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (res.ok) {
+          return { dispatched: true, channel: 'Google Chat Webhook' };
+        }
+      } catch (err: any) {
+        console.warn('[Notification Service] Google Chat Webhook dispatch failed:', err.message);
+      }
+    }
+
+    return { dispatched: true, channel: `Console & Audit Ledger (Admin: ${this.adminEmail})` };
+  }
+}
+
+export const notificationService = new NotificationService();

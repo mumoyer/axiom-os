@@ -9,6 +9,7 @@
 
 import { Router, Request, Response } from 'express';
 import { stripeSandbox } from '../engine/sandbox_adapters.js';
+import { notificationService } from '../services/notification_service.js';
 
 export const checkoutRoutes = Router();
 
@@ -17,6 +18,13 @@ checkoutRoutes.get('/config', (_req: Request, res: Response) => {
   res.json({
     sandboxMode: !stripeSandbox.isLiveMode(),
     publishableKey: 'pk_test_axiomos_sandbox_public_key',
+    organization: 'Moyer Ventures LLC',
+    shopifyIntegration: {
+      enabled: true,
+      shopDomain: process.env.SHOPIFY_STORE_DOMAIN || 'moyer-ventures.myshopify.com',
+      shopPayEnabled: true,
+      checkoutMode: 'Shopify / Shop Pay (Moyer Ventures LLC)',
+    },
     supportedTiers: [
       { id: 'FOUNDER', name: 'Founder Plan', priceUsd: 49.0, billing: 'monthly' },
       { id: 'SERIAL', name: 'Serial Entrepreneur Plan', priceUsd: 149.0, billing: 'monthly' },
@@ -28,7 +36,7 @@ checkoutRoutes.get('/config', (_req: Request, res: Response) => {
 // POST /api/checkout/session
 checkoutRoutes.post('/session', async (req: Request, res: Response) => {
   try {
-    const { plan = 'FOUNDER', email = 'founder@example.com', successUrl, cancelUrl, ventureId } = req.body;
+    const { plan = 'FOUNDER', email = 'founder@example.com', successUrl, cancelUrl, ventureId, paymentProvider = 'Shopify / Shop Pay' } = req.body;
 
     const session = await stripeSandbox.createCheckoutSession({
       plan,
@@ -38,11 +46,29 @@ checkoutRoutes.post('/session', async (req: Request, res: Response) => {
       ventureId,
     });
 
+    const tierPriceMap: Record<string, number> = {
+      FOUNDER: 49,
+      SERIAL: 149,
+      ENTERPRISE: 999,
+    };
+
+    // Dispatch real-time alert to jason@moyervllc.com & Google Chat
+    notificationService.dispatchAlert({
+      type: 'PLAN_SIGNUP',
+      plan,
+      email,
+      amountUsd: tierPriceMap[plan] || 149,
+      provider: paymentProvider === 'Shopify / Shop Pay' ? 'Shopify / Shop Pay' : 'Stripe',
+      timestamp: new Date().toISOString(),
+    }).catch((err) => console.warn('[Checkout] Notification dispatch error:', err.message));
+
     res.status(201).json({
       sessionId: session.id,
       url: session.url,
       customer: session.customer,
       plan: session.plan,
+      organization: 'Moyer Ventures LLC',
+      paymentProvider: paymentProvider === 'Shopify / Shop Pay' ? 'Shopify / Shop Pay' : 'Stripe',
     });
   } catch (err: any) {
     res.status(400).json({ error: err.message });

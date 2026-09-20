@@ -11,6 +11,7 @@ import { telemetryRoutes } from './routes/telemetry_routes.js';
 import { graderRoutes } from './routes/grader_routes.js';
 import { checkoutRoutes } from './routes/checkout_routes.js';
 import { byokRoutes } from './routes/byok_routes.js';
+import { messagingRoutes } from './routes/messaging_routes.js';
 
 export function createApp(): Express {
   const app = express();
@@ -37,6 +38,7 @@ export function createApp(): Express {
   app.use('/api/grader', graderRoutes);
   app.use('/api/checkout', checkoutRoutes);
   app.use('/api/byok', byokRoutes);
+  app.use('/api/messages', messagingRoutes);
 
   // 404 Handler for unmapped API routes
   app.use('/api/*', (req: Request, res: Response) => {

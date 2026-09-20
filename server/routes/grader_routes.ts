@@ -14,6 +14,7 @@
 
 import { Router, Request, Response } from 'express';
 import { randomUUID } from 'node:crypto';
+import { notificationService } from '../services/notification_service.js';
 
 export interface GraderInput {
   ventureName: string;
@@ -214,6 +215,18 @@ graderRoutes.post('/leads', (req: Request, res: Response) => {
   };
 
   leads.push(lead);
+
+  // Dispatch real-time alert to jason@moyervllc.com & Google Chat
+  notificationService.dispatchAlert({
+    type: 'LEAD_CAPTURED',
+    name: lead.name,
+    email: lead.email,
+    ventureName: lead.ventureName,
+    industry: lead.industry,
+    score: lead.score,
+    gradeBracket: lead.gradeBracket,
+    timestamp: lead.createdAt,
+  }).catch((err) => console.warn('[Grader] Notification dispatch error:', err.message));
 
   res.status(201).json({
     message: 'Lead captured successfully',

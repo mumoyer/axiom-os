@@ -7,11 +7,14 @@ import { CheckoutPage } from './pages/CheckoutPage.js';
 import { NewbieWizardPage } from './pages/NewbieWizardPage.js';
 import { SerialDashboardPage } from './pages/SerialDashboardPage.js';
 import { LiveVenturePage } from './pages/LiveVenturePage.js';
+import { ProjectMessengerModal } from './components/ProjectMessengerModal.js';
+import { MessageSquare } from 'lucide-react';
 
 export function App() {
   const [currentPath, setCurrentPath] = useState<string>('/');
   const [selectedPersona, setSelectedPersona] = useState<'newbie' | 'serial' | 'enterprise'>('serial');
   const [currentVentureId, setCurrentVentureId] = useState<string>('ven_docuflow_02');
+  const [messengerOpen, setMessengerOpen] = useState<boolean>(false);
 
   // Parse path and query/hash
   const resolveRoute = (rawPath: string) => {
@@ -102,6 +105,28 @@ export function App() {
           />
         )}
       </main>
+
+      {/* Floating Project Messenger Launcher */}
+      <div className="fixed bottom-6 right-6 z-40">
+        <button
+          onClick={() => setMessengerOpen(true)}
+          className="flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-medium shadow-xl shadow-cyan-950/60 border border-cyan-400/40 transition-all hover:scale-105 active:scale-95 group"
+          title="Direct Project Communication & Founder Support"
+        >
+          <div className="relative">
+            <MessageSquare className="w-5 h-5 text-cyan-100 group-hover:rotate-6 transition-transform" />
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse border-2 border-[#080C14]" />
+          </div>
+          <span className="text-sm font-semibold tracking-wide">Project Chat</span>
+        </button>
+      </div>
+
+      {/* Direct In-Product Messenger Modal */}
+      <ProjectMessengerModal
+        isOpen={messengerOpen}
+        onClose={() => setMessengerOpen(false)}
+        ventureId={currentVentureId}
+      />
 
       <Footer onNavigate={navigateTo} />
     </div>
