@@ -21,14 +21,35 @@ checkoutRoutes.get('/config', (_req: Request, res: Response) => {
     organization: 'Moyer Ventures LLC',
     shopifyIntegration: {
       enabled: true,
-      shopDomain: process.env.SHOPIFY_STORE_DOMAIN || 'moyer-ventures.myshopify.com',
+      shopDomain: process.env.SHOPIFY_STORE_DOMAIN || 'z0zt1m-ae.myshopify.com',
       shopPayEnabled: true,
       checkoutMode: 'Shopify / Shop Pay (Moyer Ventures LLC)',
     },
     supportedTiers: [
-      { id: 'FOUNDER', name: 'Founder Plan', priceUsd: 49.0, billing: 'monthly' },
-      { id: 'SERIAL', name: 'Serial Entrepreneur Plan', priceUsd: 149.0, billing: 'monthly' },
-      { id: 'ENTERPRISE', name: 'Enterprise Studio Plan', priceUsd: 999.0, billing: 'monthly' },
+      { 
+        id: 'FOUNDER', 
+        name: 'Founder Plan', 
+        priceUsd: 49.0, 
+        billing: 'monthly',
+        shopifyProductId: '7741406576774',
+        shopifyCheckoutUrl: 'https://z0zt1m-ae.myshopify.com/cart/7741406576774:1'
+      },
+      { 
+        id: 'SERIAL', 
+        name: 'Serial Entrepreneur Plan', 
+        priceUsd: 149.0, 
+        billing: 'monthly',
+        shopifyProductId: '7741407199366',
+        shopifyCheckoutUrl: 'https://z0zt1m-ae.myshopify.com/cart/7741407199366:1'
+      },
+      { 
+        id: 'ENTERPRISE', 
+        name: 'Enterprise Studio Plan', 
+        priceUsd: 999.0, 
+        billing: 'monthly',
+        shopifyProductId: '7741407723654',
+        shopifyCheckoutUrl: 'https://z0zt1m-ae.myshopify.com/cart/7741407723654:1'
+      },
     ],
   });
 });
