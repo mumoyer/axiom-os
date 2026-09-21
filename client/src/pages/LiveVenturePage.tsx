@@ -270,12 +270,26 @@ export const LiveVenturePage: React.FC<LiveVenturePageProps> = ({
   ventureId = 'ven_active_01',
   onNavigate = (path: string) => { window.location.hash = path; },
 }) => {
+  const MOCK_NAMES: Record<string, { name: string; domain: string; tier: 'FOUNDER' | 'SERIAL' | 'ENTERPRISE' }> = {
+    ven_docuflow_02: { name: 'DocuFlow AI', domain: 'docuflow.health', tier: 'FOUNDER' },
+    ven_scout_03: { name: 'ContractScout', domain: 'contractscout.legal', tier: 'SERIAL' },
+    ven_pulse_01: { name: 'MetricPulse Analytics', domain: 'metricpulse.io', tier: 'SERIAL' },
+    ven_dental_04: { name: 'DentalCompliance', domain: 'dentalcompliance.app', tier: 'FOUNDER' },
+    ven_sub_04: { name: 'SubManage SaaS', domain: 'submanage.dev', tier: 'SERIAL' },
+  };
+
+  const initialMock = MOCK_NAMES[ventureId] || {
+    name: 'DocuFlow AI',
+    domain: `${ventureId.slice(0, 8)}.axiomrun.app`,
+    tier: 'SERIAL' as const,
+  };
+
   const [venture, setVenture] = useState<VentureDetails>({
     id: ventureId,
-    name: 'DocuFlow AI',
+    name: initialMock.name,
     tenantId: 'tenant-default',
-    planTier: 'SERIAL',
-    domain: `${ventureId.slice(0, 8)}.axiomrun.app`,
+    planTier: initialMock.tier,
+    domain: initialMock.domain,
     stagingUrl: `https://stage-${ventureId.slice(0, 8)}.axiomrun.app`,
     createdAt: new Date().toISOString(),
   });

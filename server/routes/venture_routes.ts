@@ -27,17 +27,52 @@ interface VentureMetadata {
 
 const ventures: Map<string, VentureMetadata> = new Map();
 
-// Seed initial test venture if empty
-if (ventures.size === 0) {
-  const seedId = 'seed-venture-001';
-  ventures.set(seedId, {
-    id: seedId,
+// Seed initial test ventures and dummy exploration scenarios
+const SEED_VENTURES: VentureMetadata[] = [
+  {
+    id: 'ven_docuflow_02',
+    name: 'DocuFlow AI',
+    tenantId: 'tenant-healthcare',
+    planTier: 'FOUNDER',
+    description: 'Autonomous HIPAA-compliant clinical documentation pipeline for independent medical practices',
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'ven_scout_03',
+    name: 'ContractScout',
+    tenantId: 'tenant-legal',
+    planTier: 'SERIAL',
+    description: 'Automated indemnification risk & predatory clause scanner for SMB procurement teams',
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'ven_pulse_01',
+    name: 'MetricPulse Analytics',
+    tenantId: 'tenant-fintech',
+    planTier: 'SERIAL',
+    description: 'Real-time subscription dunning, smart retention telemetry & involuntary churn recovery',
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'ven_dental_04',
+    name: 'DentalCompliance',
+    tenantId: 'tenant-dental',
+    planTier: 'FOUNDER',
+    description: 'Audit-ready daily OSHA, sharps & radiation regulatory safety compliance copilot',
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'seed-venture-001',
     name: 'Stage Gate Pulse Analytics',
     tenantId: 'tenant-default',
     planTier: 'FOUNDER',
     description: 'Autonomous AI analytics platform for modern founders',
     createdAt: new Date().toISOString(),
-  });
+  },
+];
+
+for (const v of SEED_VENTURES) {
+  ventures.set(v.id, v);
 }
 
 // GET /api/ventures

@@ -75,6 +75,7 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="space-y-2.5">
             <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-200">Architecture</h4>
             <ul className="space-y-2 text-xs">
+              <li><button onClick={() => onNavigate('/#scenarios')} className="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">Explore Scenarios (Dummy Data)</button></li>
               <li><button onClick={() => onNavigate('/#guarantees')} className="hover:text-white transition-colors">Stage-Gate Engine</button></li>
               <li><button onClick={() => onNavigate('/#guarantees')} className="hover:text-white transition-colors">2PC Credit Escrow</button></li>
               <li><button onClick={() => onNavigate('/#guarantees')} className="hover:text-white transition-colors">100% Dual-Push Git</button></li>

@@ -27,6 +27,7 @@ import {
   Sliders,
   Filter,
 } from 'lucide-react';
+import { ExampleScenarioExplorer } from '../components/ExampleScenarioExplorer.js';
 
 interface LandingPageProps {
   onNavigate?: (path: string) => void;
@@ -298,6 +299,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
                 <span>START FOUNDER PLAN ($69/MO)</span>
               </button>
+
+              <a
+                href="#scenarios"
+                className="w-full sm:w-auto px-5 py-3.5 rounded-lg text-xs font-mono font-semibold text-indigo-300 bg-indigo-950/40 hover:bg-indigo-900/60 border border-indigo-700/60 transition-all flex items-center justify-center space-x-2"
+              >
+                <Sparkles className="w-4 h-4 text-indigo-400" />
+                <span>EXPLORE DUMMY SCENARIOS</span>
+              </a>
             </div>
 
             {/* Architectural Trust Indicators */}
@@ -442,6 +451,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
           </div>
         </section>
+
+        {/* INTERACTIVE EXAMPLE SCENARIOS & DUMMY DATA EXPLORER */}
+        <ExampleScenarioExplorer onNavigate={onNavigate} />
 
         {/* BENTO GRID VALUE ARCHITECTURE SECTION: THE FOUNDER SOVEREIGNTY COVENANT */}
         <section id="guarantees" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-slate-800/80">

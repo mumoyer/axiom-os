@@ -63,6 +63,75 @@ export function validateWizardStep(step: number, data: {
   return { valid: true };
 }
 
+export interface WizardFormState {
+  name: string;
+  slug: string;
+  tagline: string;
+  problem: string;
+  solution: string;
+  industry: string;
+  targetSegment: string;
+  selectedPainPoints: string[];
+  customPainPoint: string;
+  valueVector: string;
+  pricingArchetype: 'subscription' | 'usage' | 'freemium' | 'enterprise';
+  targetArpu: number;
+  estimatedCac: number;
+  simulateFailure?: 'none' | 'gate1' | 'gate2';
+}
+
+export interface ConceptPreset {
+  name: string;
+  tagline: string;
+  problem: string;
+  solution: string;
+  industry: string;
+  targetSegment: string;
+  painPoints: string[];
+  valueVector: string;
+  pricingArchetype: 'subscription' | 'usage' | 'freemium' | 'enterprise';
+  targetArpu: number;
+  estimatedCac: number;
+}
+
+/**
+ * When applying quick inspiration on Step 1, only update Step 1 fields
+ * unless overwriteAll is explicitly true, guaranteeing entered data in Steps 2-4
+ * is never lost when looking at Step 1 or clicking inspiration presets.
+ */
+export function applyConceptPreset(
+  current: WizardFormState,
+  preset: ConceptPreset,
+  options: { stepOnly?: boolean } = { stepOnly: true }
+): WizardFormState {
+  const step1Updates = {
+    name: preset.name,
+    slug: slugifyVentureName(preset.name),
+    tagline: preset.tagline,
+    problem: preset.problem,
+    solution: preset.solution,
+    industry: preset.industry,
+  };
+
+  if (options.stepOnly) {
+    return {
+      ...current,
+      ...step1Updates,
+    };
+  }
+
+  return {
+    ...current,
+    ...step1Updates,
+    targetSegment: preset.targetSegment,
+    selectedPainPoints: [...preset.painPoints],
+    valueVector: preset.valueVector,
+    pricingArchetype: preset.pricingArchetype,
+    targetArpu: preset.targetArpu,
+    estimatedCac: preset.estimatedCac,
+  };
+}
+
 export function calculateUnitEconomics(targetArpu: number, estimatedCac: number, monthlyChurnRate: number = 0.05, grossMargin: number = 0.85) {
   const projectedLifetimeMonths = 1 / Math.max(0.01, monthlyChurnRate);
   const projectedLtv = Math.round(targetArpu * projectedLifetimeMonths * grossMargin);
@@ -243,6 +312,59 @@ describe('Milestone 3: Founder Workflows & State Machines', () => {
       // Total dollar equivalent ($0.01 per credit)
       const dollarEquivalent = totalCredits * 0.01;
       assert.equal(dollarEquivalent, 10.00);
+    });
+
+    it('preserves downstream steps 2-4 entered data when returning to step 1 and applying quick inspiration presets', () => {
+      // User has configured custom data in Steps 1, 2, 3, and made it to Step 4
+      const userState: WizardFormState = {
+        name: 'My Custom Booking App',
+        slug: 'my-custom-booking-app',
+        tagline: 'Custom tagline for doctors',
+        problem: 'Doctors lose 20 hours a week to manual paper booking.',
+        solution: 'Automated booking agent.',
+        industry: 'Healthcare',
+        // Step 2 custom data
+        targetSegment: 'SMB & Solo Practice Owners',
+        selectedPainPoints: ['Manual repetitive data entry', 'Slow patient turnaround'],
+        customPainPoint: 'Specific custom clinic workflow friction',
+        valueVector: 'compliance',
+        // Step 3 custom data
+        pricingArchetype: 'usage',
+        targetArpu: 299,
+        estimatedCac: 180,
+        simulateFailure: 'none',
+      };
+
+      const presetCandidate: ConceptPreset = {
+        name: 'DentalCompliance',
+        tagline: 'Audit-ready OSHA & HIPAA compliance copilot for dentists',
+        problem: 'Independent dental practices face catastrophic fines.',
+        solution: 'Automated daily compliance checks.',
+        industry: 'Healthcare',
+        targetSegment: 'Enterprise Studios & Labs', // Different from user's custom segment
+        painPoints: ['High compliance audit risk'],
+        valueVector: 'speed',
+        pricingArchetype: 'subscription',
+        targetArpu: 199,
+        estimatedCac: 150,
+      };
+
+      // When user on Step 1 clicks inspiration preset with stepOnly: true
+      const updatedState = applyConceptPreset(userState, presetCandidate, { stepOnly: true });
+
+      // Step 1 fields are updated to the inspiration
+      assert.equal(updatedState.name, 'DentalCompliance');
+      assert.equal(updatedState.slug, 'dentalcompliance');
+      assert.equal(updatedState.tagline, presetCandidate.tagline);
+
+      // CRITICAL: Steps 2, 3, 4 custom data MUST REMAIN UNTOUCHED
+      assert.equal(updatedState.targetSegment, 'SMB & Solo Practice Owners', 'Target segment from Step 2 was lost!');
+      assert.deepEqual(updatedState.selectedPainPoints, ['Manual repetitive data entry', 'Slow patient turnaround'], 'Pain points from Step 2 were lost!');
+      assert.equal(updatedState.customPainPoint, 'Specific custom clinic workflow friction', 'Custom pain point from Step 2 was lost!');
+      assert.equal(updatedState.valueVector, 'compliance', 'Value vector from Step 2 was lost!');
+      assert.equal(updatedState.pricingArchetype, 'usage', 'Pricing archetype from Step 3 was lost!');
+      assert.equal(updatedState.targetArpu, 299, 'Target ARPU from Step 3 was lost!');
+      assert.equal(updatedState.estimatedCac, 180, 'Estimated CAC from Step 3 was lost!');
     });
   });
 

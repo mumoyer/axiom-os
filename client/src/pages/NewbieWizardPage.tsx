@@ -127,6 +127,10 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
   onNavigate = (path: string) => { window.location.hash = path; },
 }) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
+  const [maxVisitedStep, setMaxVisitedStep] = useState<number>(() => {
+    const saved = localStorage.getItem('stagegate_wizard_max_step');
+    return saved ? Math.max(1, parseInt(saved, 10)) : 1;
+  });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -159,6 +163,11 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
     localStorage.setItem('stagegate_wizard_state', JSON.stringify(formData));
   }, [formData]);
 
+  // Persist maxVisitedStep
+  useEffect(() => {
+    localStorage.setItem('stagegate_wizard_max_step', maxVisitedStep.toString());
+  }, [maxVisitedStep]);
+
   const updateField = <K extends keyof WizardState>(field: K, value: WizardState[K]) => {
     setFormData((prev) => {
       const next = { ...prev, [field]: value };
@@ -172,22 +181,40 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
     });
   };
 
-  const applyPreset = (preset: typeof CONCEPT_PRESETS[0]) => {
-    setFormData((prev) => ({
-      ...prev,
-      name: preset.name,
-      slug: preset.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
-      tagline: preset.tagline,
-      problem: preset.problem,
-      solution: preset.solution,
-      industry: preset.industry,
-      targetSegment: preset.targetSegment,
-      selectedPainPoints: preset.painPoints,
-      valueVector: preset.valueVector,
-      pricingArchetype: preset.pricingArchetype,
-      targetArpu: preset.targetArpu,
-      estimatedCac: preset.estimatedCac,
-    }));
+  // Safe preset application: preserves downstream steps 2-4 if user has already entered data or visited downstream steps
+  const applyPreset = (preset: typeof CONCEPT_PRESETS[0], overwriteAll: boolean = false) => {
+    setFormData((prev) => {
+      const step1Only = {
+        ...prev,
+        name: preset.name,
+        slug: preset.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+        tagline: preset.tagline,
+        problem: preset.problem,
+        solution: preset.solution,
+        industry: preset.industry,
+      };
+
+      if (!overwriteAll) {
+        // PRESERVE Steps 2, 3, 4 entered data!
+        return step1Only;
+      }
+
+      // Complete overwrite (only when explicitly requested)
+      return {
+        ...step1Only,
+        targetSegment: preset.targetSegment,
+        selectedPainPoints: [...preset.painPoints],
+        valueVector: preset.valueVector,
+        pricingArchetype: preset.pricingArchetype,
+        targetArpu: preset.targetArpu,
+        estimatedCac: preset.estimatedCac,
+      };
+    });
+  };
+
+  const handlePresetClick = (preset: typeof CONCEPT_PRESETS[0]) => {
+    // Quick Inspiration on Step 1 applies concept details while safely preserving any custom steps 2-4
+    applyPreset(preset, false);
   };
 
   const togglePainPoint = (painPoint: string) => {
@@ -257,7 +284,9 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
 
   const handleNext = () => {
     if (validateStep(currentStep)) {
-      setCurrentStep((prev) => Math.min(4, prev + 1));
+      const nextStep = Math.min(4, currentStep + 1);
+      setCurrentStep(nextStep);
+      setMaxVisitedStep((prev) => Math.max(prev, nextStep));
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -266,6 +295,19 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
     setErrorMessage(null);
     setCurrentStep((prev) => Math.max(1, prev - 1));
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleStepJump = (targetStep: number) => {
+    setErrorMessage(null);
+    // Allow jumping to any step already visited (or current step)
+    if (targetStep <= maxVisitedStep) {
+      setCurrentStep(targetStep);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (targetStep === currentStep + 1 && validateStep(currentStep)) {
+      setCurrentStep(targetStep);
+      setMaxVisitedStep((prev) => Math.max(prev, targetStep));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   // Step 4: Authorize Escrow & Launch
@@ -295,6 +337,12 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
+
+      // Clear wizard drafts from local storage on launch
+      try {
+        localStorage.removeItem('stagegate_wizard_state');
+        localStorage.removeItem('stagegate_wizard_max_step');
+      } catch {}
 
       if (res.ok) {
         const data = await res.json();
@@ -350,31 +398,32 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
               const StepIcon = step.icon;
               const isActive = currentStep === step.num;
               const isPast = currentStep > step.num;
+              const isReachable = step.num <= maxVisitedStep;
 
               return (
                 <div
                   key={step.num}
                   onClick={() => {
-                    if (isPast) setCurrentStep(step.num);
+                    handleStepJump(step.num);
                   }}
                   className={`flex flex-col sm:flex-row items-center sm:space-x-3 p-2.5 rounded-xl transition-all select-none ${
                     isActive
                       ? 'bg-indigo-950/70 border border-indigo-600/50 shadow-glow-indigo'
-                      : isPast
-                      ? 'cursor-pointer bg-slate-900/40 border border-emerald-900/30 hover:bg-slate-900/80'
-                      : 'opacity-50 bg-slate-950 border border-transparent'
+                      : isReachable
+                      ? 'cursor-pointer bg-slate-900/50 border border-emerald-900/40 hover:bg-slate-900/90'
+                      : 'opacity-40 bg-slate-950 border border-transparent cursor-not-allowed'
                   }`}
                 >
                   <div
                     className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs flex-shrink-0 ${
                       isActive
                         ? 'bg-indigo-600 text-white'
-                        : isPast
+                        : isPast || isReachable
                         ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
                         : 'bg-slate-800 text-slate-400'
                     }`}
                   >
-                    {isPast ? <Check className="w-4 h-4" /> : step.num}
+                    {isPast || (isReachable && !isActive) ? <Check className="w-4 h-4" /> : step.num}
                   </div>
                   <div className="text-center sm:text-left mt-1 sm:mt-0">
                     <div className="text-xs font-semibold text-slate-200 hidden sm:block">Step {step.num}</div>
@@ -410,13 +459,21 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
 
               {/* Quick preset selector */}
               <div className="text-xs text-slate-400">
-                <span className="mr-2">Quick Inspiration:</span>
-                <div className="inline-flex flex-wrap gap-1.5 mt-1 sm:mt-0">
+                <div className="flex items-center justify-between sm:justify-end gap-2 mb-1">
+                  <span className="text-[11px] text-slate-400">Quick Inspiration:</span>
+                  {maxVisitedStep > 1 && (
+                    <span className="text-[10px] text-emerald-400 font-mono bg-emerald-950/60 border border-emerald-800/60 px-1.5 py-0.5 rounded">
+                      ✓ Steps 2–4 preserved
+                    </span>
+                  )}
+                </div>
+                <div className="inline-flex flex-wrap gap-1.5">
                   {CONCEPT_PRESETS.map((p) => (
                     <button
                       key={p.name}
                       type="button"
-                      onClick={() => applyPreset(p)}
+                      onClick={() => handlePresetClick(p)}
+                      title={maxVisitedStep > 1 ? `Applies concept details to Step 1 without modifying your custom configurations in steps 2–4` : undefined}
                       className="px-2.5 py-1 rounded bg-slate-900 hover:bg-indigo-900/60 border border-slate-800 hover:border-indigo-700 text-[11px] text-slate-300 transition-colors"
                     >
                       {p.name}
@@ -571,57 +628,58 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
               </div>
             </div>
 
-            {/* Pain Points Multi-select */}
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-slate-200 flex items-center justify-between">
-                <span>Select ICP Pain Points *</span>
-                <span className="text-slate-500 text-[11px]">Choose all that apply</span>
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {COMMON_PAIN_POINTS.map((pp) => {
-                  const isSelected = formData.selectedPainPoints.includes(pp);
-                  return (
-                    <button
-                      key={pp}
-                      type="button"
-                      onClick={() => togglePainPoint(pp)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                        isSelected
-                          ? 'bg-indigo-600 text-white shadow-sm'
-                          : 'bg-slate-900 text-slate-400 border border-slate-800 hover:bg-slate-800 hover:text-slate-200'
-                      }`}
-                    >
-                      {isSelected ? '✓ ' : '+ '}
-                      {pp}
-                    </button>
-                  );
-                })}
-              </div>
+              {/* Pain Points Multi-select */}
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-slate-200 flex items-center justify-between">
+                  <span>Select ICP Pain Points *</span>
+                  <span className="text-slate-500 text-[11px]">Choose all that apply</span>
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {/* Preset and custom pain points */}
+                  {Array.from(new Set([...COMMON_PAIN_POINTS, ...formData.selectedPainPoints])).map((pp) => {
+                    const isSelected = formData.selectedPainPoints.includes(pp);
+                    return (
+                      <button
+                        key={pp}
+                        type="button"
+                        onClick={() => togglePainPoint(pp)}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                          isSelected
+                            ? 'bg-indigo-600 text-white shadow-sm'
+                            : 'bg-slate-900 text-slate-400 border border-slate-800 hover:bg-slate-800 hover:text-slate-200'
+                        }`}
+                      >
+                        {isSelected ? '✓ ' : '+ '}
+                        {pp}
+                      </button>
+                    );
+                  })}
+                </div>
 
-              {/* Custom pain point entry */}
-              <div className="flex items-center space-x-2 pt-2">
-                <input
-                  type="text"
-                  placeholder="Or enter a custom pain point..."
-                  value={formData.customPainPoint}
-                  onChange={(e) => updateField('customPainPoint', e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      addCustomPainPoint();
-                    }
-                  }}
-                  className="bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 flex-1"
-                />
-                <button
-                  type="button"
-                  onClick={addCustomPainPoint}
-                  className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 rounded-lg transition-colors"
-                >
-                  Add
-                </button>
+                {/* Custom pain point entry */}
+                <div className="flex items-center space-x-2 pt-2">
+                  <input
+                    type="text"
+                    placeholder="Or enter a custom pain point..."
+                    value={formData.customPainPoint}
+                    onChange={(e) => updateField('customPainPoint', e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addCustomPainPoint();
+                      }
+                    }}
+                    className="bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 flex-1"
+                  />
+                  <button
+                    type="button"
+                    onClick={addCustomPainPoint}
+                    className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 rounded-lg transition-colors"
+                  >
+                    Add
+                  </button>
+                </div>
               </div>
-            </div>
 
             {/* Primary Value Vector */}
             <div className="space-y-2">

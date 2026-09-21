@@ -24,7 +24,7 @@ export default defineConfig({
   workers: 1,
   reporter: [['list']],
   use: {
-    baseURL: 'http://localhost:3005',
+    baseURL: 'http://localhost:3000',
     headless: true,
     viewport: { width: 1280, height: 800 },
     ignoreHTTPSErrors: true,
@@ -50,8 +50,8 @@ export default defineConfig({
   webServer: {
     command: 'npx tsx server/index.ts',
     cwd: path.resolve(__dirname, '..'),
-    url: 'http://localhost:3005/api/healthz',
-    reuseExistingServer: !process.env.CI,
+    url: 'http://localhost:3000/api/healthz',
+    reuseExistingServer: true,
     timeout: 60000,
   },
 });

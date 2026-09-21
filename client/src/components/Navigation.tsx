@@ -18,6 +18,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   const [personaDropdownOpen, setPersonaDropdownOpen] = useState(false);
 
   const navLinks = [
+    { label: 'Explore Scenarios', href: '#scenarios', isPage: false },
     { label: 'Guarantees', href: '#guarantees', isPage: false },
     { label: 'Validation Grader', href: '/grader', isPage: true },
     { label: 'Competitive Matrix', href: '#matrix', isPage: false },

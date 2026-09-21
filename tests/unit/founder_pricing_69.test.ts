@@ -20,7 +20,7 @@ describe('Founder Plan $69 Pricing Verification Suite', () => {
       assert.equal(founder.priceUsd, 69, 'FOUNDER monthly price must be $69');
       assert.equal(founder.name, 'Founder Plan');
     } finally {
-      await new Promise<void>((resolve) => server.close(resolve));
+      await new Promise<void>((resolve) => server.close(() => resolve()));
     }
   });
 
@@ -45,7 +45,7 @@ describe('Founder Plan $69 Pricing Verification Suite', () => {
       assert.equal(data.plan, 'FOUNDER');
       assert.equal(data.amountUsd, 69, 'Checkout session amountUsd for FOUNDER must be $69');
     } finally {
-      await new Promise<void>((resolve) => server.close(resolve));
+      await new Promise<void>((resolve) => server.close(() => resolve()));
     }
   });
 });
