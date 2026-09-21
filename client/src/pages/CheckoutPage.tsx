@@ -46,7 +46,16 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       const hash = window.location.hash;
       const queryStr = hash.includes('?') ? hash.split('?')[1] : window.location.search.slice(1);
       const params = new URLSearchParams(queryStr);
-      const planParam = params.get('plan')?.toUpperCase();
+      let planParam = params.get('plan')?.toUpperCase();
+
+      // Check for /subscribe/<plan> path in hash or pathname
+      if (!planParam) {
+        const path = (hash || window.location.pathname).toLowerCase();
+        if (path.includes('founder')) planParam = 'FOUNDER';
+        else if (path.includes('serial')) planParam = 'SERIAL';
+        else if (path.includes('enterprise')) planParam = 'ENTERPRISE';
+      }
+
       if (planParam === 'FOUNDER' || planParam === 'SERIAL' || planParam === 'ENTERPRISE') {
         setSelectedPlan(planParam as any);
       }

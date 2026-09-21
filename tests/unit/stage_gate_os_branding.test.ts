@@ -38,6 +38,23 @@ describe('Stage Gate OS Branding & Path B Shopify Integration Tests', () => {
     assert.equal(data.shopifyIntegration.enabled, true);
     assert.equal(data.shopifyIntegration.shopPayEnabled, true);
     assert.equal(data.shopifyIntegration.checkoutMode, 'Shopify / Shop Pay (Moyer Ventures LLC)');
+    assert.equal(data.supportedTiers[0].shopifyCheckoutUrl, 'https://www.stagegateos.com/subscribe/founder');
+    assert.equal(data.supportedTiers[1].shopifyCheckoutUrl, 'https://www.stagegateos.com/subscribe/serial');
+    assert.equal(data.supportedTiers[2].shopifyCheckoutUrl, 'https://www.stagegateos.com/subscribe/enterprise');
+  });
+
+  it('GET /subscribe/:tier redirects to clean customer-facing checkout route', async () => {
+    const respFounder = await fetch(`${baseUrl}/subscribe/founder`, { redirect: 'manual' });
+    assert.equal(respFounder.status, 302);
+    assert.equal(respFounder.headers.get('location'), '/#checkout?plan=FOUNDER');
+
+    const respSerial = await fetch(`${baseUrl}/subscribe/serial`, { redirect: 'manual' });
+    assert.equal(respSerial.status, 302);
+    assert.equal(respSerial.headers.get('location'), '/#checkout?plan=SERIAL');
+
+    const respEnterprise = await fetch(`${baseUrl}/subscribe/enterprise`, { redirect: 'manual' });
+    assert.equal(respEnterprise.status, 302);
+    assert.equal(respEnterprise.headers.get('location'), '/#checkout?plan=ENTERPRISE');
   });
 
   it('GET /api/messages/:ventureId returns initial greeting branded as Stage Gate OS', async () => {

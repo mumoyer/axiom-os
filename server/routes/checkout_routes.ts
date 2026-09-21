@@ -32,7 +32,7 @@ checkoutRoutes.get('/config', (_req: Request, res: Response) => {
         priceUsd: 49.0, 
         billing: 'monthly',
         shopifyProductId: '7741406576774',
-        shopifyCheckoutUrl: 'https://z0zt1m-ae.myshopify.com/cart/7741406576774:1'
+        shopifyCheckoutUrl: 'https://www.stagegateos.com/subscribe/founder'
       },
       { 
         id: 'SERIAL', 
@@ -40,7 +40,7 @@ checkoutRoutes.get('/config', (_req: Request, res: Response) => {
         priceUsd: 149.0, 
         billing: 'monthly',
         shopifyProductId: '7741407199366',
-        shopifyCheckoutUrl: 'https://z0zt1m-ae.myshopify.com/cart/7741407199366:1'
+        shopifyCheckoutUrl: 'https://www.stagegateos.com/subscribe/serial'
       },
       { 
         id: 'ENTERPRISE', 
@@ -48,7 +48,7 @@ checkoutRoutes.get('/config', (_req: Request, res: Response) => {
         priceUsd: 999.0, 
         billing: 'monthly',
         shopifyProductId: '7741407723654',
-        shopifyCheckoutUrl: 'https://z0zt1m-ae.myshopify.com/cart/7741407723654:1'
+        shopifyCheckoutUrl: 'https://www.stagegateos.com/subscribe/enterprise'
       },
     ],
   });

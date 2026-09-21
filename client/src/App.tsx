@@ -36,7 +36,7 @@ export function App() {
       setCurrentPath('/ventures');
     } else if (pathnameOnly.startsWith('/grader')) {
       setCurrentPath('/grader');
-    } else if (pathnameOnly.startsWith('/checkout')) {
+    } else if (pathnameOnly.startsWith('/checkout') || pathnameOnly.startsWith('/subscribe')) {
       setCurrentPath('/checkout');
     } else {
       setCurrentPath('/');

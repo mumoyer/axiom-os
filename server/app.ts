@@ -41,6 +41,20 @@ export function createApp(): Express {
   app.use('/api/byok', byokRoutes);
   app.use('/api/messages', messagingRoutes);
 
+  // Clean Customer-Facing Vanity Checkout Redirects
+  app.get('/subscribe/founder', (_req: Request, res: Response) => {
+    res.redirect(302, '/#checkout?plan=FOUNDER');
+  });
+  app.get('/subscribe/serial', (_req: Request, res: Response) => {
+    res.redirect(302, '/#checkout?plan=SERIAL');
+  });
+  app.get('/subscribe/enterprise', (_req: Request, res: Response) => {
+    res.redirect(302, '/#checkout?plan=ENTERPRISE');
+  });
+  app.get('/subscribe', (_req: Request, res: Response) => {
+    res.redirect(302, '/#checkout');
+  });
+
   // 404 Handler for unmapped API routes
   app.use('/api/*', (req: Request, res: Response) => {
     res.status(404).json({
