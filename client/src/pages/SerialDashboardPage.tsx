@@ -930,7 +930,7 @@ stagegate stage-gate run --all --ci`}
               <div className="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
                 <div className="text-indigo-400 font-bold font-sans">2. REST API Trigger Snippet</div>
                 <pre className="text-slate-300 overflow-x-auto bg-slate-950 p-3 rounded-lg border border-slate-800/80 leading-relaxed">
-{`curl -X POST https://api.stagegateos.com/v1/ventures \\
+{`curl -X POST https://www.stagegateos.com/api/ventures \\
   -H "Authorization: Bearer sg_live_..." \\
   -H "Content-Type: application/json" \\
   -d '{

@@ -62,8 +62,8 @@ checkoutRoutes.post('/session', async (req: Request, res: Response) => {
     const session = await stripeSandbox.createCheckoutSession({
       plan,
       email,
-      successUrl: successUrl || 'http://localhost:3000/dashboard?session_id={CHECKOUT_SESSION_ID}',
-      cancelUrl: cancelUrl || 'http://localhost:3000/pricing',
+      successUrl: successUrl || 'https://www.stagegateos.com/#dashboard?session_id={CHECKOUT_SESSION_ID}',
+      cancelUrl: cancelUrl || 'https://www.stagegateos.com/#pricing',
       ventureId,
     });
 
