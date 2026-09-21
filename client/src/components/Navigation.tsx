@@ -23,6 +23,7 @@ export const Navigation: React.FC<NavigationProps> = ({
     { label: 'Validation Grader', href: '/grader', isPage: true },
     { label: 'Competitive Matrix', href: '#matrix', isPage: false },
     { label: 'Pricing', href: '#pricing', isPage: false },
+    { label: 'My Ventures', href: '/dashboard', isPage: true },
   ];
 
   const personas = [

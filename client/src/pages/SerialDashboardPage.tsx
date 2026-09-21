@@ -191,8 +191,30 @@ export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
     '✓ 4 active ventures | 20/20 Stage Gates Passed | 0% revenue tax enforced',
   ]);
 
-  // Fetch ventures from backend if available
+  // Fetch ventures from backend & local storage
   useEffect(() => {
+    // Load local client-launched ventures
+    let localSaved: VentureItem[] = [];
+    try {
+      const stored = localStorage.getItem('stagegate_user_ventures');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          localSaved = parsed.map((item: any) => ({
+            id: item.id,
+            name: item.name,
+            domain: item.domain || `${item.id.slice(0, 8)}.axiomrun.app`,
+            stagingUrl: item.stagingUrl || `https://stage-${item.id.slice(0, 8)}.axiomrun.app`,
+            planTier: item.planTier || 'FOUNDER',
+            status: item.status || 'LIVE',
+            mrr: item.mrr || 1990,
+            uptime: item.uptime || 99.98,
+            gates: { g1: 'PASS', g2: 'PASS', g3: 'PASS', g4: 'PASS', g5: 'PASS' },
+          }));
+        }
+      }
+    } catch {}
+
     fetch('/api/ventures')
       .then((res) => res.json())
       .then((data) => {
@@ -215,7 +237,15 @@ export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
             },
           }));
           setVentures((prev) => {
-            const combined = [...mapped];
+            const combined = [...localSaved, ...mapped];
+            for (const item of prev) {
+              if (!combined.some((c) => c.id === item.id)) combined.push(item);
+            }
+            return combined;
+          });
+        } else if (localSaved.length > 0) {
+          setVentures((prev) => {
+            const combined = [...localSaved];
             for (const item of prev) {
               if (!combined.some((c) => c.id === item.id)) combined.push(item);
             }
@@ -223,7 +253,17 @@ export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
           });
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        if (localSaved.length > 0) {
+          setVentures((prev) => {
+            const combined = [...localSaved];
+            for (const item of prev) {
+              if (!combined.some((c) => c.id === item.id)) combined.push(item);
+            }
+            return combined;
+          });
+        }
+      });
   }, []);
 
   // Total metrics

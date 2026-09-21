@@ -347,6 +347,24 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
       if (res.ok) {
         const data = await res.json();
         const ventureId = data.venture?.id || `ven_${Math.random().toString(36).slice(2, 10)}`;
+        
+        // Save venture to user local storage portfolio registry
+        try {
+          const userVentures = JSON.parse(localStorage.getItem('stagegate_user_ventures') || '[]');
+          const newVenture = {
+            id: ventureId,
+            name: formData.name,
+            domain: `${ventureId.slice(0, 8)}.axiomrun.app`,
+            stagingUrl: `https://stage-${ventureId.slice(0, 8)}.axiomrun.app`,
+            planTier: 'FOUNDER',
+            status: 'LIVE',
+            mrr: formData.targetArpu * 10,
+            uptime: 99.98,
+            createdAt: new Date().toISOString(),
+          };
+          localStorage.setItem('stagegate_user_ventures', JSON.stringify([newVenture, ...userVentures]));
+        } catch {}
+
         // Navigate to live dashboard
         onNavigate(`/ventures/${ventureId}`);
       } else {
