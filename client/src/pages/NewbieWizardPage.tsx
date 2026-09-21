@@ -132,7 +132,7 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
 
   // Wizard state with sensible defaults
   const [formData, setFormData] = useState<WizardState>(() => {
-    const saved = localStorage.getItem('axiom_wizard_state');
+    const saved = localStorage.getItem('stagegate_wizard_state') || localStorage.getItem('axiom_wizard_state');
     if (saved) {
       try { return JSON.parse(saved); } catch {}
     }
@@ -156,7 +156,7 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
 
   // Save state on change
   useEffect(() => {
-    localStorage.setItem('axiom_wizard_state', JSON.stringify(formData));
+    localStorage.setItem('stagegate_wizard_state', JSON.stringify(formData));
   }, [formData]);
 
   const updateField = <K extends keyof WizardState>(field: K, value: WizardState[K]) => {
@@ -477,15 +477,12 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
 
             {/* Problem Statement */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-200 flex items-center justify-between">
-                <span>The Core Problem *</span>
-                <span className="text-slate-500 font-normal text-[11px]">What specific friction exists today?</span>
-              </label>
+              <label className="text-xs font-semibold text-slate-200">The Problem Being Solved *</label>
               <textarea
                 rows={3}
                 value={formData.problem}
                 onChange={(e) => updateField('problem', e.target.value)}
-                placeholder="Describe the painful status quo, manual inefficiencies, or excessive costs your customers experience..."
+                placeholder="Describe what manual, painful problem your customers face today..."
                 className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
               />
             </div>
@@ -494,7 +491,7 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-slate-200 flex items-center justify-between">
                 <span>The Autonomous Solution *</span>
-                <span className="text-slate-500 font-normal text-[11px]">How does Axiom OS solve this?</span>
+                <span className="text-slate-500 font-normal text-[11px]">How does Stage Gate OS solve this?</span>
               </label>
               <textarea
                 rows={3}
@@ -976,7 +973,7 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
                   Your 1,000 milestone credits remain safely held in cryptographic Two-Phase Commit (2PC) escrow.
                   If any stage-gate fails after 3 autonomous self-healing retries,{' '}
                   <strong className="text-emerald-400">100% of escrowed credits are instantly refunded</strong>.
-                  Axiom absorbs all compute COGS. Net user burn invariant: <code className="text-cyan-300 font-mono">ΔB == 0.00</code>.
+                  Stage Gate OS absorbs all compute COGS. Net user burn invariant: <code className="text-cyan-300 font-mono">ΔB == 0.00</code>.
                 </p>
               </div>
             </div>

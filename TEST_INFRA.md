@@ -1,4 +1,4 @@
-# E2E Test Infra: Axiom OS Autonomous Venture Platform
+# E2E Test Infra: Stage Gate OS Autonomous Venture Platform
 
 ## Test Philosophy
 - **Opaque-box & Requirement-Driven**: Derived strictly from `ORIGINAL_REQUEST.md`, `axiom_os_stage_gate_verification_spec.md`, and user-facing contracts. Tests interact with public REST endpoints, CLI ejection artifacts, and frontend DOM elements without relying on implementation internals.

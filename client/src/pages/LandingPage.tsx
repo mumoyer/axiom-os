@@ -107,7 +107,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   };
 
   const copyBadgeMarkdown = () => {
-    navigator.clipboard.writeText('[![Verified by Axiom OS](https://axiom-os.org/badges/verified.svg)](https://axiom-os.org)');
+    navigator.clipboard.writeText('[![Verified by Stage Gate OS](https://stagegateos.com/badges/verified.svg)](https://stagegateos.com)');
     setCopiedBadge(true);
     setTimeout(() => setCopiedBadge(false), 2000);
   };
@@ -502,7 +502,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               The End of Exploitative Venture Platforms
             </h3>
             <p className="text-sm text-slate-400 leading-relaxed">
-              Why founders migrate from brittle multi-agent toys (Polsia), fragmented IDE tools (Cursor/Lovable), and $1M consulting retainers to Axiom OS.
+              Why founders migrate from brittle multi-agent toys (Polsia), fragmented IDE tools (Cursor/Lovable), and $1M consulting retainers to Stage Gate OS.
             </p>
 
             {/* Filter Tabs */}
@@ -561,7 +561,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   <th className="py-4 px-4 sm:px-6 font-bold text-indigo-400 uppercase tracking-wider bg-indigo-950/30 border-x border-indigo-800/40 w-1/4">
                     <div className="flex items-center space-x-1.5">
                       <Cpu className="w-4 h-4 text-indigo-400" />
-                      <span>Axiom OS (Tri-Plane)</span>
+                      <span>Stage Gate OS (Tri-Plane)</span>
                     </div>
                   </th>
                   {(matrixFilter === 'all' || matrixFilter === 'polsia') && (
@@ -588,7 +588,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       <div className="font-semibold text-slate-100">{item.name}</div>
                     </td>
 
-                    {/* Axiom OS Column */}
+                    {/* Stage Gate OS Column */}
                     <td className="py-4 px-4 sm:px-6 bg-indigo-950/20 border-x border-indigo-800/30">
                       <div className="space-y-1">
                         <div>{getTagBadge(item.axiom.tag)}</div>
@@ -789,7 +789,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   </div>
                   <div className="flex items-center space-x-2">
                     <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />
-                    <span>Headless CLI (<code>axiom-cli</code>) & REST API triggers</span>
+                    <span>Headless CLI (<code>stagegate-cli</code>) & REST API triggers</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />
@@ -883,17 +883,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="space-y-2 max-w-xl">
               <div className="flex items-center space-x-2">
                 <Award className="w-5 h-5 text-indigo-400" />
-                <h4 className="text-base font-bold text-white">The Verified by Axiom OS README Badge</h4>
+                <h4 className="text-base font-bold text-white">The Verified by Stage Gate OS README Badge</h4>
               </div>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Every venture built through Axiom OS includes an unencumbered cryptographic verification badge embedded into your GitHub README. Prove to investors and users that your codebase passed synthetic Playwright checks and zero-lock-in clean-room audits.
+                Every venture built through Stage Gate OS includes an unencumbered cryptographic verification badge embedded into your GitHub README. Prove to investors and users that your codebase passed synthetic Playwright checks and zero-lock-in clean-room audits.
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row items-center gap-3">
               <div className="px-4 py-2 rounded-lg bg-slate-950 border border-slate-700 text-xs font-mono text-indigo-300 flex items-center space-x-2">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>[![Verified by Axiom OS](...)]</span>
+                <span>[![Verified by Stage Gate OS](...)]</span>
               </div>
               <button
                 onClick={copyBadgeMarkdown}

@@ -181,8 +181,8 @@ describe('Tier 4: Real-World Application Scenarios (E2E Integration)', () => {
       assert.ok(repo.htmlUrl.includes('ven_serial_quick_eject'));
 
       // Verify Cryptographic README verification badge embed
-      assert.ok(ejectResult.metrics.badgeMarkdown.includes('Verified by Axiom OS'));
-      assert.ok(ejectResult.metrics.badgeMarkdown.includes('axiomrun.app/badges/ven_serial_quick_eject.svg'));
+      assert.ok(ejectResult.metrics.badgeMarkdown.includes('Verified by Stage Gate OS'));
+      assert.ok(ejectResult.metrics.badgeMarkdown.includes('badges/ven_serial_quick_eject.svg'));
       assert.ok(ejectResult.receipt?.signature);
     });
   });

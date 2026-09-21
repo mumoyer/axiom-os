@@ -185,9 +185,9 @@ export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
   // Headless CLI execution state
   const [cliRunning, setCliRunning] = useState(false);
   const [cliLogs, setCliLogs] = useState<string[]>([
-    '$ axiom --version',
-    'axiom-cli v1.4.2 (darwin/arm64) • Tri-Plane Autonomous Venture Engine',
-    '$ axiom status --portfolio',
+    '$ stagegate --version',
+    'stagegate-cli v1.4.2 (darwin/arm64) • Tri-Plane Autonomous Venture Engine',
+    '$ stagegate status --portfolio',
     '✓ 4 active ventures | 20/20 Stage Gates Passed | 0% revenue tax enforced',
   ]);
 
@@ -322,7 +322,7 @@ export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
       setEjectionReceipt({
         repoUrl: `https://${ejectProvider}.com/${ejectOrg}/${ejectRepo}`,
         deployUrl: `https://${ejectRepo}.${ejectDeployTarget}.app`,
-        badgeSnippet: `[![Verified by Axiom OS](https://axiom-os.org/badges/verified.svg)](https://axiom-os.org)`,
+        badgeSnippet: `[![Verified by Stage Gate OS](https://stagegateos.com/badges/verified.svg)](https://stagegateos.com)`,
         signature: 'sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069',
       });
 
@@ -346,17 +346,17 @@ export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
     setCliRunning(true);
 
     const steps = [
-      '$ axiom venture init --name pulse-agent --template nextjs-supabase --byok',
+      '$ stagegate venture init --name pulse-agent --template nextjs-supabase --byok',
       '[CLI] Cloned base clean-room template Next.js 15 (Zero platform imports)',
       '[CLI] Injected BYOK keys: Anthropic Sonnet 3.5 + OpenAI GPT-4o (0% platform markup)',
-      '$ axiom stage-gate run --all --ci',
+      '$ stagegate stage-gate run --all --ci',
       '[GATE 1] TypeScript AST strict check: 0 errors | bundle: 184KB [PASS]',
       '[GATE 2] TLS 1.3 socket probe: RFC 6125 SAN valid | p95: 72ms [PASS]',
       '[GATE 3] Quad-DoH DNS Quorum: 4/4 consensus confirmed [PASS]',
       '[GATE 4] Stripe test-clock settlement: Webhook mutex verified [PASS]',
       '[GATE 5] Clean-Room Portability: Dual-push Git sync complete [PASS]',
       '✓ ALL 5 GATES PASSED. Receipt signed: sha256:e3b0c44298fc1c149afbf4c8996fb924',
-      'Deploy ready at https://pulse-agent.axiomrun.app',
+      'Deploy ready at https://pulse-agent.stagegaterun.app',
     ];
 
     let i = 0;
@@ -705,7 +705,7 @@ export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
                 <span>Instant 1-Click Full Git Ejection</span>
               </h2>
               <p className="text-xs text-slate-400 mt-0.5">
-                The Ejection Paradox: Axiom OS founders maintain 100% code and database ownership from day one.
+                The Ejection Paradox: Stage Gate OS founders maintain 100% code and database ownership from day one.
               </p>
             </div>
 
@@ -824,7 +824,7 @@ export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
                   </div>
                   <p className="text-xs text-slate-300 leading-relaxed">
                     Ejected codebases contain standard Next.js 15, Tailwind, and Supabase code. Zero proprietary
-                    Axiom SDKs or runtime dependencies exist. You can self-host or deploy anywhere immediately.
+                    Stage Gate OS SDKs or runtime dependencies exist. You can self-host or deploy anywhere immediately.
                   </p>
 
                   {ejectionReceipt && (
@@ -916,22 +916,22 @@ export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
                 <div className="text-indigo-400 font-bold font-sans">1. CLI Scaffolding Command</div>
                 <pre className="text-slate-300 overflow-x-auto bg-slate-950 p-3 rounded-lg border border-slate-800/80 leading-relaxed">
 {`# Initialize venture headlessly with BYOK
-axiom venture init \\
+stagegate venture init \\
   --name metricpulse \\
   --template nextjs-supabase \\
   --domain metricpulse.io \\
   --byok
 
 # Run deterministic stage gates
-axiom stage-gate run --all --ci`}
+stagegate stage-gate run --all --ci`}
                 </pre>
               </div>
 
               <div className="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
                 <div className="text-indigo-400 font-bold font-sans">2. REST API Trigger Snippet</div>
                 <pre className="text-slate-300 overflow-x-auto bg-slate-950 p-3 rounded-lg border border-slate-800/80 leading-relaxed">
-{`curl -X POST https://api.axiomrun.app/v1/ventures \\
-  -H "Authorization: Bearer ax_live_..." \\
+{`curl -X POST https://api.stagegateos.com/v1/ventures \\
+  -H "Authorization: Bearer sg_live_..." \\
   -H "Content-Type: application/json" \\
   -d '{
     "name": "DocuFlow AI",

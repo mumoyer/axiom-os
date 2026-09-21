@@ -83,7 +83,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="text-xl font-bold tracking-tight text-white font-mono">AXIOM<span className="text-indigo-400">.OS</span></span>
+                <span className="text-xl font-bold tracking-tight text-white font-mono">STAGEGATE<span className="text-indigo-400">.OS</span></span>
                 <span className="hidden sm:inline-block px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-indigo-950/80 text-indigo-300 border border-indigo-700/50 rounded-full">
                   Tri-Plane
                 </span>

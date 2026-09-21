@@ -1,4 +1,4 @@
-# Multi-stage production Dockerfile for Axiom OS
+# Multi-stage production Dockerfile for Stage Gate OS
 # Stage 1: Build Frontend and Verify Strict TypeScript
 FROM node:20-alpine AS builder
 WORKDIR /app

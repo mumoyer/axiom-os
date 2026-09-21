@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: axiom-os
+    name: stage-gate-os
     env: node
     plan: starter
     buildCommand: npm ci && npm run build:client

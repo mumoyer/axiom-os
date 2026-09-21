@@ -1,7 +1,7 @@
 /**
  * Master Stage-Gate Pipeline Orchestrator
  * 
- * Axiom OS Tri-Plane Orchestrator:
+ * Stage Gate OS Tri-Plane Orchestrator:
  * - Coordinates sequential execution of all 5 deterministic stage gates.
  * - Integrates Two-Phase Commit (2PC) Credit Escrow with Zero-Charge Failure Guarantee.
  * - Enforces bounded self-healing remediation (max 3 retries with platform-absorbed COGS).

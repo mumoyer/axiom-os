@@ -118,7 +118,7 @@ export function generateEjectionManifest(ventureName: string, org: string, repo:
   return {
     gitRemoteUrl: `https://github.com/${org}/${cleanSlug}.git`,
     deploymentUrl: `https://${cleanSlug}.${deployTarget}.app`,
-    badgeMarkdown: `[![Verified by Axiom OS](https://axiom-os.org/badges/verified.svg)](https://axiom-os.org)`,
+    badgeMarkdown: `[![Verified by Stage Gate OS](https://stagegateos.com/badges/verified.svg)](https://stagegateos.com)`,
     ejectionCertificate: {
       ventureName,
       cleanRoomVerified: true,
@@ -130,9 +130,11 @@ export function generateEjectionManifest(ventureName: string, org: string, repo:
 
 export function scanImportsForLockIn(codeSnippets: string[]): { clean: boolean; violations: string[] } {
   const forbiddenPatterns = [
+    { name: '@stagegate-os/proprietary', regex: /@stagegate-os\/proprietary/ },
     { name: '@axiom-os/proprietary', regex: /@axiom-os\/proprietary/ },
     { name: '@polsia/runtime-lock', regex: /@polsia\/runtime-lock/ },
     { name: 'polsia-cloud-agent', regex: /polsia-cloud-agent/ },
+    { name: '@stagegate-os/closed-source', regex: /@stagegate-os\/closed-source/ },
     { name: '@axiom-os/closed-source', regex: /@axiom-os\/closed-source/ },
   ];
 
@@ -303,7 +305,7 @@ describe('Milestone 3: Founder Workflows & State Machines', () => {
 
       assert.equal(manifest.gitRemoteUrl, 'https://github.com/acme-studios/docuflow-ai.git');
       assert.equal(manifest.deploymentUrl, 'https://docuflow-ai.vercel.app');
-      assert.match(manifest.badgeMarkdown, /!\[Verified by Axiom OS\]/);
+      assert.match(manifest.badgeMarkdown, /!\[Verified by Stage Gate OS\]/);
       assert.equal(manifest.ejectionCertificate.cleanRoomVerified, true);
       assert.equal(manifest.ejectionCertificate.proprietaryImportsDetected, 0);
     });

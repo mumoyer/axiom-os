@@ -31,7 +31,7 @@ export const StagingPreviewModal: React.FC<StagingPreviewModalProps> = ({
   isOpen,
   onClose,
   stagingUrl,
-  ventureName = 'Axiom Autonomous Venture',
+  ventureName = 'Stage Gate Autonomous Venture',
   gateStatus = 'PASSED',
 }) => {
   const [deviceMode, setDeviceMode] = useState<DeviceMode>('desktop');
@@ -326,7 +326,7 @@ export const StagingPreviewModal: React.FC<StagingPreviewModalProps> = ({
                         <ShieldCheck className="w-8 h-8 text-indigo-400" />
                         <div>
                           <div className="text-xs font-semibold text-slate-200">
-                            Verified by Axiom OS Stage Gates
+                            Verified by Stage Gate OS Stage Gates
                           </div>
                           <div className="text-[11px] text-slate-400 font-mono">
                             Deterministic Certificate: G1-AST • G2-TLS • G3-DNS • G4-PAY • G5-EJECT
@@ -409,7 +409,7 @@ export const StagingPreviewModal: React.FC<StagingPreviewModalProps> = ({
 
               {/* Staging Footer */}
               <div className="p-3 bg-slate-950 border-t border-slate-800 text-center text-[10px] text-slate-500 flex-shrink-0">
-                Isolated Staging Sandbox • Powered by Axiom OS Tri-Plane Architecture
+                Isolated Staging Sandbox • Powered by Stage Gate OS Tri-Plane Architecture
               </div>
             </div>
           </div>

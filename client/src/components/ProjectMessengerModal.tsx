@@ -240,7 +240,7 @@ export const ProjectMessengerModal: React.FC<ProjectMessengerModalProps> = ({
                   : 'Replies notified directly to jason@moyervllc.com (Google Chat)'}
               </span>
             </span>
-            <span className="font-mono">Axiom Comm v1.0</span>
+            <span className="font-mono">Stage Gate Comm v1.0</span>
           </div>
         </form>
       </div>

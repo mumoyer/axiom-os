@@ -1,7 +1,7 @@
 /**
  * Deterministic Sandbox Adapters with Live-Key Overrides
  * 
- * Axiom OS Multi-Adapter Subsystem:
+ * Stage Gate OS Multi-Adapter Subsystem:
  * - Deterministic, offline-capable mocks for Stripe, GitHub, and Cloud Infrastructure.
  * - Out-of-the-box zero-dependency simulation.
  * - Seamless live-key override support when external credentials (STRIPE_SECRET_KEY, GITHUB_TOKEN) are provided.
@@ -242,9 +242,9 @@ export class GitHubSandboxAdapter {
   public async createRepo(repoName: string, isPrivate: boolean = true): Promise<MockGitRepo> {
     const repo: MockGitRepo = {
       name: repoName,
-      owner: 'axiom-founder',
-      cloneUrl: `https://github.com/axiom-founder/${repoName}.git`,
-      htmlUrl: `https://github.com/axiom-founder/${repoName}`,
+      owner: 'stagegate-founder',
+      cloneUrl: `https://github.com/stagegate-founder/${repoName}.git`,
+      htmlUrl: `https://github.com/stagegate-founder/${repoName}`,
       isPrivate,
       defaultBranch: 'main',
     };
@@ -254,11 +254,14 @@ export class GitHubSandboxAdapter {
 
   /**
    * Scans a codebase directory for proprietary platform dependencies or locked RPC imports.
-   * Asserts zero occurrences of @axiom-os/proprietary-runtime or closed-source wrappers.
+   * Asserts zero occurrences of @stagegate-os/proprietary-runtime, @axiom-os/proprietary-runtime or closed-source wrappers.
    */
   public scanForProprietaryDependencies(codebaseDir: string): { clean: boolean; violations: string[] } {
     const violations: string[] = [];
     const forbiddenPatterns = [
+      { name: '@stagegate-os/proprietary-runtime', regex: /@stagegate-os\/proprietary-runtime/ },
+      { name: '@stagegate-os/internal-gateway', regex: /@stagegate-os\/internal-gateway/ },
+      { name: 'stagegate-closed-source', regex: /stagegate-closed-source/ },
       { name: '@axiom-os/proprietary-runtime', regex: /@axiom-os\/proprietary-runtime/ },
       { name: '@axiom-os/internal-gateway', regex: /@axiom-os\/internal-gateway/ },
       { name: 'axiom-closed-source', regex: /axiom-closed-source/ },
@@ -299,10 +302,10 @@ export class GitHubSandboxAdapter {
   }
 
   /**
-   * Embeds the official Axiom OS verification badge into a README file.
+   * Embeds the official Stage Gate OS verification badge into a README file.
    */
   public generateVerificationBadgeMarkdown(ventureId: string, receiptId: string): string {
-    return `[![Verified by Axiom OS](https://axiomrun.app/badges/${ventureId}.svg)](https://axiomrun.app/verify/${receiptId})`;
+    return `[![Verified by Stage Gate OS](https://stagegateos.com/badges/${ventureId}.svg)](https://stagegateos.com/verify/${receiptId})`;
   }
 }
 

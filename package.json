@@ -1,5 +1,6 @@
 {
-  "name": "adventurous-newton",
+  "name": "stage-gate-os",
+  "description": "Stage Gate OS — The Autonomous Business Operating System",
   "version": "1.0.0",
   "private": true,
   "scripts": {

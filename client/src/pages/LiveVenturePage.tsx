@@ -230,7 +230,7 @@ const DEFAULT_STAGES: StageGateResult[] = [
     metrics: { proprietaryImportsCount: 0, gitPushStatus: 'OK' },
     diagnosticLogs: [
       '[Clean-Room AST Scan] Inspecting all imports across client and server packages...',
-      '[Zero Lock-In] Verified 0 proprietary Axiom OS framework dependencies - PASS',
+      '[Zero Lock-In] Verified 0 proprietary Stage Gate OS framework dependencies - PASS',
       '[GitHub Dual-Push] Continuous push to user remote repository complete - PASS',
       '[Viral Badge] Injected verified README badge and signed cryptographic pass receipt.',
     ],

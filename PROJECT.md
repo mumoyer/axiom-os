@@ -1,7 +1,7 @@
-# Project: Axiom OS Autonomous Venture Engine & Founder Platform MVP
+# Project: Stage Gate OS Autonomous Venture Engine & Founder Platform MVP
 
 ## Architecture & System Overview
-Axiom OS is an Autonomous Business Operating System that inverts the brittle, hallucination-prone failure modes of AI venture builders (e.g. Polsia) into mathematical, anti-fragile guarantees.
+Stage Gate OS is an Autonomous Business Operating System that inverts the brittle, hallucination-prone failure modes of AI venture builders (e.g. Polsia) into mathematical, anti-fragile guarantees.
 
 The application is structured as a unified full-stack TypeScript platform:
 - **Frontend Layer (`client/`)**: React 19 + Vite 8 + Tailwind CSS + Lucide Icons. Provides high-converting Marketing Landing Page, interactive Venture Validation Grader (VVG), Subscriber Onboarding & Stripe Checkout, Newbie Guided Launchpad Wizard, Serial Entrepreneur Cockpit (BYOK + Instant Git Ejection), and Real-time Stage-Gate Telemetry Dashboard with Embedded Staging Preview.
@@ -31,7 +31,7 @@ adventurous-newton/
 │   │   │   ├── SerialDashboardPage.tsx   # Persona 2: Git ejection, BYOK, headless API
 │   │   │   └── LiveVenturePage.tsx       # Live venture dashboard & stage-gate telemetry
 │   │   ├── services/
-│   │   │   ├── api.ts                    # Typed API client for Axiom OS backend
+│   │   │   ├── api.ts                    # Typed API client for Stage Gate OS backend
 │   │   │   └── grader.ts                 # Client-side validation math & score helpers
 │   │   ├── App.tsx                       # Client application routes & layout
 │   │   └── main.tsx                      # Client entry point

@@ -155,7 +155,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
             <span>Stripe Sandbox Test Mode Active</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
-            Complete Your Axiom OS Subscription
+            Complete Your Stage Gate OS Subscription
           </h1>
           <p className="text-xs sm:text-sm text-slate-400">
             Protected by the Zero-Charge Failure Guarantee. Never debited for syntax errors or failed health checks.

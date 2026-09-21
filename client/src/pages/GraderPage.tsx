@@ -608,7 +608,7 @@ export const GraderPage: React.FC<GraderPageProps> = ({
                     onClick={() => onNavigate('/checkout?plan=serial')}
                     className="w-full py-3.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 shadow-glow-indigo transition-all flex items-center justify-center space-x-2"
                   >
-                    <span>Deploy Validated Venture in Axiom OS</span>
+                    <span>Deploy Validated Venture in Stage Gate OS</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 ) : (
@@ -633,7 +633,7 @@ export const GraderPage: React.FC<GraderPageProps> = ({
                   </h4>
                 </div>
                 <p className="text-xs text-slate-300 leading-relaxed">
-                  Validation score below 60 signals severe risk of capital waste. Axiom OS synthesized 3 high-intent strategic pivots:
+                  Validation score below 60 signals severe risk of capital waste. Stage Gate OS synthesized 3 high-intent strategic pivots:
                 </p>
 
                 <div className="space-y-2.5">
@@ -764,7 +764,7 @@ export const GraderPage: React.FC<GraderPageProps> = ({
                     Evaluated against <strong>{formInput.directCompetitorsCount} direct competitors</strong> with a differentiation rank of <strong>{formInput.differentiationFactor}/5</strong>.
                   </p>
                   <p className="text-slate-400">
-                    Axiom OS structural recommendation: Position product as an anti-fragile developer utility rather than an unconstrained "God Mode" wrapper.
+                    Stage Gate OS structural recommendation: Position product as an anti-fragile developer utility rather than an unconstrained "God Mode" wrapper.
                   </p>
                 </div>
               </div>
@@ -828,7 +828,7 @@ export const GraderPage: React.FC<GraderPageProps> = ({
                     className="w-full sm:w-auto px-8 py-3.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 shadow-glow-indigo transition-all flex items-center justify-center space-x-2"
                   >
                     <Sparkles className="w-4 h-4 text-cyan-200" />
-                    <span>Deploy This Validated Venture in Axiom OS ($149/mo)</span>
+                    <span>Deploy This Validated Venture in Stage Gate OS ($149/mo)</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>

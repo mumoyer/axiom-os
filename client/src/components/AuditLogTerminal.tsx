@@ -96,7 +96,7 @@ export const AuditLogTerminal: React.FC<AuditLogTerminalProps> = ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `axiom_audit_logs_${ventureId || 'stream'}_${Date.now()}.json`;
+    a.download = `stagegate_audit_logs_${ventureId || 'stream'}_${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -181,7 +181,7 @@ export const AuditLogTerminal: React.FC<AuditLogTerminalProps> = ({
           </div>
           <div className="flex items-center space-x-2 text-xs font-mono text-slate-300">
             <Terminal className="w-4 h-4 text-indigo-400" />
-            <span className="font-semibold text-white">axiom-telemetry.stream</span>
+            <span className="font-semibold text-white">stagegate-telemetry.stream</span>
             <span className="text-slate-600">/</span>
             <span className="text-slate-400">{ventureId || 'active-pipeline'}</span>
           </div>

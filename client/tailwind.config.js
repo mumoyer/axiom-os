@@ -10,6 +10,18 @@ export default {
   theme: {
     extend: {
       colors: {
+        stagegate: {
+          bg: '#080C14',
+          surface: '#0F172A',
+          card: '#131D31',
+          border: '#1E293B',
+          muted: '#64748B',
+          accent: '#38BDF8',
+          primary: '#6366F1',
+          success: '#10B981',
+          warning: '#F59E0B',
+          danger: '#EF4444',
+        },
         axiom: {
           bg: '#080C14',
           surface: '#0F172A',

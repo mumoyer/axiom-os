@@ -1,7 +1,7 @@
 /**
  * Two-Phase Commit (2PC) Credit Escrow Ledger
  * 
- * Axiom OS Zero-Charge Failure Guarantee:
+ * Stage Gate OS Zero-Charge Failure Guarantee:
  * - Mathematical Invariant: Net user credit burn on failed or aborted gate is strictly 0.00 (Delta B == 0.00).
  * - Phase 1 (Prepare): holdCredits() locks milestone credits in escrow; funds are inaccessible.
  * - Phase 2 (Commit): commitCredits() settles funds upon cryptographically verified PASS receipt.

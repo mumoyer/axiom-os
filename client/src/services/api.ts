@@ -1,5 +1,5 @@
 /**
- * Typed API Client for Axiom OS Backend Services
+ * Typed API Client for Stage Gate OS Backend Services
  * Connects frontend UI to Express endpoints on port 3000 (proxied via Vite)
  */
 
@@ -90,7 +90,7 @@ async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> 
 
     return await res.json();
   } catch (err: any) {
-    console.warn(`[Axiom API] Call to ${url} failed:`, err.message);
+    console.warn(`[Stage Gate OS API] Call to ${url} failed:`, err.message);
     throw err;
   }
 }
@@ -140,7 +140,14 @@ export async function getCheckoutConfig(): Promise<CheckoutConfigResponse> {
   } catch {
     return {
       sandboxMode: true,
-      publishableKey: 'pk_test_axiomos_sandbox_public_key',
+      publishableKey: 'pk_test_stagegate_sandbox_public_key',
+      organization: 'Moyer Ventures LLC',
+      shopifyIntegration: {
+        enabled: true,
+        shopDomain: 'moyer-ventures.myshopify.com',
+        shopPayEnabled: true,
+        checkoutMode: 'Shopify / Shop Pay (Moyer Ventures LLC)',
+      },
       supportedTiers: [
         { id: 'FOUNDER', name: 'Founder Plan', priceUsd: 49.0, billing: 'monthly' },
         { id: 'SERIAL', name: 'Serial Entrepreneur Plan', priceUsd: 149.0, billing: 'monthly' },
@@ -174,7 +181,7 @@ export async function getSystemHealth(): Promise<HealthResponse> {
       uptime: 4200,
       database: 'connected (sandbox)',
       timestamp: new Date().toISOString(),
-      engine: 'Axiom OS Stage-Gate Orchestrator v1.0',
+      engine: 'Stage Gate OS Stage-Gate Orchestrator v1.0',
     };
   }
 }

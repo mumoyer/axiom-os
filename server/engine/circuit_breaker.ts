@@ -1,7 +1,7 @@
 /**
  * Tenant Cumulative Failure Circuit Breaker & Unit Economic Margin Guard
  * 
- * Axiom OS Architectural Guarantee:
+ * Stage Gate OS Architectural Guarantee:
  * - Caps platform-absorbed COGS at $9.45/month across 5 unhealed failures ($1.890 each).
  * - Enforces minimum gross margin floor: >= 75.77% on Starter ($39/mo), >= 91.25% on Pro ($108/mo),
  *   and > 80% blended cohort margin under an 8% failure rate.

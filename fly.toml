@@ -1,4 +1,4 @@
-app = "axiom-os"
+app = "stage-gate-os"
 primary_region = "iad"
 
 [build]

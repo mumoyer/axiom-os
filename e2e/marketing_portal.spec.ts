@@ -52,7 +52,7 @@ test.describe('Marketing Portal & Competitive Intelligence Suite', () => {
     await expect(matrixSection).toBeVisible();
 
     // Verify column headers
-    await expect(page.locator('text=Axiom OS (Tri-Plane)')).toBeVisible();
+    await expect(page.locator('text=Stage Gate OS (Tri-Plane)')).toBeVisible();
     await expect(page.locator('text=Polsia (God Mode Loop)')).toBeVisible();
     await expect(page.locator('text=AI Dev Tools (Cursor / Lovable)')).toBeVisible();
     await expect(page.locator('text=Corporate Venture Studios')).toBeVisible();

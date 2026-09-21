@@ -1,5 +1,5 @@
 /**
- * Notification Service for Axiom OS
+ * Notification Service for Stage Gate OS
  * Dispatches real-time alerts to Google Chat webhook and admin inbox (jason@moyervllc.com)
  */
 
@@ -32,7 +32,8 @@ export interface CustomerMessageAlert {
   timestamp: string;
 }
 
-export type AxiomAlert = LeadAlert | SignupAlert | CustomerMessageAlert;
+export type StageGateAlert = LeadAlert | SignupAlert | CustomerMessageAlert;
+export type AxiomAlert = StageGateAlert;
 
 class NotificationService {
   private googleChatWebhookUrl: string | null = process.env.GOOGLE_CHAT_WEBHOOK_URL || null;
@@ -42,17 +43,17 @@ class NotificationService {
     this.googleChatWebhookUrl = url;
   }
 
-  public async dispatchAlert(alert: AxiomAlert): Promise<{ dispatched: boolean; channel: string }> {
+  public async dispatchAlert(alert: StageGateAlert): Promise<{ dispatched: boolean; channel: string }> {
     console.log(`[Notification Service] Alert for ${this.adminEmail}:`, JSON.stringify(alert, null, 2));
 
     let cardText = '';
     let title = '';
 
     if (alert.type === 'LEAD_CAPTURED') {
-      title = '🎯 New Axiom OS Venture Lead';
+      title = '🎯 New Stage Gate OS Venture Lead';
       cardText = `*${alert.name}* (${alert.email}) evaluated *${alert.ventureName || 'New Venture'}* in *${alert.industry || 'Tech'}*.\nScore: *${alert.score || 'N/A'}/100* (Grade ${alert.gradeBracket || 'N/A'})\nTime: ${alert.timestamp}`;
     } else if (alert.type === 'PLAN_SIGNUP') {
-      title = '💰 New Axiom OS Subscriber!';
+      title = '💰 New Stage Gate OS Subscriber!';
       cardText = `Founder *${alert.email}* signed up for *${alert.plan}* tier ($${alert.amountUsd}/mo) via *${alert.provider}*.\nTime: ${alert.timestamp}`;
     } else if (alert.type === 'CUSTOMER_MESSAGE') {
       title = `💬 New Customer Message on Venture ${alert.ventureId}`;

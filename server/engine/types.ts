@@ -1,5 +1,5 @@
 /**
- * Axiom OS Stage-Gate Engine Core Types & Receipts
+ * Stage Gate OS Stage-Gate Engine Core Types & Receipts
  */
 
 import { createHmac } from 'node:crypto';

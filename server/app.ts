@@ -1,5 +1,6 @@
 /**
- * Express Application Configuration for Axiom OS
+ * Express Application Configuration for Stage Gate OS
+ * Orchestrates deterministic venture stage-gates, Stripe checkout, telemetry, and founder messaging
  */
 
 import express, { Express, Request, Response } from 'express';
@@ -28,7 +29,7 @@ export function createApp(): Express {
       uptime: process.uptime(),
       database: 'connected',
       timestamp: new Date().toISOString(),
-      engine: 'Axiom OS Stage-Gate Orchestrator v1.0',
+      engine: 'Stage Gate OS Stage-Gate Orchestrator v1.0',
     });
   });
 
@@ -55,7 +56,7 @@ export function createApp(): Express {
     if (fs.existsSync(indexPath)) {
       res.sendFile(indexPath);
     } else {
-      res.status(200).send('<!DOCTYPE html><html><body><div id="root">Axiom OS Engine Running</div></body></html>');
+      res.status(200).send('<!DOCTYPE html><html><body><div id="root">Stage Gate OS Engine Running</div></body></html>');
     }
   });
 

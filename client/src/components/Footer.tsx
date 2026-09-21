@@ -59,7 +59,7 @@ export const Footer: React.FC<FooterProps> = ({
                 <Cpu className="w-4 h-4" />
               </div>
               <span className="text-lg font-bold tracking-tight text-white font-mono">
-                AXIOM<span className="text-indigo-400">.OS</span>
+                STAGEGATE<span className="text-indigo-400">.OS</span>
               </span>
             </div>
             <p className="text-slate-400 leading-relaxed text-xs max-w-sm">
@@ -112,7 +112,7 @@ export const Footer: React.FC<FooterProps> = ({
         {/* Bottom Strip */}
         <div className="mt-10 pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-slate-500 text-[11px] gap-3">
           <div className="flex items-center space-x-2">
-            <span>© {new Date().getFullYear()} Axiom OS Tri-Plane Systems Inc.</span>
+            <span>© {new Date().getFullYear()} Stage Gate OS Tri-Plane Systems Inc.</span>
             <span>•</span>
             <span className="text-slate-400 font-mono">Build v1.0.0-verified</span>
           </div>

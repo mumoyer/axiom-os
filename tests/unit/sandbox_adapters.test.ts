@@ -160,8 +160,9 @@ describe('Deterministic Sandbox Adapters Unit Tests', () => {
 
     it('generates cryptographic README verification badge', () => {
       const badge = github.generateVerificationBadgeMarkdown('ven_123', 'rcpt_456');
-      assert.ok(badge.includes('https://axiomrun.app/badges/ven_123.svg'));
-      assert.ok(badge.includes('https://axiomrun.app/verify/rcpt_456'));
+      assert.ok(badge.includes('Verified by Stage Gate OS'));
+      assert.ok(badge.includes('badges/ven_123.svg'));
+      assert.ok(badge.includes('verify/rcpt_456'));
     });
   });
 

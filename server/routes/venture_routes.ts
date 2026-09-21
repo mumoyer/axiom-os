@@ -32,7 +32,7 @@ if (ventures.size === 0) {
   const seedId = 'seed-venture-001';
   ventures.set(seedId, {
     id: seedId,
-    name: 'Axiom Pulse Analytics',
+    name: 'Stage Gate Pulse Analytics',
     tenantId: 'tenant-default',
     planTier: 'FOUNDER',
     description: 'Autonomous AI analytics platform for modern founders',

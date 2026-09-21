@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Subscriber Onboarding & Stripe Checkout Flow', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/checkout');
-    await expect(page.locator('text=Complete Your Axiom OS Subscription')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('text=Complete Your Stage Gate OS Subscription')).toBeVisible({ timeout: 10000 });
   });
 
   test('Page Structure: displays sandbox test mode header and order summary', async ({ page }) => {

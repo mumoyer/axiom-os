@@ -40,7 +40,7 @@ test.describe('Live Stage-Gate Telemetry & Audit Stream Suite', () => {
 
   test('AuditLogTerminal Component: tests level filter buttons and search', async ({ page }) => {
     // Terminal window chrome
-    const terminal = page.locator('text=axiom-telemetry.stream');
+    const terminal = page.locator('text=stagegate-telemetry.stream');
     await expect(terminal).toBeVisible();
 
     // Search filter input
