@@ -291,7 +291,7 @@ export const StagingPreviewModal: React.FC<StagingPreviewModalProps> = ({
                           onClick={() => setActiveInteractiveTab('billing')}
                           className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center space-x-1.5 transition-all"
                         >
-                          <span>Test Stripe Checkout ($49.00)</span>
+                          <span>Test Stripe Checkout ($69.00)</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </button>
                         <span className="text-[11px] text-emerald-400 flex items-center gap-1 font-mono">
@@ -362,7 +362,7 @@ export const StagingPreviewModal: React.FC<StagingPreviewModalProps> = ({
                         </div>
                         <div className="flex justify-between text-slate-300">
                           <span>Billing Interval:</span>
-                          <span>Monthly ($49.00 / mo)</span>
+                          <span>Monthly ($69.00 / mo)</span>
                         </div>
                         <div className="flex justify-between text-slate-300">
                           <span>Test Card:</span>
@@ -378,7 +378,7 @@ export const StagingPreviewModal: React.FC<StagingPreviewModalProps> = ({
                         onClick={() => alert('Simulated Stripe Sandbox Checkout test completed successfully!')}
                         className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition-colors shadow-sm"
                       >
-                        Simulate Payment Confirmation ($49.00)
+                        Simulate Payment Confirmation ($69.00)
                       </button>
                     </div>
                   </div>

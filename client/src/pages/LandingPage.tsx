@@ -139,7 +139,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     {
       id: 3,
       name: 'Monetization & Revenue Share',
-      axiom: { tag: 'OPTIMAL', text: 'Predictable SaaS Tiers ($49 / $149 / $999). Strict 0.0% Perpetual Revenue Tax.' },
+      axiom: { tag: 'OPTIMAL', text: 'Predictable SaaS Tiers ($69 / $149 / $999). Strict 0.0% Perpetual Revenue Tax.' },
       polsia: { tag: 'CRITICAL', text: 'Exploitative: $49/mo + $1/credit + 20% to 50% perpetual lifetime revenue tax' },
       devtools: { tag: 'OPTIMAL', text: 'Tool subscription ($20-$50/mo); 0% revenue share' },
       studios: { tag: 'CRITICAL', text: '$500K-$2.5M fixed fee + 15% to 40% equity stake' },
@@ -296,7 +296,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 className="w-full sm:w-auto px-6 py-3.5 rounded-lg text-xs font-mono font-semibold text-emerald-300 bg-[#0c1a24] hover:bg-[#112433] border border-emerald-700/80 transition-all flex items-center justify-center space-x-2"
               >
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>START FOUNDER PLAN ($49/MO)</span>
+                <span>START FOUNDER PLAN ($69/MO)</span>
               </button>
             </div>
 
@@ -766,11 +766,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
                 <div className="flex items-baseline space-x-2 font-mono">
                   <span className="text-4xl font-extrabold text-white">
-                    ${billingInterval === 'monthly' ? '49' : '39'}
+                    ${billingInterval === 'monthly' ? '69' : '55'}
                   </span>
                   <span className="text-xs text-slate-400">/ month</span>
                   {billingInterval === 'annual' && (
-                    <span className="text-[11px] text-emerald-400">($470 billed annually)</span>
+                    <span className="text-[11px] text-emerald-400">($660 billed annually)</span>
                   )}
                 </div>
 
@@ -811,7 +811,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 onClick={() => onNavigate(`/checkout?plan=founder&billing=${billingInterval}`)}
                 className="w-full py-3 rounded-lg text-xs font-mono font-semibold text-emerald-300 bg-emerald-950/40 hover:bg-emerald-900/60 border border-emerald-700/50 transition-all text-center cursor-pointer"
               >
-                START FOUNDER PLAN ($49/MO)
+                START FOUNDER PLAN ($69/MO)
               </button>
             </div>
 

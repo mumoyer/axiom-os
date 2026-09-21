@@ -82,7 +82,7 @@
         "ai_scaffolders": "Subscription Tool: $20-$50/mo flat. 0% revenue tax.",
         "developer_ides": "Subscription Tool: $20/mo flat seat licensing. 0% revenue tax.",
         "corporate_studios": "Retainer Extortion: $500K-$2.5M fixed fees + 15%-35% equity.",
-        "stage_gate_os": "Transparent SaaS: Flat predictable tiers ($49 Starter, $149 Pro, $999 Enterprise). 0% revenue tax."
+        "stage_gate_os": "Transparent SaaS: Flat predictable tiers ($69 Starter, $149 Pro, $999 Enterprise). 0% revenue tax."
       },
       {
         "dimension": "4. Ad-Spend Economics",
@@ -168,7 +168,7 @@
         "target_audience": "Busy 9-to-5 Professionals, Solopreneurs & Side Income Seekers",
         "core_value_proposition": "Autonomous software side business with zero technical knowledge required and zero risk of burning money on broken code.",
         "acquisition_focus": "Meta Ads & Reels, YouTube Shorts, repositioned Venture Validation Grader ($1k-$5k/mo viability), Google Search intent.",
-        "flagship_tier": "Founder Tier ($49/mo sticker / $39/mo effective)"
+        "flagship_tier": "Founder Tier ($69/mo sticker / $55/mo effective)"
       },
       "phase_2_month_7_to_month_18": {
         "target_audience": "Serial Indie Hackers & Multi-Venture Operators",
@@ -233,7 +233,7 @@
         "verification_mechanisms": [
           "Direct OAuth integration to founder's independent Stripe Connect account (0 bps platform fee).",
           "Direct OAuth integration to founder's Meta Ads Manager and Google Ads account with raw billing at cost.",
-          "Transparent SaaS subscription tiers ($49, $149, $999/mo) maintaining aligned customer-platform incentives."
+          "Transparent SaaS subscription tiers ($69, $149, $999/mo) maintaining aligned customer-platform incentives."
         ]
       }
     ],
@@ -345,7 +345,7 @@
         "cta_text_variants": [
           "Grade My Side Business Idea Free",
           "Check 15-Minute Launch Feasibility",
-          "Start in Founder Mode ($49/mo)",
+          "Start in Founder Mode ($69/mo)",
           "Watch 2-Minute Verification Demo"
         ],
         "landing_page_hero_copy": {
@@ -358,13 +358,13 @@
       },
       "pricing_tier_assignment": {
         "tier_name": "Founder",
-        "monthly_price_usd": 49,
-        "annual_price_usd": 470,
-        "effective_monthly_usd": 39,
+        "monthly_price_usd": 69,
+        "annual_price_usd": 660,
+        "effective_monthly_usd": 55,
         "target_cac_usd": 65,
-        "projected_ltv_usd": 602.67,
-        "ltv_to_cac_ratio": 9.27,
-        "payback_period_months": 1.96,
+        "projected_ltv_usd": 848.54,
+        "ltv_to_cac_ratio": 13.05,
+        "payback_period_months": 1.39,
         "monthly_churn_rate_percent": 5.5
       },
       "objection_handling_matrix": [
@@ -724,16 +724,16 @@
       "breakeven_milestone_month": 17,
       "tier_economics_summary": [
         {
-          "tier": "Founder ($49/mo)",
-          "arpu": 49.00,
-          "effective_monthly_annual": 39.00,
+          "tier": "Founder ($69/mo)",
+          "arpu": 69.00,
+          "effective_monthly_annual": 55.00,
           "target_cac": 65.00,
           "churn_monthly": 5.5,
           "lifetime_months": 18.2,
-          "ltv": 602.67,
-          "ltv_cac_ratio": 9.27,
-          "payback_months": 1.96,
-          "gross_margin_percent": 87.3
+          "ltv": 848.54,
+          "ltv_cac_ratio": 13.05,
+          "payback_months": 1.39,
+          "gross_margin_percent": 91.0
         },
         {
           "tier": "Serial ($149/mo)",
@@ -807,7 +807,7 @@
       "gated_lead_capture_flow": {
         "modal_fields": ["Founder Name", "Work Email", "Current Weekly Available Hours (1-2 hrs / 3-5 hrs / 5+ hrs)"],
         "backend_dispatch": "POST /api/grader/leads dispatches real-time webhook alert and enqueues lead into Stage Gate OS onboarding CRM.",
-        "post_unlock_cta": "Deploy This Validated Venture in Founder Mode ($49/mo)"
+        "post_unlock_cta": "Deploy This Validated Venture in Founder Mode ($69/mo)"
       }
     },
     "open_source_cli_distribution": {
@@ -1008,7 +1008,7 @@
           "title": "Launching a Software Side Business on a 30-Minute Lunch Break",
           "hook": "You don't need 6 months of nights and weekends to launch a SaaS. Watch me approve 5 stage gates over lunch.",
           "visual_breakdown": "POV eating lunch while tapping mobile dashboard to review Playwright checkout test and GitHub repo push.",
-          "call_to_action": "Start your side business in Founder Mode ($49/mo)"
+          "call_to_action": "Start your side business in Founder Mode ($69/mo)"
         },
         {
           "script_id": "shorts_s3_anti_bug_tax",

@@ -29,7 +29,7 @@ checkoutRoutes.get('/config', (_req: Request, res: Response) => {
       { 
         id: 'FOUNDER', 
         name: 'Founder Plan', 
-        priceUsd: 49.0, 
+        priceUsd: 69.0, 
         billing: 'monthly',
         shopifyProductId: '7741406576774',
         shopifyCheckoutUrl: 'https://www.stagegateos.com/subscribe/founder'
@@ -68,17 +68,19 @@ checkoutRoutes.post('/session', async (req: Request, res: Response) => {
     });
 
     const tierPriceMap: Record<string, number> = {
-      FOUNDER: 49,
+      FOUNDER: 69,
       SERIAL: 149,
       ENTERPRISE: 999,
     };
+
+    const amountUsd = tierPriceMap[plan] || 149;
 
     // Dispatch real-time alert to jason@moyervllc.com & Google Chat
     notificationService.dispatchAlert({
       type: 'PLAN_SIGNUP',
       plan,
       email,
-      amountUsd: tierPriceMap[plan] || 149,
+      amountUsd,
       provider: paymentProvider === 'Shopify / Shop Pay' ? 'Shopify / Shop Pay' : 'Stripe',
       timestamp: new Date().toISOString(),
     }).catch((err) => console.warn('[Checkout] Notification dispatch error:', err.message));
@@ -88,6 +90,7 @@ checkoutRoutes.post('/session', async (req: Request, res: Response) => {
       url: session.url,
       customer: session.customer,
       plan: session.plan,
+      amountUsd,
       organization: 'Moyer Ventures LLC',
       paymentProvider: paymentProvider === 'Shopify / Shop Pay' ? 'Shopify / Shop Pay' : 'Stripe',
     });

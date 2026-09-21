@@ -160,7 +160,7 @@ export async function getCheckoutConfig(): Promise<CheckoutConfigResponse> {
         {
           id: 'FOUNDER',
           name: 'Founder Plan',
-          priceUsd: 49.0,
+          priceUsd: 69.0,
           billing: 'monthly',
           shopifyProductId: '7741406576774',
           shopifyCheckoutUrl: 'https://www.stagegateos.com/subscribe/founder',

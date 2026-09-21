@@ -206,7 +206,7 @@ Traditional consultancies (**BCG Digital Ventures, McKinsey Leap, Mach49, High A
 | :- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **1** | **Core Architecture** | Asynchronous Celery/Redis loops; unconstrained "God Mode". | In-browser WebContainer / Vite virtualization. | Local VS Code IDE fork with codebase indexing. | Human consultancy pods (Designers, PMs, Devs). | **Tri-Plane Architecture:** Cognitive Agent + Deterministic Verification + 2PC Escrow. |
 | **2** | **Verification Harness** | **Shallow / Heuristic:** Process exit 0 and curl HTTP 200. High "False Done". | **User-Dependent:** Manual human click testing in preview frame. | **Developer-Dependent:** Manual unit/integration testing by engineer. | **Subjective:** Steering committee reviews and staging environment QA. | **5-Stage Deterministic Verification:** Headless Playwright DOM, TLS 1.3 sockets, DNS DoH quorum, Stripe test-clock. |
-| **3** | **Monetization & Take-Rate** | **Exploitative:** $49/mo + $1/credit + **20%–50% revenue tax** + 20% ad markup. | **Subscription Tool:** $20–$50/mo flat. 0% revenue tax. | **Subscription Tool:** $20/mo flat seat licensing. 0% revenue tax. | **Retainer Extortion:** $500K–$2.5M fixed fees + **15%–35% equity**. | **Transparent SaaS:** Flat predictable tiers ($49 Starter, $149 Pro, $999 Enterprise). **0% revenue tax.** |
+| **3** | **Monetization & Take-Rate** | **Exploitative:** $49/mo + $1/credit + **20%–50% revenue tax** + 20% ad markup. | **Subscription Tool:** $20–$50/mo flat. 0% revenue tax. | **Subscription Tool:** $20/mo flat seat licensing. 0% revenue tax. | **Retainer Extortion:** $500K–$2.5M fixed fees + **15%–35% equity**. | **Transparent SaaS:** Flat predictable tiers ($69 Starter, $149 Pro, $999 Enterprise). **0% revenue tax.** |
 | **4** | **Ad-Spend Economics** | **Predatory Markup:** 20% surcharge on all managed Meta/Google ad spend. | **Non-Existent:** No native marketing or ad automation. | **Non-Existent:** Pure code editor. | **Agency Fee:** 15% media management surcharge or $300/hr consulting fee. | **0% Markup Pass-Through:** Direct OAuth link to customer’s Meta/Google Ads Manager. Raw billing. |
 | **5** | **Billing on Failures** | **The "Bug Tax":** User billed ~$1/task for every agent syntax loop and retry. | **Metered Consumption:** User burns generation credits on broken outputs. | **Metered Usage:** Developer burns prompt quotas on bad diffs. | **Sunk Cost:** Retainer billed regardless of venture commercial viability. | **Zero-Charge Failure Guarantee:** Escrowed credits refunded 100% on failed gates. Self-healing absorbed as COGS. |
 | **6** | **Code Ownership** | **Proprietary Hostage:** Walled-garden Docker hosting. No clean git repo. | **Partial:** Exportable to GitHub, but lacks production plumbing. | **100% Local:** Code resides on local filesystem. | **Contractual IP Transfer:** Legal IP transferred, but bespoke agency code. | **100% Continuous Dual-Push Git Ejection:** Full Next.js/Supabase/Prisma codebase pushed to user’s GitHub from commit 1. |
@@ -266,7 +266,7 @@ In legacy platforms, every Celery worker retry debits user credits, creating an 
   - *Phase 2a (Commit):* Credits are settled to recognized revenue (`SETTLED_DEBIT`) **only upon issuance of a signed ECDSA cryptographic pass receipt**.
   - *Phase 2b (Abort):* If an assertion fails, the transaction automatically rolls back: **100% of escrowed credits are refunded to the user (`RELEASED_REFUND`)**.
 * **Mathematical Invariant:** $\Delta B(S_k) = C_k \cdot G(S_k)$. When $G(S_k) = 0$, net user credit burn is identically **$0.00**.
-* **Tenant Circuit Breaker:** Internal self-healing routines (up to 3 retries) are absorbed as platform COGS. Platform absorption is capped at **5 consecutive unhealed attempts per month ($9.45 max COGS)**. This preserves a minimum gross margin of **80.71%** on the $49/mo plan while ensuring the customer is never charged for failed tasks.
+* **Tenant Circuit Breaker:** Internal self-healing routines (up to 3 retries) are absorbed as platform COGS. Platform absorption is capped at **5 consecutive unhealed attempts per month ($9.45 max COGS)**. This preserves a minimum gross margin of **86.30%** on the $69/mo plan while ensuring the customer is never charged for failed tasks.
 
 ### 3.3 Pillar 3: 100% Full Git Ejection (Continuous Sovereignty)
 We believe software platforms must retain customers through product excellence, not infrastructure kidnapping.
@@ -275,7 +275,7 @@ We believe software platforms must retain customers through product excellence, 
 * Running `poas eject` detaches all platform hooks. The venture continues running independently on the founder's personal Vercel and Supabase accounts forever.
 
 ### 3.4 Pillar 4: 0% Perpetual Take-Rate (True Founder Alignment)
-* Stage Gate OS charges a transparent, predictable monthly SaaS subscription ($49, $149, $999/mo).
+* Stage Gate OS charges a transparent, predictable monthly SaaS subscription ($69, $149, $999/mo).
 * **0.0% Perpetual Revenue Take-Rate:** Customer credit card transactions settle directly into the founder’s independent Stripe account via Stripe Connect (0 bps platform cut).
 * **0.0% Ad Spend Markup:** Marketing agents connect via standard OAuth to the founder’s Meta Ads Manager and Google Ads account. Ad spend is billed directly by Meta/Google at raw cost.
 
@@ -337,7 +337,7 @@ The credibility of Stage Gate OS rests on empirical mathematical proofs rather t
 
 * **Target Profile:** 28–48 years old, fully employed at technology companies, healthcare networks, financial institutions, consulting firms, or enterprise corporations. Earning $110,000–$250,000/year. Possesses deep subject-matter expertise in their vertical industry; comfortable with software tools; zero to intermediate coding background; has valuable business ideas based on daily workplace problems but zero bandwidth or desire to spend nights debugging servers.
 * **Time Availability:** 15 to 45 minutes per day maximum (during morning commute, lunch break, or evening wind-down).
-* **Budget:** $49–$150/month discretionary software budget.
+* **Budget:** $69–$250/month discretionary software budget.
 * **Core Pain Points:**
   1. *Severe Time Scarcity:* 50-hour corporate workweeks, commutes, and family commitments leave zero margin for the 20+ hours/week demanded by traditional coding and startup operations.
   2. *Fear of Wasting Evenings on Broken Tech:* Paralyzed by complex developer setups (DNS records, SSL handshakes, database connection pooling, Stripe webhook secrets).
@@ -346,7 +346,7 @@ The credibility of Stage Gate OS rests on empirical mathematical proofs rather t
   5. *Fear of Production Outages During the Workday:* Terrified of customer-facing bugs or checkout failures occurring while they are trapped in corporate meetings or presentations.
 * **Value Proposition:**  
   *"Launch and operate a real, verified software side business in 15 minutes a day. Stage Gate OS handles the coding, infrastructure, payments, and regression monitoring autonomously—guaranteed by zero-charge failures and 100% personal Git code ownership."*
-* **Primary Offer:** **Founder Plan ($49/month or $39/month annual)** with Guided Visual Launchpad, Free Venture Validation Grader with Time-Commitment Index, and Turnkey Verification.
+* **Primary Offer:** **Founder Plan ($69/month or $55/month annual)** with Guided Visual Launchpad, Free Venture Validation Grader with Time-Commitment Index, and Turnkey Verification.
 
 #### Verbatim Headline Formulas Registry
 * **Category A: Career Burnout & Time Scarcity**
@@ -441,7 +441,7 @@ The credibility of Stage Gate OS rests on empirical mathematical proofs rather t
   Stop paying for AI hallucinations. Build an asset that proves itself.
 * **Headline:** The Zero-Risk Software Side Business
 * **Description:** If our AI makes an error, you pay $0.00. 100% unencumbered code.
-* **CTA Button:** `Explore Founder Plan ($49/mo)`
+* **CTA Button:** `Explore Founder Plan ($69/mo)`
 
 #### LinkedIn Thought Leadership & Creator Playbook
 * **Target Audience:** Mid-to-senior product managers, engineering leads, directors of operations, financial analysts, and corporate executives dreaming of independent equity.
@@ -787,7 +787,7 @@ Traffic from paid and organic campaigns routes to high-converting landing pages 
 1. **Hero Section with Customer-First Hook:** "Your job keeps you too busy to start that side business you've been thinking about. Let Stage Gate OS build, manage, and run your side business with minimal disruption to your busy life." Includes dynamic terminal demonstrating passing Playwright test assertions in real time.
 2. **The Founder Sovereignty Display:** Highlighting the 4 Brand Pillars with interactive tooltips explaining technical proof points for busy founders.
 3. **12-Dimension Competitive Matrix:** Interactive comparison table contrasting Stage Gate OS against First-Gen AI Builders, No-Code Tools, Developer IDEs, and Consultancies.
-4. **Transparent Pricing Table:** Founder ($49), Serial ($149), Enterprise ($999) with annual billing toggle (-20% discount).
+4. **Transparent Pricing Table:** Founder ($69), Serial ($149), Enterprise ($999) with annual billing toggle (-20% discount).
 5. **Trust Badges in Footer:** Telemetry bar displaying real-time pass status of all 5 deterministic gates and the 2PC Escrow Invariant (`ΔB == 0.00 Guaranteed`).
 
 ---
@@ -1076,18 +1076,18 @@ TOTAL DIRECT COGS PER FULLY VERIFIED VENTURE                                    
 Metric                    Persona 1: Founder      Persona 2: Serial       Persona 3: Enterprise
 ----------------------------------------------------------------------------------------------------
 Target Audience           Busy 9-to-5 Pros        Indie Hackers / Devs    Innovation Labs / Studios
-Primary Plan              Founder ($49/mo)        Serial ($149/mo)        Enterprise ($999/mo)
-Effective Annual Monthly  $39.00 / month          $119.00 / month         $799.00 / month
+Primary Plan              Founder ($69/mo)        Serial ($149/mo)        Enterprise ($999/mo)
+Effective Annual Monthly  $55.00 / month          $119.00 / month         $799.00 / month
 Customer Acquisition (CAC)$65.00                  $140.00                 $3,800.00
 Monthly Churn Rate        5.5%                    2.2%                    0.75%
 Average Lifetime          18.2 months             45.5 months             133.3 months (~11 yrs)
-Customer Lifetime Value   $602.67                 $3,975.97               $98,597.54
-LTV : CAC Ratio           9.27x                   28.4x                   25.9x
-CAC Payback Period        1.96 months (~59 days)  1.60 months (~48 days)  5.14 months (~154 days)
-Realized Gross Margin     87.3%                   84.1%                   91.1%
+Customer Lifetime Value   $848.54                 $3,975.97               $98,597.54
+LTV : CAC Ratio           13.05x                  28.4x                   25.9x
+CAC Payback Period        1.39 months (~42 days)  1.60 months (~48 days)  5.14 months (~154 days)
+Realized Gross Margin     91.0%                   84.1%                   91.1%
 Net Revenue Ret. (NRR)    98.0%                   124.0%                  142.0%
 ====================================================================================================
-Blended Platform Baseline: ARPU $86.50 | CAC $192.50 | LTV $1,990.80 | LTV:CAC 10.34x | Payback 2.65 mo
+Blended Platform Baseline: ARPU $98.50 | CAC $192.50 | LTV $2,236.67 | LTV:CAC 11.62x | Payback 2.30 mo
 ====================================================================================================
 ```
 
@@ -1102,7 +1102,7 @@ Blended Platform Baseline: ARPU $86.50 | CAC $192.50 | LTV $1,990.80 | LTV:CAC 1
 Metric                                   Year 1 (FY1)          Year 2 (FY2)          Year 3 (FY3)
 ----------------------------------------------------------------------------------------------------
 Active Subscribers (Year-End)                   1,895                 8,110                26,420
-  - Founder Plan ($49/mo)                       1,200                 4,800                14,500
+  - Founder Plan ($69/mo)                       1,200                 4,800                14,500
   - Serial Plan ($149/mo)                         650                 3,100                11,200
   - Enterprise Plan ($999/mo)                      45                   210                   720
 Ending MRR                                   $144,900              $651,600            $2,286,300
