@@ -213,15 +213,16 @@ export const GraderPage: React.FC<GraderPageProps> = ({
         <div className="text-center space-y-4 max-w-3xl mx-auto">
           <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-indigo-500/30 text-xs text-indigo-300 shadow-glow-indigo">
             <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-            <span className="font-semibold tracking-wide">Autonomous Venture Validation Grader</span>
+            <span className="font-semibold tracking-wide">Free 9-to-5 Feasibility &amp; Time-Commitment Grader</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-            Stress-Test Your Startup <span className="text-gradient-indigo">Before Spending $1</span>
+            Can your side business make $1k–$5k/mo{' '}
+            <span className="text-gradient-indigo">while you keep your day job?</span>
           </h1>
 
-          <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
-            Our quantitative 4-factor scoring engine analyzes Market Demand (30%), Competitor Density (25%), Unit Economics (25%), and Feasibility (20%) to prevent premature capital loss.
+          <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
+            Get an instant <strong className="text-white">Feasibility &amp; Time-Commitment Score</strong>. Our quantitative 4-factor scoring engine analyzes Market Demand, Competitor Density, Unit Economics, and Operational Maintenance before you spend $1.
           </p>
 
           {/* Quick Presets */}

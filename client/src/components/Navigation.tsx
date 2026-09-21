@@ -27,22 +27,22 @@ export const Navigation: React.FC<NavigationProps> = ({
   const personas = [
     {
       id: 'newbie' as const,
-      label: 'Aspiring Founder',
-      subtitle: 'Guardrailed No-Code & Grader',
+      label: 'Busy 9-to-5 Professional',
+      subtitle: 'Turnkey 15 Min/Day & Grader',
       icon: User,
       color: 'text-emerald-400',
     },
     {
       id: 'serial' as const,
-      label: 'Serial Entrepreneur',
+      label: 'Serial Indie Hacker',
       subtitle: 'Headless CLI, BYOK & Git Eject',
       icon: Terminal,
       color: 'text-indigo-400',
     },
     {
       id: 'enterprise' as const,
-      label: 'Enterprise Studio',
-      subtitle: 'Capital Tranches & SOC2 Audit',
+      label: 'Corporate Innovation Studio',
+      subtitle: 'Capital Tranches & SOC 2 Audit',
       icon: Building2,
       color: 'text-cyan-400',
     },

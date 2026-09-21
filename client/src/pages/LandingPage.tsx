@@ -250,32 +250,33 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </span>
               <span className="text-indigo-400 font-semibold">STAGEGATE.OS</span>
               <span className="text-slate-600">/</span>
-              <span>TRI-PLANE ENGINE</span>
+              <span>AUTONOMOUS SIDE BUSINESS ENGINE</span>
               <span className="text-slate-600">/</span>
               <span className="text-emerald-400">ZERO TECH DEBT</span>
             </div>
 
             {/* Main Headline */}
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.08] font-sans">
-              Autonomous Venture Engine with{' '}
+              Too busy to start that side business?{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-indigo-100 to-sky-300">
-                Deterministic Stage Gates
+                Let AI build & run it while you work your 9-to-5.
               </span>
             </h1>
 
             {/* Subheadline */}
-            <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed">
-              Playwright DOM assertions, RFC 6125 TLS, Quad-DoH DNS quorum, and a cryptographic{' '}
-              <span className="text-slate-200 font-mono font-medium">Zero-Charge Failure Escrow</span>. Never pay for broken code or hallucinated agent loops.
+            <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed">
+              Not a get-rich-quick scheme. A real, verified software business built and maintained autonomously on your personal GitHub with a mathematical <span className="text-emerald-400 font-semibold">Zero-Charge Failure Guarantee</span>.
             </p>
 
             {/* Persona Guidance Banner */}
-            <div className="p-2.5 rounded-lg bg-[#0b101d] border border-slate-800/80 text-xs text-slate-300 flex items-center justify-center space-x-2 max-w-xl mx-auto font-mono">
-              <span className="text-indigo-400 font-semibold">TARGET ARCHITECTURE:</span>
-              <span className="text-slate-300">
-                {selectedPersona === 'newbie' && 'Aspiring Founders — Guardrailed no-code launchpad & automated validation'}
-                {selectedPersona === 'serial' && 'Serial Entrepreneurs — Headless CLI, BYOK wholesale tokens & 1-click Git ejection'}
-                {selectedPersona === 'enterprise' && 'Corporate Studios — Capital tranche governance, SAML SSO & SOC2 audit trails'}
+            <div className="p-3 rounded-lg bg-[#0b101d] border border-slate-800 text-xs text-slate-300 flex flex-col sm:flex-row items-center justify-center gap-2 max-w-2xl mx-auto font-sans">
+              <span className="text-indigo-400 font-semibold uppercase tracking-wider font-mono text-[11px] shrink-0">
+                TAILORED FOR YOUR ROLE:
+              </span>
+              <span className="text-slate-300 text-center sm:text-left">
+                {selectedPersona === 'newbie' && 'Busy 9-to-5 Professionals — 15 min/day, no coding, turnkey verification & 0% revenue tax.'}
+                {selectedPersona === 'serial' && 'Serial Indie Hackers — Headless CLI, BYOK wholesale 0% markup & continuous dual-push Git.'}
+                {selectedPersona === 'enterprise' && 'Corporate Innovation Studios — Tranche capital gates ($5k→$25k→$100k), SAML SSO & SOC 2 audit logs.'}
               </span>
             </div>
 
@@ -283,19 +284,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <button
                 onClick={() => onNavigate('/grader')}
-                className="w-full sm:w-auto px-6 py-3 rounded-lg text-xs font-mono font-semibold text-slate-950 bg-white hover:bg-slate-200 transition-all flex items-center justify-center space-x-2 border border-slate-300"
+                className="w-full sm:w-auto px-6 py-3.5 rounded-lg text-xs font-mono font-semibold text-slate-950 bg-white hover:bg-slate-200 transition-all flex items-center justify-center space-x-2 border border-slate-300 shadow-md"
               >
                 <Code2 className="w-4 h-4 text-slate-950" />
-                <span>EXECUTE FREE IDEA AUDIT</span>
+                <span>GRADE YOUR SIDE BUSINESS IDEA FREE</span>
                 <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
               </button>
 
               <button
-                onClick={() => onNavigate('/checkout?plan=serial')}
-                className="w-full sm:w-auto px-6 py-3 rounded-lg text-xs font-mono font-semibold text-slate-200 bg-[#0c1220] hover:bg-[#111a30] border border-slate-700/80 transition-all flex items-center justify-center space-x-2"
+                onClick={() => onNavigate('/checkout?plan=founder')}
+                className="w-full sm:w-auto px-6 py-3.5 rounded-lg text-xs font-mono font-semibold text-emerald-300 bg-[#0c1a24] hover:bg-[#112433] border border-emerald-700/80 transition-all flex items-center justify-center space-x-2"
               >
-                <Terminal className="w-4 h-4 text-indigo-400" />
-                <span>LAUNCH VENTURE ($149/MO)</span>
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span>START FOUNDER PLAN ($49/MO)</span>
               </button>
             </div>
 
@@ -303,15 +304,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs text-slate-400 pt-2 font-mono">
               <span className="flex items-center space-x-1.5">
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span>15 Min/Day Maintenance</span>
+              </span>
+              <span className="flex items-center space-x-1.5">
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
                 <span>0.0% Perpetual Revenue Tax</span>
               </span>
               <span className="flex items-center space-x-1.5">
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span>100% Dual-Push Git Ejection</span>
+                <span>100% Personal GitHub Ejection</span>
               </span>
               <span className="flex items-center space-x-1.5">
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span>2PC Escrow: Invariant ΔB == 0.00</span>
+                <span>Zero-Charge Failure Guarantee ($0.00)</span>
               </span>
             </div>
           </div>
@@ -438,121 +443,117 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
         </section>
 
-        {/* BENTO GRID VALUE ARCHITECTURE SECTION */}
+        {/* BENTO GRID VALUE ARCHITECTURE SECTION: THE FOUNDER SOVEREIGNTY COVENANT */}
         <section id="guarantees" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-slate-800/80">
           <div className="space-y-3 mb-12">
             <div className="text-xs font-mono uppercase tracking-widest text-indigo-400 flex items-center space-x-2">
-              <span className="inline-block w-2 h-2 rounded-full bg-indigo-500"></span>
-              <span>BENTO ARCHITECTURE SPECIFICATION</span>
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span>THE FOUNDER SOVEREIGNTY COVENANT</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-              Engineered for Zero Technical Debt
+              4 Structural Guarantees for Busy Founders
             </h2>
-            <p className="text-sm text-slate-400 max-w-2xl leading-relaxed">
-              We eliminated the failure modes of AI wrappers and consulting agencies through mathematical bounds, clean Git ejection, and deterministic verification.
+            <p className="text-sm text-slate-300 max-w-2xl leading-relaxed">
+              We replaced the failure modes of AI hype and broken agency promises with mathematical bounds, clean Git ejection, and deterministic verification.
             </p>
           </div>
 
           {/* Bento Modular Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             
-            {/* Bento Block 1: Large (Span 2) */}
-            <div className="md:col-span-2 bento-card p-6 sm:p-7 flex flex-col justify-between space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="w-9 h-9 rounded-lg bg-[#0e1628] border border-slate-800 flex items-center justify-center text-indigo-400">
-                    <ShieldCheck className="w-5 h-5" />
-                  </div>
-                  <span className="text-[11px] font-mono text-emerald-400 px-2 py-0.5 rounded bg-emerald-950/40 border border-emerald-800/40">
-                    INVARIANT ΔB == 0.00
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold text-white tracking-tight">Zero-Charge Failure Escrow</h3>
-                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                  Competitors charge you per credit while agent loops crash or hallucinate. Stage Gate OS wraps every build, health-check, and synthetic probe in a 2-Phase Commit (2PC) credit escrow. If any assertion fails, 100% of credits are rolled back instantly.
-                </p>
-              </div>
-
-              {/* Code Snippet in Bento Card */}
-              <div className="p-3 rounded-lg bg-[#060911] border border-slate-800 font-mono text-[11px] text-slate-400 space-y-1">
-                <div className="text-slate-500">// Atomic Escrow Invariant Check</div>
-                <div>assert(wallet.preHold == wallet.postRollback);</div>
-                <div className="text-emerald-400">✓ Platform absorbs self-healing retries (up to 3x) as internal COGS</div>
-              </div>
-            </div>
-
-            {/* Bento Block 2: Standard (Span 1 or 2) */}
-            <div className="md:col-span-1 lg:col-span-2 bento-card p-6 sm:p-7 flex flex-col justify-between space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="w-9 h-9 rounded-lg bg-[#0e1628] border border-slate-800 flex items-center justify-center text-cyan-400">
-                    <GitBranch className="w-5 h-5" />
-                  </div>
-                  <span className="text-[11px] font-mono text-cyan-400 px-2 py-0.5 rounded bg-cyan-950/40 border border-cyan-800/40">
-                    ZERO LOCK-IN
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold text-white tracking-tight">100% Dual-Push Git Ejection</h3>
-                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                  Never held hostage by proprietary runtimes. Every verified commit is dual-pushed directly to your personal or organization GitHub repository as pure Next.js 15, Supabase, and Tailwind CSS.
-                </p>
-              </div>
-
-              <div className="p-3 rounded-lg bg-[#060911] border border-slate-800 font-mono text-[11px] text-slate-400 flex items-center justify-between">
-                <span className="text-slate-300">git remote -v</span>
-                <span className="text-indigo-400">github.com/user/venture-prod</span>
-              </div>
-            </div>
-
-            {/* Bento Block 3: Standard (Span 2) */}
-            <div className="md:col-span-2 bento-card p-6 sm:p-7 flex flex-col justify-between space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="w-9 h-9 rounded-lg bg-[#0e1628] border border-slate-800 flex items-center justify-center text-emerald-400">
-                    <DollarSign className="w-5 h-5" />
-                  </div>
-                  <span className="text-[11px] font-mono text-emerald-400 px-2 py-0.5 rounded bg-emerald-950/40 border border-emerald-800/40">
-                    0.0% REVENUE TAX
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold text-white tracking-tight">Strict 0.0% Perpetual Revenue Tax</h3>
-                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                  Unlike platforms that demand 20% to 50% of your lifetime gross revenue or agency studios that take 25% equity, Stage Gate OS operates on predictable, transparent flat SaaS tiers. You keep 100% of your enterprise value.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 text-center text-xs font-mono">
-                <div className="p-2 rounded bg-[#060911] border border-slate-800">
-                  <div className="text-slate-500">Ad Spend Markup</div>
-                  <div className="text-emerald-400 font-bold mt-0.5">0% Direct OAuth</div>
-                </div>
-                <div className="p-2 rounded bg-[#060911] border border-slate-800">
-                  <div className="text-slate-500">Equity Taken</div>
-                  <div className="text-emerald-400 font-bold mt-0.5">0.0% Founder Retained</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Bento Block 4: Standard (Span 2) */}
-            <div className="md:col-span-2 bento-card p-6 sm:p-7 flex flex-col justify-between space-y-6">
-              <div className="space-y-4">
+            {/* Bento Block 1: Anti-Fragile Execution */}
+            <div className="bento-card p-6 sm:p-7 flex flex-col justify-between space-y-6">
+              <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="w-9 h-9 rounded-lg bg-[#0e1628] border border-slate-800 flex items-center justify-center text-indigo-400">
                     <Activity className="w-5 h-5" />
                   </div>
-                  <span className="text-[11px] font-mono text-indigo-400 px-2 py-0.5 rounded bg-indigo-950/40 border border-indigo-800/40">
-                    QUAD-DOH QUORUM
+                  <span className="text-[10px] font-mono text-indigo-400 px-2 py-0.5 rounded bg-indigo-950/40 border border-indigo-800/40">
+                    PILLAR 01
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-white tracking-tight">Deterministic Stage Gates 1–5</h3>
-                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                  No false "Done" illusions. Every production milestone validates AST syntax budgets (&lt;250KB), 15/15 container health probes (p95 &lt; 18ms), Quad-DoH DNS consensus (Cloudflare, Google, AliDNS, AdGuard), and simulated +30d Stripe clocks.
+                <h3 className="text-lg font-bold text-white tracking-tight">Anti-Fragile Execution</h3>
+                <div className="text-xs font-semibold text-indigo-300">"We never declare victory on a blank screen."</div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  No false 'Done' illusions. An agent that writes code cannot grade its own output. Every release must pass headless Playwright browser tests, TLS 1.3 socket checks, and Quad-DoH DNS quorum before sign-off.
                 </p>
               </div>
 
-              <div className="p-3 rounded-lg bg-[#060911] border border-slate-800 font-mono text-[11px] text-slate-400 flex items-center justify-between">
-                <span className="text-slate-400">Synthetic SLA Verification</span>
-                <span className="text-emerald-400">100% Passed (5/5 Gates)</span>
+              <div className="p-2.5 rounded-lg bg-[#060911] border border-slate-800 font-mono text-[11px] text-slate-400 flex items-center justify-between">
+                <span>Verification Rigor</span>
+                <span className="text-emerald-400 font-bold">5 Programmatic Gates</span>
+              </div>
+            </div>
+
+            {/* Bento Block 2: Zero-Charge Failure Guarantee */}
+            <div className="bento-card p-6 sm:p-7 flex flex-col justify-between space-y-6">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="w-9 h-9 rounded-lg bg-[#0e1628] border border-slate-800 flex items-center justify-center text-emerald-400">
+                    <ShieldCheck className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-mono text-emerald-400 px-2 py-0.5 rounded bg-emerald-950/40 border border-emerald-800/40">
+                    PILLAR 02
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold text-white tracking-tight">Zero-Charge Failure Guarantee</h3>
+                <div className="text-xs font-semibold text-emerald-300">"You never pay for AI mistakes or syntax loops."</div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Competitors debit your card for agent syntax retries and broken loops. Our Two-Phase Commit (2PC) escrow holds credits in trust. If any test fails, 100% of credits are refunded instantly. Net cost: $0.00.
+                </p>
+              </div>
+
+              <div className="p-2.5 rounded-lg bg-[#060911] border border-slate-800 font-mono text-[11px] text-slate-400 flex items-center justify-between">
+                <span>User Failure Liability</span>
+                <span className="text-emerald-400 font-bold">$0.00 (Invariant ΔB == 0)</span>
+              </div>
+            </div>
+
+            {/* Bento Block 3: 100% Full Git Ejection */}
+            <div className="bento-card p-6 sm:p-7 flex flex-col justify-between space-y-6">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="w-9 h-9 rounded-lg bg-[#0e1628] border border-slate-800 flex items-center justify-center text-cyan-400">
+                    <GitBranch className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-mono text-cyan-400 px-2 py-0.5 rounded bg-cyan-950/40 border border-cyan-800/40">
+                    PILLAR 03
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold text-white tracking-tight">100% Personal Git Ejection</h3>
+                <div className="text-xs font-semibold text-cyan-300">"True code ownership from second zero."</div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Never held hostage by proprietary hosting. Every verified commit is continuously dual-pushed to your private GitHub organization as standard Next.js 15, Tailwind, Prisma, and Supabase.
+                </p>
+              </div>
+
+              <div className="p-2.5 rounded-lg bg-[#060911] border border-slate-800 font-mono text-[11px] text-slate-400 flex items-center justify-between">
+                <span>Proprietary Lock-in</span>
+                <span className="text-cyan-400 font-bold">0% (Pure Standard OSS)</span>
+              </div>
+            </div>
+
+            {/* Bento Block 4: 0% Perpetual Take-Rate */}
+            <div className="bento-card p-6 sm:p-7 flex flex-col justify-between space-y-6">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="w-9 h-9 rounded-lg bg-[#0e1628] border border-slate-800 flex items-center justify-center text-amber-400">
+                    <DollarSign className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-mono text-amber-400 px-2 py-0.5 rounded bg-amber-950/40 border border-amber-800/40">
+                    PILLAR 04
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold text-white tracking-tight">0% Perpetual Take-Rate</h3>
+                <div className="text-xs font-semibold text-amber-300">"Keep 100% of your revenue and ad ROAS."</div>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Unlike platforms demanding 20%–50% of your revenue or taking equity stakes, Stage Gate OS charges only a flat, transparent SaaS subscription. Direct OAuth to your Stripe and Meta/Google Ads.
+                </p>
+              </div>
+
+              <div className="p-2.5 rounded-lg bg-[#060911] border border-slate-800 font-mono text-[11px] text-slate-400 flex items-center justify-between">
+                <span>Revenue Tax / Equity</span>
+                <span className="text-emerald-400 font-bold">0.0% Kept by Founder</span>
               </div>
             </div>
 
@@ -747,16 +748,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           {/* Bento Pricing Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
-            {/* Tier 1: Founder */}
+            {/* Tier 1: Founder Plan */}
             <div className="bento-card p-6 sm:p-7 space-y-6 flex flex-col justify-between">
               <div className="space-y-4">
                 <div>
                   <div className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400">
-                    TIER 01 / ASPIRING FOUNDER
+                    TIER 01 / BUSY 9-TO-5 PROFESSIONALS
                   </div>
-                  <h3 className="text-2xl font-bold text-white mt-1">Founder Launchpad</h3>
-                  <p className="text-xs text-slate-400 mt-1">
-                    Launch your first verified business with zero technical overwhelm.
+                  <h3 className="text-2xl font-bold text-white mt-1">Founder Plan</h3>
+                  <p className="text-xs text-slate-300 mt-1 font-medium">
+                    Turn your industry knowledge into an automated micro-SaaS in 15 min/day.
+                  </p>
+                  <p className="text-[11px] text-slate-400 mt-1">
+                    Zero coding required. Full turnkey deployment to your personal GitHub & Stripe.
                   </p>
                 </div>
 
@@ -771,7 +775,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 </div>
 
                 <div className="pt-4 border-t border-slate-800/80 space-y-2.5 text-xs text-slate-300">
-                  <div className="font-mono text-slate-400 text-[11px]">INCLUDED CAPACITIES:</div>
+                  <div className="font-mono text-slate-400 text-[11px]">FOUNDER SOVEREIGNTY INCLUSIONS:</div>
+                  <div className="flex items-center space-x-2">
+                    <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span><strong>15 min/day maintenance</strong> with visual approval checkpoints</span>
+                  </div>
                   <div className="flex items-center space-x-2">
                     <Check className="w-4 h-4 text-emerald-400 shrink-0" />
                     <span><strong>3 verified deployments</strong> / month</span>
@@ -782,49 +790,48 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   </div>
                   <div className="flex items-center space-x-2">
                     <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>1 active ephemeral preview sandbox</span>
+                    <span>Deterministic Gates 1–5 Verification (Playwright + DNS)</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Deterministic Gates 1–5 Verification</span>
+                    <span>Zero-Charge Failure Guarantee (2PC Credit Escrow)</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Zero-Charge Failure Escrow (2PC)</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>1-Click Git Ejection to personal GitHub</span>
+                    <span>1-Click Git Ejection to personal GitHub (You own the code)</span>
                   </div>
                   <div className="flex items-center space-x-2 text-emerald-400 font-semibold">
                     <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>0.0% Perpetual Revenue Tax</span>
+                    <span>0.0% Perpetual Revenue Tax (Direct Stripe payout)</span>
                   </div>
                 </div>
               </div>
 
               <button
                 onClick={() => onNavigate(`/checkout?plan=founder&billing=${billingInterval}`)}
-                className="w-full py-2.5 rounded-lg text-xs font-mono font-semibold text-emerald-300 bg-emerald-950/40 hover:bg-emerald-900/60 border border-emerald-700/50 transition-all text-center"
+                className="w-full py-3 rounded-lg text-xs font-mono font-semibold text-emerald-300 bg-emerald-950/40 hover:bg-emerald-900/60 border border-emerald-700/50 transition-all text-center cursor-pointer"
               >
-                SELECT FOUNDER ($49/MO)
+                START FOUNDER PLAN ($49/MO)
               </button>
             </div>
 
             {/* Tier 2: Serial Entrepreneur (Featured Bento Highlight) */}
             <div className="rounded-xl border border-indigo-500/70 bg-[#0d1424] p-6 sm:p-7 space-y-6 flex flex-col justify-between relative shadow-lg">
               <div className="absolute -top-3 left-6 px-2.5 py-0.5 rounded bg-indigo-600 text-white text-[10px] font-mono font-bold uppercase tracking-wider">
-                RECOMMENDED ARCHITECTURE
+                RECOMMENDED FOR BUILDERS
               </div>
 
               <div className="space-y-4 pt-1">
                 <div>
                   <div className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-400">
-                    TIER 02 / SERIAL HACKER
+                    TIER 02 / SERIAL INDIE HACKERS
                   </div>
-                  <h3 className="text-2xl font-bold text-white mt-1">Serial Entrepreneur</h3>
-                  <p className="text-xs text-slate-400 mt-1">
+                  <h3 className="text-2xl font-bold text-white mt-1">Serial Plan</h3>
+                  <p className="text-xs text-slate-300 mt-1 font-medium">
                     High-velocity multi-venture operations with wholesale token economics.
+                  </p>
+                  <p className="text-[11px] text-slate-400 mt-1">
+                    Headless CLI speed, BYOK keys, and continuous dual-push Git synchronization.
                   </p>
                 </div>
 
@@ -840,6 +847,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
                 <div className="pt-4 border-t border-slate-800 space-y-2.5 text-xs text-slate-300">
                   <div className="font-mono text-slate-400 text-[11px]">EVERYTHING IN FOUNDER, PLUS:</div>
+                  <div className="flex items-center space-x-2 text-indigo-300 font-semibold font-mono">
+                    <Check className="w-4 h-4 text-indigo-400 shrink-0" />
+                    <span>BYOK Mode: Wholesale 0% token markup (OpenAI/Claude)</span>
+                  </div>
+                  <div className="flex items-center space-x-2 font-mono text-[11px]">
+                    <Check className="w-4 h-4 text-indigo-400 shrink-0" />
+                    <span>Headless CLI (<code>poas-cli</code>) & REST API triggers</span>
+                  </div>
                   <div className="flex items-center space-x-2">
                     <Check className="w-4 h-4 text-indigo-400 shrink-0" />
                     <span><strong>15 verified deployments</strong> / month</span>
@@ -850,32 +865,24 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   </div>
                   <div className="flex items-center space-x-2">
                     <Check className="w-4 h-4 text-indigo-400 shrink-0" />
-                    <span>Up to 5 concurrent active preview sandboxes</span>
-                  </div>
-                  <div className="flex items-center space-x-2 text-indigo-300 font-semibold font-mono">
-                    <Check className="w-4 h-4 text-indigo-400 shrink-0" />
-                    <span>BYOK Mode: Wholesale 0% token markup</span>
-                  </div>
-                  <div className="flex items-center space-x-2 font-mono text-[11px]">
-                    <Check className="w-4 h-4 text-indigo-400 shrink-0" />
-                    <span>Headless CLI (<code>stagegate-cli</code>) & REST API triggers</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Check className="w-4 h-4 text-indigo-400 shrink-0" />
                     <span>Multi-Venture Portfolio Cockpit (Aggregated MRR)</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Check className="w-4 h-4 text-indigo-400 shrink-0" />
                     <span>Continuous dual-push to GitHub/GitLab orgs</span>
                   </div>
+                  <div className="flex items-center space-x-2">
+                    <Check className="w-4 h-4 text-indigo-400 shrink-0" />
+                    <span>Up to 5 concurrent active preview sandboxes</span>
+                  </div>
                 </div>
               </div>
 
               <button
                 onClick={() => onNavigate(`/checkout?plan=serial&billing=${billingInterval}`)}
-                className="w-full py-3 rounded-lg text-xs font-mono font-bold text-slate-950 bg-white hover:bg-slate-200 transition-all text-center"
+                className="w-full py-3.5 rounded-lg text-xs font-mono font-bold text-slate-950 bg-white hover:bg-slate-200 transition-all text-center cursor-pointer shadow-md"
               >
-                LAUNCH SERIAL TIER ($149/MO)
+                LAUNCH SERIAL PLAN ($149/MO)
               </button>
             </div>
 
@@ -884,11 +891,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <div className="space-y-4">
                 <div>
                   <div className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400">
-                    TIER 03 / CORPORATE STUDIO
+                    TIER 03 / CORPORATE INNOVATION STUDIOS
                   </div>
                   <h3 className="text-2xl font-bold text-white mt-1">Enterprise Studio</h3>
-                  <p className="text-xs text-slate-400 mt-1">
+                  <p className="text-xs text-slate-300 mt-1 font-medium">
                     Institutional intrapreneurship sandbox with capital tranche governance.
+                  </p>
+                  <p className="text-[11px] text-slate-400 mt-1">
+                    Eliminate 80% of venture waste with programmatic gates ($5k→$25k→$100k).
                   </p>
                 </div>
 
@@ -904,6 +914,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
                 <div className="pt-4 border-t border-slate-800 space-y-2.5 text-xs text-slate-300">
                   <div className="font-mono text-slate-400 text-[11px]">EVERYTHING IN SERIAL, PLUS:</div>
+                  <div className="flex items-center space-x-2 font-semibold text-cyan-300">
+                    <Check className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <span>Capital Tranche Governance ($5k → $25k → $100k)</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Check className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <span>Okta / Azure SAML 2.0 SSO & granular RBAC</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Check className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <span>SOC 2 Type II audit logs & cryptographically signed receipts</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Check className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <span>Dedicated single-tenant clean-room VPC (Zero Data Retention)</span>
+                  </div>
                   <div className="flex items-center space-x-2">
                     <Check className="w-4 h-4 text-cyan-400 shrink-0" />
                     <span><strong>50 complete deployments</strong> (pooled across team)</span>
@@ -912,37 +938,107 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     <Check className="w-4 h-4 text-cyan-400 shrink-0" />
                     <span><strong>250 iterations</strong> / month pooled</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Check className="w-4 h-4 text-cyan-400 shrink-0" />
-                    <span>Unlimited concurrent preview sandboxes</span>
-                  </div>
-                  <div className="flex items-center space-x-2 font-semibold text-cyan-300">
-                    <Check className="w-4 h-4 text-cyan-400 shrink-0" />
-                    <span>Capital Tranche Budget Governance</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Check className="w-4 h-4 text-cyan-400 shrink-0" />
-                    <span>Okta SAML 2.0 SSO & granular RBAC</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Check className="w-4 h-4 text-cyan-400 shrink-0" />
-                    <span>SOC 2 Type II audit logs & receipts</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Check className="w-4 h-4 text-cyan-400 shrink-0" />
-                    <span>Dedicated single-tenant VPC (ZDR)</span>
-                  </div>
                 </div>
               </div>
 
               <button
                 onClick={() => onNavigate(`/checkout?plan=enterprise&billing=${billingInterval}`)}
-                className="w-full py-2.5 rounded-lg text-xs font-mono font-semibold text-cyan-300 bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-700/50 transition-all text-center"
+                className="w-full py-3 rounded-lg text-xs font-mono font-semibold text-cyan-300 bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-700/50 transition-all text-center cursor-pointer"
               >
-                CONTACT SALES ($999/MO)
+                DEPLOY ENTERPRISE STUDIO ($999/MO)
               </button>
             </div>
 
+          </div>
+        </section>
+
+        {/* DEDICATED 4-POINT 9-TO-5 OBJECTION HANDLING MATRIX (FAQ) */}
+        <section id="faq" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-slate-800/80">
+          <div className="space-y-3 mb-12">
+            <div className="text-xs font-mono uppercase tracking-widest text-indigo-400 flex items-center space-x-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-indigo-500"></span>
+              <span>OBJECTION HANDLING &amp; TRANSPARENCY</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+              Frequently Addressed Hesitations
+            </h2>
+            <p className="text-sm text-slate-300 max-w-2xl leading-relaxed">
+              Real answers for busy professionals with high-stakes careers and zero time to waste.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* Question 1 */}
+            <div className="bento-card p-6 space-y-3">
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 rounded-lg bg-indigo-950/60 border border-indigo-700/50 flex items-center justify-center text-indigo-400 shrink-0 font-bold text-xs font-mono">
+                  01
+                </div>
+                <h3 className="text-base font-bold text-white leading-snug">
+                  "I barely have 1 hour a day — how much work do I actually have to do?"
+                </h3>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed pl-11">
+                <strong className="text-white">You act as the Executive Chairman, not the programmer.</strong> Your commitment is strictly 15 minutes a day. You provide the domain concept and approve visual stage gates. Stage Gate OS handles code emission, Docker containerization, DNS configuration, and Stripe webhook wiring autonomously in background microVMs.
+              </p>
+              <div className="pl-11 pt-1 font-mono text-[11px] text-emerald-400">
+                ✓ Bounded DAG orchestration pauses strictly at 5 visual checkpoints.
+              </div>
+            </div>
+
+            {/* Question 2 */}
+            <div className="bento-card p-6 space-y-3">
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-950/60 border border-emerald-700/50 flex items-center justify-center text-emerald-400 shrink-0 font-bold text-xs font-mono">
+                  02
+                </div>
+                <h3 className="text-base font-bold text-white leading-snug">
+                  "Is this just another passive income or AI wrapper scam?"
+                </h3>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed pl-11">
+                <strong className="text-white">No. We do not sell courses, dropshipping bots, or fake marketing toys.</strong> Stage Gate OS builds real, production-ready B2B software written in standard Next.js 15, Tailwind, Prisma, and Supabase. We prove it with our Zero-Charge Failure Guarantee: if our AI errs or fails any test, your cost is mathematically $0.00.
+              </p>
+              <div className="pl-11 pt-1 font-mono text-[11px] text-emerald-400">
+                ✓ Playwright synthetic checkout &amp; signed ECDSA verification receipts.
+              </div>
+            </div>
+
+            {/* Question 3 */}
+            <div className="bento-card p-6 space-y-3">
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 rounded-lg bg-cyan-950/60 border border-cyan-700/50 flex items-center justify-center text-cyan-400 shrink-0 font-bold text-xs font-mono">
+                  03
+                </div>
+                <h3 className="text-base font-bold text-white leading-snug">
+                  "Does my employer have any legal claim to this software?"
+                </h3>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed pl-11">
+                <strong className="text-white">Stage Gate OS enforces complete asset segregation.</strong> Your software is developed in isolated cloud microVMs outside your employer's network and dual-pushed directly to your personal, private GitHub organization and personal Stripe account. You never run it on company hardware or networks.
+              </p>
+              <div className="pl-11 pt-1 font-mono text-[11px] text-cyan-400">
+                ✓ 100% personal Git ejection with 0 proprietary dependencies.
+              </div>
+            </div>
+
+            {/* Question 4 */}
+            <div className="bento-card p-6 space-y-3">
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 rounded-lg bg-amber-950/60 border border-amber-700/50 flex items-center justify-center text-amber-400 shrink-0 font-bold text-xs font-mono">
+                  04
+                </div>
+                <h3 className="text-base font-bold text-white leading-snug">
+                  "What happens if something breaks while I'm at my day job?"
+                </h3>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed pl-11">
+                <strong className="text-white">You are never on-call.</strong> Stage Gate OS incorporates automated self-healing and continuous synthetic monitoring. If an edge error occurs, our Sentinel circuit breaker contains it and deploys an automated patch or rollback to the last passing receipt without requiring your real-time intervention.
+              </p>
+              <div className="pl-11 pt-1 font-mono text-[11px] text-amber-400">
+                ✓ Sentinel 24/7 CI/CD watchdog with Anycast DNS failover.
+              </div>
+            </div>
           </div>
         </section>
 

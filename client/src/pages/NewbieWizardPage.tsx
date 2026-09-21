@@ -326,15 +326,15 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
         
         {/* Wizard Top Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-950/80 border border-indigo-700/50 text-indigo-300 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Aspiring Founder Launchpad</span>
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-700/50 text-emerald-300 text-xs font-semibold">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Busy 9-to-5 Founder Launchpad</span>
           </div>
           <h1 className="text-3xl font-extrabold text-white tracking-tight sm:text-4xl">
-            Launch Your Verified Venture in 4 Steps
+            Launch Your Side Business in 4 Guided Steps
           </h1>
-          <p className="text-sm text-slate-400 max-w-xl mx-auto">
-            Zero technical debt. Deterministic stage-gates verify your app, DNS, and Stripe plumbing before you spend.
+          <p className="text-sm text-slate-300 max-w-xl mx-auto">
+            15 minutes to configure. Zero coding required. Our deterministic stage gates build, test, and wire your Stripe and GitHub infrastructure autonomously.
           </p>
         </div>
 

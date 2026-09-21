@@ -77,7 +77,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     FOUNDER: {
       id: 'FOUNDER' as const,
       name: 'Founder Plan',
-      persona: 'Aspiring Founder',
+      persona: 'Busy 9-to-5 Professionals',
+      subtitle: 'Turnkey 15 min/day, no coding needed, personal GitHub & Stripe',
       monthlyPrice: 49,
       annualPrice: 470,
       monthlyPerMo: 49,
@@ -92,8 +93,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     },
     SERIAL: {
       id: 'SERIAL' as const,
-      name: 'Serial Entrepreneur Plan',
-      persona: 'Serial Indie Hacker / Engineer',
+      name: 'Serial Plan',
+      persona: 'Serial Indie Hackers & Builders',
+      subtitle: 'Headless CLI, BYOK 0% token markup, multi-venture cockpit',
       monthlyPrice: 149,
       annualPrice: 1430,
       monthlyPerMo: 149,
@@ -109,7 +111,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     ENTERPRISE: {
       id: 'ENTERPRISE' as const,
       name: 'Enterprise Studio Plan',
-      persona: 'Corporate Innovation Lab',
+      persona: 'Corporate Innovation Studios',
+      subtitle: 'Tranche capital gates ($5k→$25k→$100k), SAML SSO, SOC 2 logs',
       monthlyPrice: 999,
       annualPrice: 9590,
       monthlyPerMo: 999,
@@ -297,13 +300,17 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         <div>
                           <div className="text-sm font-bold text-white flex items-center space-x-2">
                             <span>{p.name}</span>
+                            <span className="text-[10px] text-slate-400 font-normal">({p.persona})</span>
                             {planKey === 'SERIAL' && (
                               <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-indigo-900 text-indigo-200">
                                 POPULAR
                               </span>
                             )}
                           </div>
-                          <div className="text-[11px] text-slate-400">
+                          <div className="text-[11px] text-indigo-300 font-medium mt-0.5">
+                            {p.subtitle}
+                          </div>
+                          <div className="text-[10px] text-slate-400 mt-0.5">
                             {p.deployments} verified deployments / mo • {p.iterations} iterations
                           </div>
                         </div>
