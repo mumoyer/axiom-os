@@ -226,7 +226,7 @@ export const ExampleScenarioExplorer: React.FC<ExampleScenarioExplorerProps> = (
         <div className="space-y-3 max-w-2xl">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-indigo-950/60 border border-indigo-700/50 text-indigo-300 text-xs font-mono">
             <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-            <span className="font-bold uppercase tracking-wider">LIVE DUMMY SCENARIOS</span>
+            <span className="font-bold uppercase tracking-wider">LIVE EXAMPLE SCENARIOS</span>
             <span className="text-slate-500">•</span>
             <span className="text-emerald-400">ZERO RISK EXPLORATION</span>
           </div>

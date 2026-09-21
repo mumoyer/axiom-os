@@ -180,5 +180,32 @@ describe('TenantFailureCircuitBreaker Unit Tests', () => {
       // Total platform COGS absorbed remains strictly $9.45!
       assert.equal(breaker.getRecord(tenantId).monthlyCogsAbsorbed, 9.45);
     });
+
+    it('prevents margin leak when failures are interleaved with successes (4 failures -> 1 success -> 1 failure)', () => {
+      const oscillatingTenant = 'tenant_adversarial_interleaved';
+      // 4 failures: 4 * 1.89 = 7.56
+      for (let i = 0; i < 4; i++) {
+        breaker.recordFailure(oscillatingTenant);
+      }
+      assert.equal(breaker.getRecord(oscillatingTenant).consecutiveUnhealedFailures, 4);
+      assert.equal(breaker.getRecord(oscillatingTenant).monthlyCogsAbsorbed, 7.56);
+      assert.equal(breaker.getRecord(oscillatingTenant).circuitBreakerTripped, false);
+
+      // 1 success: consecutive resets to 0, but absorbed COGS remains 7.56
+      breaker.recordSuccess(oscillatingTenant);
+      assert.equal(breaker.getRecord(oscillatingTenant).consecutiveUnhealedFailures, 0);
+      assert.equal(breaker.getRecord(oscillatingTenant).monthlyCogsAbsorbed, 7.56);
+
+      // 1 more failure: absorbed COGS reaches 9.45
+      breaker.recordFailure(oscillatingTenant);
+      assert.equal(breaker.getRecord(oscillatingTenant).consecutiveUnhealedFailures, 1);
+      assert.equal(breaker.getRecord(oscillatingTenant).monthlyCogsAbsorbed, 9.45);
+      // Tripped due to monthly absorption cap despite only 1 consecutive failure!
+      assert.equal(breaker.getRecord(oscillatingTenant).circuitBreakerTripped, true);
+      assert.throws(
+        () => breaker.assertCanExecute(oscillatingTenant),
+        /TENANT_CIRCUIT_BREAKER_TRIPPED/
+      );
+    });
   });
 });

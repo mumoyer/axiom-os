@@ -34,7 +34,7 @@ test.describe('Founder Launchpad & Multi-Tier Workflows (Newbie + Serial)', () =
 
       // Step 4: Blueprint Review & 2PC Escrow Authorization
       await expect(page.locator('text=Step 4: Blueprint Review & 2PC Escrow Authorization')).toBeVisible({ timeout: 5000 });
-      await expect(page.locator('text=Zero-Charge Failure Guarantee Protected')).toBeVisible();
+      await expect(page.locator('text=Pay-Only-For-Working-Code Guarantee')).toBeVisible();
       await expect(page.locator('text=5-Milestone Execution Roadmap')).toBeVisible();
 
       // Trigger Launch

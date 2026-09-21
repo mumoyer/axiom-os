@@ -299,15 +299,18 @@ export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
     };
 
     try {
-      await fetch('/api/byok/keys', {
+      const res = await fetch('/api/byok/keys', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-    } catch {}
-
-    setByokSaveSuccess(true);
-    setTimeout(() => setByokSaveSuccess(false), 3000);
+      if (res.ok) {
+        setByokSaveSuccess(true);
+        setTimeout(() => setByokSaveSuccess(false), 3000);
+      }
+    } catch {
+      // Keep save success false on network or server error
+    }
   };
 
   // Ejection Handler

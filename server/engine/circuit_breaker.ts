@@ -74,13 +74,14 @@ export class TenantFailureCircuitBreaker {
 
   /**
    * Check if autonomous retries are permitted.
-   * Throws Error if circuit breaker has tripped and BYOK is not active.
+   * Throws Error if circuit breaker has tripped or monthly COGS absorption ceiling is reached,
+   * and BYOK is not active.
    */
   public assertCanExecute(tenantId: string): void {
     const rec = this.getOrCreate(tenantId);
-    if (rec.circuitBreakerTripped && !rec.byokMode) {
+    if (!rec.byokMode && (rec.circuitBreakerTripped || rec.monthlyCogsAbsorbed >= TenantFailureCircuitBreaker.MAX_MONTHLY_COGS_ABSORPTION)) {
       throw new Error(
-        `TENANT_CIRCUIT_BREAKER_TRIPPED: Autonomous retries frozen for tenant ${tenantId}. Platform absorption ceiling ($${TenantFailureCircuitBreaker.MAX_MONTHLY_COGS_ABSORPTION.toFixed(2)}) reached after ${TenantFailureCircuitBreaker.MAX_UNHEALED_FAILURES} unhealed failures. Founder intervention or BYOK mode required.`
+        `TENANT_CIRCUIT_BREAKER_TRIPPED: Autonomous retries frozen for tenant ${tenantId}. Platform absorption ceiling ($${TenantFailureCircuitBreaker.MAX_MONTHLY_COGS_ABSORPTION.toFixed(2)}) reached. Founder intervention or BYOK mode required.`
       );
     }
   }
@@ -92,8 +93,13 @@ export class TenantFailureCircuitBreaker {
     const rec = this.getOrCreate(tenantId);
     rec.consecutiveUnhealedFailures = 0;
     if (!rec.byokMode) {
-      rec.status = 'NORMAL_AUTONOMOUS';
-      rec.circuitBreakerTripped = false;
+      if (rec.monthlyCogsAbsorbed < TenantFailureCircuitBreaker.MAX_MONTHLY_COGS_ABSORPTION) {
+        rec.status = 'NORMAL_AUTONOMOUS';
+        rec.circuitBreakerTripped = false;
+      } else {
+        rec.status = 'TRIPPED_INTERVENTION_REQUIRED';
+        rec.circuitBreakerTripped = true;
+      }
     }
     rec.updatedAt = new Date().toISOString();
     return { ...rec };
@@ -102,7 +108,7 @@ export class TenantFailureCircuitBreaker {
   /**
    * Records an unhealed failure.
    * Increments failure counter, tracks platform COGS absorption ($0 if BYOK),
-   * and trips the circuit breaker if consecutive failures >= 5.
+   * and trips the circuit breaker if consecutive failures >= 5 or monthly absorbed COGS >= $9.45.
    */
   public recordFailure(tenantId: string, customCogs?: number): TenantBreakerRecord {
     const rec = this.getOrCreate(tenantId);
@@ -112,8 +118,11 @@ export class TenantFailureCircuitBreaker {
     rec.monthlyCogsAbsorbed = Number((rec.monthlyCogsAbsorbed + cogsToAdd).toFixed(4));
     rec.consecutiveUnhealedFailures += 1;
 
-    // Check circuit breaker condition
-    if (rec.consecutiveUnhealedFailures >= TenantFailureCircuitBreaker.MAX_UNHEALED_FAILURES) {
+    // Check circuit breaker condition (either consecutive failures or monthly absorption cap)
+    if (
+      rec.consecutiveUnhealedFailures >= TenantFailureCircuitBreaker.MAX_UNHEALED_FAILURES ||
+      rec.monthlyCogsAbsorbed >= TenantFailureCircuitBreaker.MAX_MONTHLY_COGS_ABSORPTION
+    ) {
       if (!rec.byokMode) {
         rec.circuitBreakerTripped = true;
         rec.status = 'TRIPPED_INTERVENTION_REQUIRED';
@@ -143,6 +152,7 @@ export class TenantFailureCircuitBreaker {
   public resetBreaker(tenantId: string): TenantBreakerRecord {
     const rec = this.getOrCreate(tenantId);
     rec.consecutiveUnhealedFailures = 0;
+    rec.monthlyCogsAbsorbed = 0.0;
     rec.circuitBreakerTripped = false;
     rec.status = rec.byokMode ? 'BYOK_ENFORCED' : 'NORMAL_AUTONOMOUS';
     rec.updatedAt = new Date().toISOString();

@@ -1020,12 +1020,12 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
               </div>
             </div>
 
-            {/* Zero-Charge Failure Guarantee Seal */}
+            {/* Pay-Only-For-Working-Code Guarantee Seal */}
             <div className="rounded-xl p-4 bg-emerald-950/30 border border-emerald-500/40 flex items-start space-x-3">
               <ShieldCheck className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
               <div className="space-y-1 text-xs">
                 <div className="font-bold text-emerald-300">
-                  Zero-Charge Failure Guarantee Protected
+                  Pay-Only-For-Working-Code Guarantee
                 </div>
                 <p className="text-slate-300 text-[11px] leading-relaxed">
                   Your 1,000 milestone credits remain safely held in cryptographic Two-Phase Commit (2PC) escrow.

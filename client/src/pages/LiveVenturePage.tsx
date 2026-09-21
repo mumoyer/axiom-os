@@ -278,9 +278,10 @@ export const LiveVenturePage: React.FC<LiveVenturePageProps> = ({
     ven_sub_04: { name: 'SubManage SaaS', domain: 'submanage.dev', tier: 'SERIAL' },
   };
 
+  const cleanSubdomain = ventureId.slice(0, 8).replace(/_/g, '-');
   const initialMock = MOCK_NAMES[ventureId] || {
     name: 'DocuFlow AI',
-    domain: `${ventureId.slice(0, 8)}.axiomrun.app`,
+    domain: `${cleanSubdomain}.axiomrun.app`,
     tier: 'SERIAL' as const,
   };
 
@@ -290,7 +291,7 @@ export const LiveVenturePage: React.FC<LiveVenturePageProps> = ({
     tenantId: 'tenant-default',
     planTier: initialMock.tier,
     domain: initialMock.domain,
-    stagingUrl: `https://stage-${ventureId.slice(0, 8)}.axiomrun.app`,
+    stagingUrl: `https://stage-${cleanSubdomain}.axiomrun.app`,
     createdAt: new Date().toISOString(),
   });
 
@@ -312,13 +313,14 @@ export const LiveVenturePage: React.FC<LiveVenturePageProps> = ({
       })
       .then((data) => {
         if (data.venture) {
+          const sub = (data.venture.id || ventureId).slice(0, 8).replace(/_/g, '-');
           setVenture({
             id: data.venture.id,
             name: data.venture.name || 'DocuFlow AI',
             tenantId: data.venture.tenantId || 'tenant-default',
             planTier: data.venture.planTier || 'SERIAL',
-            domain: `${data.venture.id.slice(0, 8)}.axiomrun.app`,
-            stagingUrl: `https://stage-${data.venture.id.slice(0, 8)}.axiomrun.app`,
+            domain: `${sub}.axiomrun.app`,
+            stagingUrl: `https://stage-${sub}.axiomrun.app`,
             createdAt: data.venture.createdAt || new Date().toISOString(),
           });
         }
@@ -373,7 +375,9 @@ export const LiveVenturePage: React.FC<LiveVenturePageProps> = ({
                 ? 'RECEIPT_SIGNED'
                 : 'INFO',
             message:
-              data.type === 'GATE_RUNNING'
+              data.type === 'SNAPSHOT'
+                ? `Loaded current pipeline snapshot for ${ventureId}`
+                : data.type === 'GATE_RUNNING'
                 ? `Evaluating Gate ${data.payload?.gateId}: ${data.payload?.gateName}...`
                 : data.type === 'GATE_COMPLETED'
                 ? `Gate ${data.payload?.gateId} finished with status: ${data.payload?.status} (${data.payload?.durationMs}ms)`
@@ -391,8 +395,15 @@ export const LiveVenturePage: React.FC<LiveVenturePageProps> = ({
 
           setLogs((prev) => [...prev, newEntry]);
 
-          // Update stage status dynamically if payload contains gate info
-          if (data.type === 'GATE_RUNNING' && data.payload?.gateId) {
+          // Process state hydration or stage updates
+          if (data.type === 'SNAPSHOT' && data.payload) {
+            if (data.payload.stages) setStages(data.payload.stages);
+            if (data.payload.overallStatus) setOverallStatus(data.payload.overallStatus);
+            if (data.payload.escrowStatus) setEscrowStatus(data.payload.escrowStatus);
+            if (typeof data.payload.absorbedPlatformCogsUsd === 'number') {
+              setAbsorbedCogs(data.payload.absorbedPlatformCogsUsd);
+            }
+          } else if (data.type === 'GATE_RUNNING' && data.payload?.gateId) {
             setStages((prev) =>
               prev.map((s) =>
                 s.gateId === data.payload.gateId

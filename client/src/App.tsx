@@ -18,7 +18,8 @@ export function App() {
 
   // Parse path and query/hash
   const resolveRoute = (rawPath: string) => {
-    let clean = rawPath.replace(/^#/, '');
+    let clean = rawPath.replace(/^#\/?/, '/');
+    if (!clean.startsWith('/')) clean = '/' + clean;
     if (!clean || clean === '') clean = '/';
 
     // Remove query params for route matching

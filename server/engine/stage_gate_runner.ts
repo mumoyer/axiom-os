@@ -202,51 +202,64 @@ export class StageGateRunner {
     let pipelinePassed = true;
     let failedGateIndex = -1;
 
-    for (let i = 0; i < 5; i++) {
-      const gateNum = (i + 1) as GateNumber;
-      execution.stages[i].status = 'RUNNING';
-      execution.stages[i].startTime = Date.now();
-      this.emitTelemetry(ventureId, 'GATE_RUNNING', { gateId: gateNum, gateName: execution.stages[i].gateName });
+    try {
+      for (let i = 0; i < 5; i++) {
+        const gateNum = (i + 1) as GateNumber;
+        execution.stages[i].status = 'RUNNING';
+        execution.stages[i].startTime = Date.now();
+        this.emitTelemetry(ventureId, 'GATE_RUNNING', { gateId: gateNum, gateName: execution.stages[i].gateName });
 
-      let result: StageGateResult = await gateExecutors[gateNum](fullConfig);
+        let result: StageGateResult = await gateExecutors[gateNum](fullConfig);
 
-      // Bounded self-healing retry loop (up to 3 retries if failed)
-      let retryCount = 0;
-      const MAX_RETRIES = 3;
-      while (result.status === 'FAILED' && retryCount < MAX_RETRIES) {
-        retryCount++;
-        // Platform absorbs internal remediation COGS ($0.15 per retry)
-        const absorbedRetryCogs = execution.byokMode ? 0.0 : 0.15;
-        execution.absorbedPlatformCogsUsd = Number(
-          (execution.absorbedPlatformCogsUsd + absorbedRetryCogs).toFixed(4)
-        );
+        // Bounded self-healing retry loop (up to 3 retries if failed)
+        let retryCount = 0;
+        const MAX_RETRIES = 3;
+        while (result.status === 'FAILED' && retryCount < MAX_RETRIES) {
+          retryCount++;
+          // Platform absorbs internal remediation COGS ($0.15 per retry)
+          const absorbedRetryCogs = execution.byokMode ? 0.0 : 0.15;
+          execution.absorbedPlatformCogsUsd = Number(
+            (execution.absorbedPlatformCogsUsd + absorbedRetryCogs).toFixed(4)
+          );
 
-        this.emitTelemetry(ventureId, 'GATE_RETRYING', {
+          this.emitTelemetry(ventureId, 'GATE_RETRYING', {
+            gateId: gateNum,
+            retryCount,
+            absorbedCogs: execution.absorbedPlatformCogsUsd,
+          });
+
+          // Re-execute gate (unless simulation is permanent)
+          result = await gateExecutors[gateNum](fullConfig);
+          if (result.receipt) {
+            result.receipt.remediationAttempts = retryCount;
+          }
+        }
+
+        execution.stages[i] = result;
+        this.emitTelemetry(ventureId, 'GATE_COMPLETED', {
           gateId: gateNum,
-          retryCount,
-          absorbedCogs: execution.absorbedPlatformCogsUsd,
+          status: result.status,
+          durationMs: result.durationMs,
+          receipt: result.receipt,
         });
 
-        // Re-execute gate (unless simulation is permanent)
-        result = await gateExecutors[gateNum](fullConfig);
-        if (result.receipt) {
-          result.receipt.remediationAttempts = retryCount;
+        if (result.status === 'FAILED') {
+          pipelinePassed = false;
+          failedGateIndex = i;
+          break; // Halt subsequent gates
         }
       }
-
-      execution.stages[i] = result;
-      this.emitTelemetry(ventureId, 'GATE_COMPLETED', {
-        gateId: gateNum,
-        status: result.status,
-        durationMs: result.durationMs,
-        receipt: result.receipt,
-      });
-
-      if (result.status === 'FAILED') {
-        pipelinePassed = false;
-        failedGateIndex = i;
-        break; // Halt subsequent gates
+    } catch (unhandledErr: any) {
+      // Unhandled runtime exception in gate execution: fail pipeline and refund escrow
+      pipelinePassed = false;
+      if (failedGateIndex === -1) {
+        failedGateIndex = execution.stages.findIndex((s) => s.status === 'RUNNING');
+        if (failedGateIndex === -1) failedGateIndex = 0;
       }
+      execution.stages[failedGateIndex].status = 'FAILED';
+      execution.stages[failedGateIndex].diagnosticLogs.push(
+        `[CRITICAL_EXCEPTION] Unhandled pipeline error: ${unhandledErr?.message || unhandledErr}`
+      );
     }
 
     // Phase 2 Commit or Rollback

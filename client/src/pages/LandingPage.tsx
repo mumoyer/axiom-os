@@ -243,17 +243,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-16 sm:pt-20 sm:pb-24">
           <div className="text-center space-y-6 max-w-4xl mx-auto">
             
-            {/* Devtools Terminal Badge */}
-            <div className="inline-flex items-center space-x-2.5 px-3.5 py-1.5 rounded-md bg-[#0e1526] border border-slate-800 text-xs font-mono text-slate-300">
+            {/* Customer Assurance Badge */}
+            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#0e1526] border border-slate-800 text-xs text-slate-300 shadow-sm">
               <span className="flex h-2 w-2 relative">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
-              <span className="text-indigo-400 font-semibold">STAGEGATE.OS</span>
-              <span className="text-slate-600">/</span>
-              <span>AUTONOMOUS SIDE BUSINESS ENGINE</span>
-              <span className="text-slate-600">/</span>
-              <span className="text-emerald-400">ZERO TECH DEBT</span>
+              <span className="text-indigo-300 font-medium">Autonomous Side Business Engine</span>
+              <span className="text-slate-600">•</span>
+              <span className="text-emerald-400 font-medium">Zero Tech Debt & Zero Lock-In</span>
             </div>
 
             {/* Main Headline */}
@@ -266,7 +264,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
             {/* Subheadline */}
             <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed">
-              Not a get-rich-quick scheme. A real, verified software business built and maintained autonomously on your personal GitHub with a mathematical <span className="text-emerald-400 font-semibold">Zero-Charge Failure Guarantee</span>.
+              Not a get-rich-quick scheme. A real software business built and maintained on your personal GitHub with our <span className="text-emerald-400 font-semibold">Pay-Only-For-Working-Code Guarantee</span>—zero charges for broken builds or AI syntax errors.
             </p>
 
             {/* Persona Guidance Banner */}
@@ -305,7 +303,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 className="w-full sm:w-auto px-5 py-3.5 rounded-lg text-xs font-mono font-semibold text-indigo-300 bg-indigo-950/40 hover:bg-indigo-900/60 border border-indigo-700/60 transition-all flex items-center justify-center space-x-2"
               >
                 <Sparkles className="w-4 h-4 text-indigo-400" />
-                <span>EXPLORE DUMMY SCENARIOS</span>
+                <span>EXPLORE EXAMPLE SCENARIOS</span>
               </a>
             </div>
 
@@ -325,7 +323,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </span>
               <span className="flex items-center space-x-1.5">
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Zero-Charge Failure Guarantee ($0.00)</span>
+                <span>Pay-Only-For-Working-Code ($0.00 On Failed Builds)</span>
               </span>
             </div>
           </div>
@@ -497,7 +495,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
             </div>
 
-            {/* Bento Block 2: Zero-Charge Failure Guarantee */}
+            {/* Bento Block 2: Pay-Only-For-Working-Code Guarantee */}
             <div className="bento-card p-6 sm:p-7 flex flex-col justify-between space-y-6">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -508,16 +506,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     PILLAR 02
                   </span>
                 </div>
-                <h3 className="text-lg font-bold text-white tracking-tight">Zero-Charge Failure Guarantee</h3>
+                <h3 className="text-lg font-bold text-white tracking-tight">Pay-Only-For-Working-Code</h3>
                 <div className="text-xs font-semibold text-emerald-300">"You never pay for AI mistakes or syntax loops."</div>
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  Competitors debit your card for agent syntax retries and broken loops. Our Two-Phase Commit (2PC) escrow holds credits in trust. If any test fails, 100% of credits are refunded instantly. Net cost: $0.00.
+                  Competitors debit your card for agent syntax retries and broken loops. Our Two-Phase Commit (2PC) escrow holds credits in trust. If any build test fails, 100% of credits are refunded instantly. Net cost: $0.00.
                 </p>
               </div>
 
               <div className="p-2.5 rounded-lg bg-[#060911] border border-slate-800 font-mono text-[11px] text-slate-400 flex items-center justify-between">
-                <span>User Failure Liability</span>
-                <span className="text-emerald-400 font-bold">$0.00 (Invariant ΔB == 0)</span>
+                <span>Failed Build Liability</span>
+                <span className="text-emerald-400 font-bold">$0.00 (100% Escrow Refund)</span>
               </div>
             </div>
 
