@@ -54,30 +54,30 @@ body {
   background: #334155;
 }
 
-/* Gradients */
-.text-gradient-indigo {
-  background: linear-gradient(135deg, #A5B4FC 0%, #6366F1 50%, #38BDF8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Bento Grid & Devtools Console Surface Foundations */
+.bento-card {
+  background-color: #0b0f19;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
-.text-gradient-cyan {
-  background: linear-gradient(135deg, #67E8F9 0%, #06B6D4 50%, #3B82F6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.bento-card:hover {
+  border-color: #334155;
+  background-color: #0d1322;
 }
 
-.bg-grid-pattern {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
-  background-size: 24px 24px;
+.terminal-window {
+  background-color: #060911;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
 }
 
-/* Animations */
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
-}
-
-.animate-pulse-glow {
-  animation: pulseGlow 3s infinite ease-in-out;
+/* Subtle Technical Grid Lines */
+.bg-tech-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
 }

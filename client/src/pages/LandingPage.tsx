@@ -20,6 +20,12 @@ import {
   ChevronRight,
   Copy,
   Check,
+  Activity,
+  Code2,
+  Database,
+  ExternalLink,
+  Sliders,
+  Filter,
 } from 'lucide-react';
 
 interface LandingPageProps {
@@ -227,40 +233,46 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#080C14] text-slate-100 selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-[#070B12] text-slate-100 selection:bg-indigo-600 selection:text-white">
       
-      {/* Background Gradient Mesh */}
-      <div className="relative isolate overflow-hidden">
-        <div className="absolute inset-0 bg-grid-pattern opacity-60 pointer-events-none" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-indigo-600/15 via-cyan-500/10 to-transparent blur-3xl pointer-events-none -z-10" />
-
+      {/* Subtle Engineering Background Pattern */}
+      <div className="relative isolate overflow-hidden bg-tech-grid">
+        
         {/* HERO SECTION */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20 sm:pt-24 sm:pb-28">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-16 sm:pt-20 sm:pb-24">
           <div className="text-center space-y-6 max-w-4xl mx-auto">
             
-            {/* Pill Tag */}
-            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-indigo-500/30 text-xs text-indigo-300 shadow-glow-indigo">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-              <span className="font-semibold tracking-wide">The Autonomous Business Operating System</span>
-              <span className="text-slate-500">|</span>
-              <span className="text-slate-400">Zero Technical Debt</span>
+            {/* Devtools Terminal Badge */}
+            <div className="inline-flex items-center space-x-2.5 px-3.5 py-1.5 rounded-md bg-[#0e1526] border border-slate-800 text-xs font-mono text-slate-300">
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span className="text-indigo-400 font-semibold">STAGEGATE.OS</span>
+              <span className="text-slate-600">/</span>
+              <span>TRI-PLANE ENGINE</span>
+              <span className="text-slate-600">/</span>
+              <span className="text-emerald-400">ZERO TECH DEBT</span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.1]">
-              From Validated Idea to Live Venture in Hours.{' '}
-              <span className="text-gradient-indigo">Zero Technical Debt.</span>
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.08] font-sans">
+              Autonomous Venture Engine with{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-indigo-100 to-sky-300">
+                Deterministic Stage Gates
+              </span>
             </h1>
 
             {/* Subheadline */}
-            <p className="text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto font-normal leading-relaxed">
-              Deterministic stage-gates, 100% full Git ejection, and a strict <span className="text-slate-200 font-semibold">Zero-Charge Failure Guarantee</span>. Never pay for broken code or hallucinated agent loops.
+            <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed">
+              Playwright DOM assertions, RFC 6125 TLS, Quad-DoH DNS quorum, and a cryptographic{' '}
+              <span className="text-slate-200 font-mono font-medium">Zero-Charge Failure Escrow</span>. Never pay for broken code or hallucinated agent loops.
             </p>
 
             {/* Persona Guidance Banner */}
-            <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-xs text-slate-300 flex items-center justify-center space-x-2 max-w-lg mx-auto">
-              <span className="text-indigo-400 font-semibold">Optimized for:</span>
-              <span>
+            <div className="p-2.5 rounded-lg bg-[#0b101d] border border-slate-800/80 text-xs text-slate-300 flex items-center justify-center space-x-2 max-w-xl mx-auto font-mono">
+              <span className="text-indigo-400 font-semibold">TARGET ARCHITECTURE:</span>
+              <span className="text-slate-300">
                 {selectedPersona === 'newbie' && 'Aspiring Founders — Guardrailed no-code launchpad & automated validation'}
                 {selectedPersona === 'serial' && 'Serial Entrepreneurs — Headless CLI, BYOK wholesale tokens & 1-click Git ejection'}
                 {selectedPersona === 'enterprise' && 'Corporate Studios — Capital tranche governance, SAML SSO & SOC2 audit trails'}
@@ -268,78 +280,84 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
 
             {/* Hero CTAs */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <button
                 onClick={() => onNavigate('/grader')}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 shadow-glow-indigo transition-all flex items-center justify-center space-x-2"
+                className="w-full sm:w-auto px-6 py-3 rounded-lg text-xs font-mono font-semibold text-slate-950 bg-white hover:bg-slate-200 transition-all flex items-center justify-center space-x-2 border border-slate-300"
               >
-                <Sparkles className="w-4 h-4 text-cyan-200" />
-                <span>Validate Your Idea Free (No Credit Card)</span>
-                <ArrowRight className="w-4 h-4" />
+                <Code2 className="w-4 h-4 text-slate-950" />
+                <span>EXECUTE FREE IDEA AUDIT</span>
+                <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
               </button>
 
               <button
                 onClick={() => onNavigate('/checkout?plan=serial')}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-xl text-sm font-semibold text-slate-300 bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 hover:text-white transition-all flex items-center justify-center space-x-2"
+                className="w-full sm:w-auto px-6 py-3 rounded-lg text-xs font-mono font-semibold text-slate-200 bg-[#0c1220] hover:bg-[#111a30] border border-slate-700/80 transition-all flex items-center justify-center space-x-2"
               >
-                <span>Launch Venture ($149/mo)</span>
+                <Terminal className="w-4 h-4 text-indigo-400" />
+                <span>LAUNCH VENTURE ($149/MO)</span>
               </button>
             </div>
 
-            <div className="flex items-center justify-center space-x-6 text-xs text-slate-500 pt-2">
+            {/* Architectural Trust Indicators */}
+            <div className="flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs text-slate-400 pt-2 font-mono">
               <span className="flex items-center space-x-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>0.0% Revenue Tax</span>
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span>0.0% Perpetual Revenue Tax</span>
               </span>
               <span className="flex items-center space-x-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>100% Code Ownership</span>
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span>100% Dual-Push Git Ejection</span>
               </span>
               <span className="flex items-center space-x-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>2PC Escrow Protection</span>
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span>2PC Escrow: Invariant ΔB == 0.00</span>
               </span>
             </div>
           </div>
 
-          {/* INTERACTIVE STAGE-GATE DEMO WIDGET */}
-          <div className="mt-14 max-w-4xl mx-auto rounded-2xl border border-slate-800 bg-slate-900/90 shadow-2xl p-6 sm:p-8 backdrop-blur-xl">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
-              <div>
-                <div className="flex items-center space-x-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                  <h3 className="text-base font-bold text-white font-mono tracking-tight">
-                    TRI-PLANE DETERMINISTIC STAGE-GATE PIPELINE
-                  </h3>
+          {/* INTERACTIVE STAGE-GATE DEVTOOLS CONSOLE */}
+          <div className="mt-12 max-w-5xl mx-auto terminal-window overflow-hidden">
+            {/* Terminal Top Window Bar */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 py-3 bg-[#0a0f1d] border-b border-slate-800 text-xs font-mono">
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-1.5">
+                  <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+                  <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+                  <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
                 </div>
-                <p className="text-xs text-slate-400 mt-1">
-                  Synthetic Playwright, RFC 6125 TLS, Quad-DoH quorum & Stripe test-clock settlement in action
-                </p>
+                <span className="text-slate-400">stagegate-console --pipeline=tri-plane-deterministic</span>
               </div>
 
-              {/* Demo Action Buttons */}
+              {/* Simulation Controls */}
               <div className="flex items-center space-x-2">
+                <span className="text-[11px] text-slate-500 mr-1 hidden md:inline">TEST BENCH:</span>
                 <button
                   disabled={simRunning}
                   onClick={() => runSimulation('pass')}
-                  className="px-3.5 py-1.5 text-xs font-semibold text-emerald-300 bg-emerald-950/60 border border-emerald-700/50 hover:bg-emerald-900/60 rounded-lg transition-colors flex items-center space-x-1.5 disabled:opacity-50"
+                  className="px-3 py-1 text-xs font-mono font-medium text-emerald-300 bg-emerald-950/50 border border-emerald-700/60 hover:bg-emerald-900/60 rounded transition-colors flex items-center space-x-1.5 disabled:opacity-50"
                 >
-                  <RefreshCw className={`w-3.5 h-3.5 ${simRunning ? 'animate-spin' : ''}`} />
-                  <span>Simulate Verified Pass</span>
+                  <RefreshCw className={`w-3 h-3 ${simRunning && simMode === 'pass' ? 'animate-spin' : ''}`} />
+                  <span>PASS_SCENARIO</span>
                 </button>
                 <button
                   disabled={simRunning}
                   onClick={() => runSimulation('fail_refund')}
-                  className="px-3.5 py-1.5 text-xs font-semibold text-rose-300 bg-rose-950/60 border border-rose-700/50 hover:bg-rose-900/60 rounded-lg transition-colors flex items-center space-x-1.5 disabled:opacity-50"
+                  className="px-3 py-1 text-xs font-mono font-medium text-rose-300 bg-rose-950/50 border border-rose-700/60 hover:bg-rose-900/60 rounded transition-colors flex items-center space-x-1.5 disabled:opacity-50"
                 >
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Simulate $0.00 Refund</span>
+                  <ShieldCheck className="w-3 h-3" />
+                  <span>REFUND_TEST ($0.00)</span>
                 </button>
               </div>
             </div>
 
-            {/* Stepper Grid */}
-            <div className="mt-6 space-y-3">
+            {/* Terminal Body with Monospaced Telemetry */}
+            <div className="p-4 sm:p-6 bg-[#060911] space-y-3 font-mono">
+              <div className="flex items-center justify-between text-slate-500 text-[11px] pb-1 border-b border-slate-900">
+                <span>GATE / TELEMETRY SPECIFICATION</span>
+                <span className="hidden sm:inline">VERIFICATION STATUS</span>
+              </div>
+
               {demoGates.map((gate, idx) => {
                 const isPassed = idx <= activeGateIndex && (simMode === 'pass' || idx < 1);
                 const isCurrent = idx === activeGateIndex && simRunning;
@@ -348,249 +366,299 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 return (
                   <div
                     key={gate.id}
-                    className={`flex items-start sm:items-center justify-between p-3.5 rounded-xl border transition-all ${
+                    className={`flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg border transition-all gap-2 text-xs ${
                       isFailed
-                        ? 'bg-rose-950/40 border-rose-700/70'
+                        ? 'bg-rose-950/30 border-rose-800/80 text-rose-200'
                         : isPassed
-                        ? 'bg-slate-900/90 border-slate-700/70'
+                        ? 'bg-[#090e1c] border-slate-800/90 text-slate-300'
                         : isCurrent
-                        ? 'bg-indigo-950/40 border-indigo-500'
-                        : 'bg-slate-950/60 border-slate-800/60 opacity-60'
+                        ? 'bg-indigo-950/30 border-indigo-500/70 text-indigo-200'
+                        : 'bg-[#060911] border-slate-900 text-slate-600'
                     }`}
                   >
-                    <div className="flex items-start sm:items-center space-x-3.5">
-                      <div
-                        className={`flex items-center justify-center w-7 h-7 rounded-lg text-xs font-mono font-bold ${
+                    <div className="flex items-start sm:items-center space-x-3">
+                      <span
+                        className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
                           isFailed
                             ? 'bg-rose-600 text-white'
                             : isPassed
-                            ? 'bg-emerald-500 text-slate-950'
+                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
                             : isCurrent
-                            ? 'bg-indigo-600 text-white animate-pulse'
-                            : 'bg-slate-800 text-slate-400'
+                            ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/40 animate-pulse'
+                            : 'bg-slate-900 text-slate-600'
                         }`}
                       >
-                        {isFailed ? '!' : isPassed ? '✓' : gate.id}
-                      </div>
+                        {isFailed ? 'ERR' : isPassed ? 'PASS' : isCurrent ? 'RUN' : `G0${gate.id}`}
+                      </span>
 
                       <div>
-                        <div className="text-xs sm:text-sm font-semibold text-slate-200">
-                          {gate.name}
-                        </div>
-                        <div className="text-[11px] text-slate-400 font-mono">
-                          {isFailed ? 'Assertion breach (Container latency > 300ms SLA). 2PC Escrow refunded 100% of credits.' : gate.detail}
+                        <div className="font-semibold text-slate-200">{gate.name}</div>
+                        <div className="text-[11px] text-slate-400 mt-0.5">
+                          {isFailed
+                            ? 'Assertion breached: Container latency > 300ms SLA. 2PC Escrow triggered automatic rollback.'
+                            : gate.detail}
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center space-x-3 text-right shrink-0">
-                      <span className="font-mono text-xs text-slate-400 hidden sm:inline">
-                        {gate.duration}
-                      </span>
+                    <div className="flex items-center space-x-3 text-right self-end sm:self-center shrink-0">
+                      <span className="text-[11px] text-slate-500">{gate.duration}</span>
                       <span
-                        className={`px-2 py-0.5 text-[10px] font-bold rounded uppercase ${
+                        className={`px-2 py-0.5 text-[10px] font-bold rounded ${
                           isFailed
-                            ? 'bg-rose-950 text-rose-300 border border-rose-700/50'
+                            ? 'bg-rose-900/60 text-rose-300 border border-rose-700/60'
                             : isPassed
-                            ? 'bg-emerald-950 text-emerald-300 border border-emerald-700/50'
+                            ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-800/60'
                             : isCurrent
-                            ? 'bg-indigo-950 text-indigo-300 border border-indigo-700/50 animate-pulse'
-                            : 'bg-slate-800 text-slate-400'
+                            ? 'bg-indigo-950/60 text-indigo-300 border border-indigo-700/60 animate-pulse'
+                            : 'bg-slate-900 text-slate-600'
                         }`}
                       >
-                        {isFailed ? 'ROLLED BACK ($0.00)' : isPassed ? 'VERIFIED PASS' : isCurrent ? 'RUNNING PROBE' : 'QUEUED'}
+                        {isFailed ? 'ROLLED BACK ($0.00)' : isPassed ? 'VERIFIED_OK' : isCurrent ? 'EXECUTING...' : 'PENDING'}
                       </span>
                     </div>
                   </div>
                 );
               })}
-            </div>
 
-            {/* Escrow Proof Footnote */}
-            <div className="mt-5 p-3 rounded-lg bg-slate-950/80 border border-slate-800 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 font-mono gap-2">
-              <div className="flex items-center space-x-2">
-                <Lock className="w-3.5 h-3.5 text-indigo-400" />
-                <span>2PC Escrow State: {simMode === 'fail_refund' && !simRunning ? 'REFUNDED_ZERO_CHARGE' : 'COMMITTED_SETTLED'}</span>
-              </div>
-              <div className="text-emerald-400 font-semibold">
-                User Balance Debit: $0.00 on Failure | Delta B == 0.00
+              {/* Cryptographic Escrow Proof Box */}
+              <div className="mt-4 p-3 rounded-lg bg-[#080d19] border border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-2">
+                <div className="flex items-center space-x-2">
+                  <Lock className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>2PC Escrow Invariant:</span>
+                  <span className="text-slate-200 font-bold">
+                    {simMode === 'fail_refund' && !simRunning ? 'ESCROW_ABORT_ROLLBACK' : 'ESCROW_SETTLED_SUCCESS'}
+                  </span>
+                </div>
+                <div className="text-emerald-400 font-mono text-[11px] bg-emerald-950/30 px-2.5 py-1 rounded border border-emerald-800/40">
+                  User Balance Liability: $0.00 | Invariant ΔB == 0.00
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* 4 ANTI-FRAGILE GUARANTEES SECTION */}
+        {/* BENTO GRID VALUE ARCHITECTURE SECTION */}
         <section id="guarantees" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-slate-800/80">
-          <div className="text-center max-w-3xl mx-auto space-y-4 mb-14">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-indigo-400">
-              ANTI-FRAGILE ARCHITECTURE
+          <div className="space-y-3 mb-12">
+            <div className="text-xs font-mono uppercase tracking-widest text-indigo-400 flex items-center space-x-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-indigo-500"></span>
+              <span>BENTO ARCHITECTURE SPECIFICATION</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+              Engineered for Zero Technical Debt
             </h2>
-            <h3 className="text-3xl sm:text-4xl font-extrabold text-white">
-              The 4 Structural Guarantees
-            </h3>
-            <p className="text-sm text-slate-400 leading-relaxed">
-              We inverted competitor failure modes into mathematical, programmatic guarantees.
+            <p className="text-sm text-slate-400 max-w-2xl leading-relaxed">
+              We eliminated the failure modes of AI wrappers and consulting agencies through mathematical bounds, clean Git ejection, and deterministic verification.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Guarantee 1 */}
-            <div className="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 hover:border-indigo-500/40 transition-all space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-indigo-950/80 border border-indigo-700/50 flex items-center justify-center text-indigo-400">
-                <ShieldCheck className="w-5 h-5" />
+          {/* Bento Modular Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            
+            {/* Bento Block 1: Large (Span 2) */}
+            <div className="md:col-span-2 bento-card p-6 sm:p-7 flex flex-col justify-between space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-9 h-9 rounded-lg bg-[#0e1628] border border-slate-800 flex items-center justify-center text-indigo-400">
+                    <ShieldCheck className="w-5 h-5" />
+                  </div>
+                  <span className="text-[11px] font-mono text-emerald-400 px-2 py-0.5 rounded bg-emerald-950/40 border border-emerald-800/40">
+                    INVARIANT ΔB == 0.00
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-white tracking-tight">Zero-Charge Failure Escrow</h3>
+                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                  Competitors charge you per credit while agent loops crash or hallucinate. Stage Gate OS wraps every build, health-check, and synthetic probe in a 2-Phase Commit (2PC) credit escrow. If any assertion fails, 100% of credits are rolled back instantly.
+                </p>
               </div>
-              <h4 className="text-base font-bold text-white">1. Zero-Charge Failure Guarantee</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Cryptographic 2PC credit escrow boundary. If any build, container health-check, or agent loop fails, 100% of credits are immediately refunded. <span className="text-indigo-300 font-mono font-semibold">Invariant ΔB == 0.00</span>.
-              </p>
-              <div className="pt-2 text-[11px] text-emerald-400 font-mono">
-                ✓ Up to 3 self-healing retries absorbed as platform COGS
+
+              {/* Code Snippet in Bento Card */}
+              <div className="p-3 rounded-lg bg-[#060911] border border-slate-800 font-mono text-[11px] text-slate-400 space-y-1">
+                <div className="text-slate-500">// Atomic Escrow Invariant Check</div>
+                <div>assert(wallet.preHold == wallet.postRollback);</div>
+                <div className="text-emerald-400">✓ Platform absorbs self-healing retries (up to 3x) as internal COGS</div>
               </div>
             </div>
 
-            {/* Guarantee 2 */}
-            <div className="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 hover:border-indigo-500/40 transition-all space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-cyan-950/80 border border-cyan-700/50 flex items-center justify-center text-cyan-400">
-                <CheckCircle2 className="w-5 h-5" />
+            {/* Bento Block 2: Standard (Span 1 or 2) */}
+            <div className="md:col-span-1 lg:col-span-2 bento-card p-6 sm:p-7 flex flex-col justify-between space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-9 h-9 rounded-lg bg-[#0e1628] border border-slate-800 flex items-center justify-center text-cyan-400">
+                    <GitBranch className="w-5 h-5" />
+                  </div>
+                  <span className="text-[11px] font-mono text-cyan-400 px-2 py-0.5 rounded bg-cyan-950/40 border border-cyan-800/40">
+                    ZERO LOCK-IN
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-white tracking-tight">100% Dual-Push Git Ejection</h3>
+                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                  Never held hostage by proprietary runtimes. Every verified commit is dual-pushed directly to your personal or organization GitHub repository as pure Next.js 15, Supabase, and Tailwind CSS.
+                </p>
               </div>
-              <h4 className="text-base font-bold text-white">2. Deterministic Stage Gates</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                No false "Done" illusions. Every milestone executes synthetic Playwright browser tests, live TLS 1.3 socket probes, Quad-DoH DNS consensus, and Stripe test clocks before verification.
-              </p>
-              <div className="pt-2 text-[11px] text-cyan-400 font-mono">
-                ✓ True p95 latency &lt; 300ms SLA enforced
+
+              <div className="p-3 rounded-lg bg-[#060911] border border-slate-800 font-mono text-[11px] text-slate-400 flex items-center justify-between">
+                <span className="text-slate-300">git remote -v</span>
+                <span className="text-indigo-400">github.com/user/venture-prod</span>
               </div>
             </div>
 
-            {/* Guarantee 3 */}
-            <div className="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 hover:border-indigo-500/40 transition-all space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-violet-950/80 border border-violet-700/50 flex items-center justify-center text-violet-400">
-                <GitBranch className="w-5 h-5" />
+            {/* Bento Block 3: Standard (Span 2) */}
+            <div className="md:col-span-2 bento-card p-6 sm:p-7 flex flex-col justify-between space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-9 h-9 rounded-lg bg-[#0e1628] border border-slate-800 flex items-center justify-center text-emerald-400">
+                    <DollarSign className="w-5 h-5" />
+                  </div>
+                  <span className="text-[11px] font-mono text-emerald-400 px-2 py-0.5 rounded bg-emerald-950/40 border border-emerald-800/40">
+                    0.0% REVENUE TAX
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-white tracking-tight">Strict 0.0% Perpetual Revenue Tax</h3>
+                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                  Unlike platforms that demand 20% to 50% of your lifetime gross revenue or agency studios that take 25% equity, Stage Gate OS operates on predictable, transparent flat SaaS tiers. You keep 100% of your enterprise value.
+                </p>
               </div>
-              <h4 className="text-base font-bold text-white">3. 100% Full Git Ejection</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Never held hostage. Continuous dual-push Git engine delivers pure, idiomatic Next.js 15 + Supabase + Prisma code directly to your personal GitHub repo with zero proprietary lock-in.
-              </p>
-              <div className="pt-2 text-[11px] text-violet-300 font-mono">
-                ✓ Clean AST scan guarantees 0 proprietary imports
+
+              <div className="grid grid-cols-2 gap-2 text-center text-xs font-mono">
+                <div className="p-2 rounded bg-[#060911] border border-slate-800">
+                  <div className="text-slate-500">Ad Spend Markup</div>
+                  <div className="text-emerald-400 font-bold mt-0.5">0% Direct OAuth</div>
+                </div>
+                <div className="p-2 rounded bg-[#060911] border border-slate-800">
+                  <div className="text-slate-500">Equity Taken</div>
+                  <div className="text-emerald-400 font-bold mt-0.5">0.0% Founder Retained</div>
+                </div>
               </div>
             </div>
 
-            {/* Guarantee 4 */}
-            <div className="p-6 rounded-2xl bg-slate-900/70 border border-slate-800 hover:border-indigo-500/40 transition-all space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-700/50 flex items-center justify-center text-emerald-400">
-                <DollarSign className="w-5 h-5" />
+            {/* Bento Block 4: Standard (Span 2) */}
+            <div className="md:col-span-2 bento-card p-6 sm:p-7 flex flex-col justify-between space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-9 h-9 rounded-lg bg-[#0e1628] border border-slate-800 flex items-center justify-center text-indigo-400">
+                    <Activity className="w-5 h-5" />
+                  </div>
+                  <span className="text-[11px] font-mono text-indigo-400 px-2 py-0.5 rounded bg-indigo-950/40 border border-indigo-800/40">
+                    QUAD-DOH QUORUM
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-white tracking-tight">Deterministic Stage Gates 1–5</h3>
+                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                  No false "Done" illusions. Every production milestone validates AST syntax budgets (&lt;250KB), 15/15 container health probes (p95 &lt; 18ms), Quad-DoH DNS consensus (Cloudflare, Google, AliDNS, AdGuard), and simulated +30d Stripe clocks.
+                </p>
               </div>
-              <h4 className="text-base font-bold text-white">4. Transparent SaaS Economics</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Strict 0.0% perpetual revenue tax and 0.0% markup on ad spend. You retain 100% of customer revenue and link directly to your Meta/Google ads account with zero pass-through fees.
-              </p>
-              <div className="pt-2 text-[11px] text-emerald-400 font-mono">
-                ✓ BYOK mode: 0% token markup wholesale rates
+
+              <div className="p-3 rounded-lg bg-[#060911] border border-slate-800 font-mono text-[11px] text-slate-400 flex items-center justify-between">
+                <span className="text-slate-400">Synthetic SLA Verification</span>
+                <span className="text-emerald-400">100% Passed (5/5 Gates)</span>
               </div>
             </div>
+
           </div>
         </section>
 
-        {/* 12-DIMENSION MASTER COMPETITIVE MATRIX */}
+        {/* 12-DIMENSION ARCHITECTURE MATRIX SECTION */}
         <section id="matrix" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-slate-800/80">
-          <div className="text-center max-w-3xl mx-auto space-y-4 mb-10">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-indigo-400">
-              UNAPOLOGETIC COMPARISON
-            </h2>
-            <h3 className="text-3xl sm:text-4xl font-extrabold text-white">
+          <div className="space-y-3 mb-10">
+            <div className="text-xs font-mono uppercase tracking-widest text-indigo-400 flex items-center space-x-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-indigo-500"></span>
+              <span>UNAPOLOGETIC ARCHITECTURAL COMPARISON</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
               The End of Exploitative Venture Platforms
-            </h3>
-            <p className="text-sm text-slate-400 leading-relaxed">
+            </h2>
+            <p className="text-sm text-slate-400 max-w-2xl leading-relaxed">
               Why founders migrate from brittle multi-agent toys (Polsia), fragmented IDE tools (Cursor/Lovable), and $1M consulting retainers to Stage Gate OS.
             </p>
 
             {/* Filter Tabs */}
-            <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+            <div className="flex flex-wrap items-center gap-2 pt-3 font-mono">
               <button
                 onClick={() => setMatrixFilter('all')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
                   matrixFilter === 'all'
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+                    ? 'bg-slate-200 text-slate-950 font-bold'
+                    : 'bg-[#0a0f1d] text-slate-400 hover:text-slate-200 border border-slate-800'
                 }`}
               >
-                All 12 Dimensions
+                ALL_12_DIMENSIONS
               </button>
               <button
                 onClick={() => setMatrixFilter('polsia')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
                   matrixFilter === 'polsia'
-                    ? 'bg-rose-950 text-rose-300 border border-rose-700/60'
-                    : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+                    ? 'bg-rose-950/80 text-rose-200 border border-rose-700'
+                    : 'bg-[#0a0f1d] text-slate-400 hover:text-slate-200 border border-slate-800'
                 }`}
               >
-                vs Polsia (Walled Garden)
+                VS_POLSIA (WALLED_GARDEN)
               </button>
               <button
                 onClick={() => setMatrixFilter('devtools')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
                   matrixFilter === 'devtools'
-                    ? 'bg-amber-950 text-amber-300 border border-amber-700/60'
-                    : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+                    ? 'bg-amber-950/80 text-amber-200 border border-amber-700'
+                    : 'bg-[#0a0f1d] text-slate-400 hover:text-slate-200 border border-slate-800'
                 }`}
               >
-                vs Cursor / Lovable (IDE Tools)
+                VS_CURSOR_LOVABLE (IDE_TOOLS)
               </button>
               <button
                 onClick={() => setMatrixFilter('studios')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
                   matrixFilter === 'studios'
-                    ? 'bg-slate-800 text-slate-200 border border-slate-700'
-                    : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+                    ? 'bg-slate-800 text-slate-100 border border-slate-600'
+                    : 'bg-[#0a0f1d] text-slate-400 hover:text-slate-200 border border-slate-800'
                 }`}
               >
-                vs Venture Studios ($1M Retainers)
+                VS_VENTURE_STUDIOS ($1M_RETAINERS)
               </button>
             </div>
           </div>
 
-          {/* Master Comparison Table */}
-          <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl">
+          {/* Master Comparison Table with Clean Bento Framing */}
+          <div className="overflow-x-auto rounded-xl border border-slate-800 bg-[#080d19]">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-slate-800 bg-slate-950/80">
-                  <th className="py-4 px-4 sm:px-6 font-bold text-slate-300 uppercase tracking-wider w-1/4">
+                <tr className="border-b border-slate-800 bg-[#060a14] font-mono">
+                  <th className="py-3.5 px-4 sm:px-6 font-semibold text-slate-400 uppercase tracking-wider w-1/4">
                     Dimension
                   </th>
-                  <th className="py-4 px-4 sm:px-6 font-bold text-indigo-400 uppercase tracking-wider bg-indigo-950/30 border-x border-indigo-800/40 w-1/4">
-                    <div className="flex items-center space-x-1.5">
-                      <Cpu className="w-4 h-4 text-indigo-400" />
+                  <th className="py-3.5 px-4 sm:px-6 font-semibold text-indigo-300 uppercase tracking-wider bg-[#0c1428] border-x border-slate-800 w-1/4">
+                    <div className="flex items-center space-x-2">
+                      <Cpu className="w-3.5 h-3.5 text-indigo-400" />
                       <span>Stage Gate OS (Tri-Plane)</span>
                     </div>
                   </th>
                   {(matrixFilter === 'all' || matrixFilter === 'polsia') && (
-                    <th className="py-4 px-4 sm:px-6 font-bold text-rose-400 uppercase tracking-wider w-1/4">
+                    <th className="py-3.5 px-4 sm:px-6 font-semibold text-rose-400 uppercase tracking-wider w-1/4">
                       Polsia (God Mode Loop)
                     </th>
                   )}
                   {(matrixFilter === 'all' || matrixFilter === 'devtools') && (
-                    <th className="py-4 px-4 sm:px-6 font-bold text-amber-400 uppercase tracking-wider w-1/4">
+                    <th className="py-3.5 px-4 sm:px-6 font-semibold text-amber-400 uppercase tracking-wider w-1/4">
                       AI Dev Tools (Cursor / Lovable)
                     </th>
                   )}
                   {(matrixFilter === 'all' || matrixFilter === 'studios') && (
-                    <th className="py-4 px-4 sm:px-6 font-bold text-slate-400 uppercase tracking-wider w-1/4">
+                    <th className="py-3.5 px-4 sm:px-6 font-semibold text-slate-400 uppercase tracking-wider w-1/4">
                       Corporate Venture Studios
                     </th>
                   )}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 font-sans">
+              <tbody className="divide-y divide-slate-800/80">
                 {competitiveDimensions.map((item, idx) => (
-                  <tr key={item.id} className={idx % 2 === 0 ? 'bg-slate-900/30' : 'bg-transparent'}>
+                  <tr key={item.id} className={idx % 2 === 0 ? 'bg-[#080d19]' : 'bg-[#060a14]'}>
                     <td className="py-4 px-4 sm:px-6 font-medium text-slate-200">
                       <div className="font-semibold text-slate-100">{item.name}</div>
                     </td>
 
                     {/* Stage Gate OS Column */}
-                    <td className="py-4 px-4 sm:px-6 bg-indigo-950/20 border-x border-indigo-800/30">
-                      <div className="space-y-1">
+                    <td className="py-4 px-4 sm:px-6 bg-[#0c1428]/60 border-x border-slate-800">
+                      <div className="space-y-1.5">
                         <div>{getTagBadge(item.axiom.tag)}</div>
                         <div className="text-slate-100 font-medium leading-relaxed">
                           {item.axiom.text}
@@ -601,7 +669,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     {/* Polsia Column */}
                     {(matrixFilter === 'all' || matrixFilter === 'polsia') && (
                       <td className="py-4 px-4 sm:px-6 text-slate-300">
-                        <div className="space-y-1">
+                        <div className="space-y-1.5">
                           <div>{getTagBadge(item.polsia.tag)}</div>
                           <div className="text-slate-400 leading-relaxed">{item.polsia.text}</div>
                         </div>
@@ -611,7 +679,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     {/* Dev Tools Column */}
                     {(matrixFilter === 'all' || matrixFilter === 'devtools') && (
                       <td className="py-4 px-4 sm:px-6 text-slate-300">
-                        <div className="space-y-1">
+                        <div className="space-y-1.5">
                           <div>{getTagBadge(item.devtools.tag)}</div>
                           <div className="text-slate-400 leading-relaxed">{item.devtools.text}</div>
                         </div>
@@ -621,7 +689,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     {/* Venture Studios Column */}
                     {(matrixFilter === 'all' || matrixFilter === 'studios') && (
                       <td className="py-4 px-4 sm:px-6 text-slate-300">
-                        <div className="space-y-1">
+                        <div className="space-y-1.5">
                           <div>{getTagBadge(item.studios.tag)}</div>
                           <div className="text-slate-400 leading-relaxed">{item.studios.text}</div>
                         </div>
@@ -634,169 +702,170 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
         </section>
 
-        {/* 3 PRICING TIERS SECTION */}
+        {/* 3 PRICING TIERS SECTION (BENTO CARDS) */}
         <section id="pricing" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-slate-800/80">
-          <div className="text-center max-w-3xl mx-auto space-y-4 mb-12">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-indigo-400">
-              TRANSPARENT VALUE PRICING
+          <div className="space-y-3 mb-12">
+            <div className="text-xs font-mono uppercase tracking-widest text-indigo-400 flex items-center space-x-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-indigo-500"></span>
+              <span>TRANSPARENT UNIT ECONOMICS</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+              Zero Hidden Taxes. Wholesale Token Pricing.
             </h2>
-            <h3 className="text-3xl sm:text-4xl font-extrabold text-white">
-              Zero Hidden Taxes. Wholesale Token Unit Economics.
-            </h3>
-            <p className="text-sm text-slate-400 leading-relaxed">
-              Choose the right tier for your venture velocity. Switch or cancel anytime. All plans backed by the strict Zero-Charge Failure Guarantee.
+            <p className="text-sm text-slate-400 max-w-2xl leading-relaxed">
+              Choose the tier calibrated to your venture velocity. Switch or cancel anytime. All plans backed by the strict Zero-Charge Failure Guarantee.
             </p>
 
             {/* Monthly / Annual Toggle */}
-            <div className="inline-flex items-center p-1 rounded-xl bg-slate-900 border border-slate-800 mt-4">
+            <div className="inline-flex items-center p-1 rounded-lg bg-[#0a0f1d] border border-slate-800 mt-2 font-mono">
               <button
                 onClick={() => setBillingInterval('monthly')}
-                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-3.5 py-1.5 rounded text-xs transition-all ${
                   billingInterval === 'monthly'
-                    ? 'bg-indigo-600 text-white shadow-sm'
+                    ? 'bg-slate-200 text-slate-950 font-bold shadow-sm'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                Monthly Billing
+                MONTHLY
               </button>
               <button
                 onClick={() => setBillingInterval('annual')}
-                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
+                className={`px-3.5 py-1.5 rounded text-xs transition-all flex items-center space-x-1.5 ${
                   billingInterval === 'annual'
-                    ? 'bg-indigo-600 text-white shadow-sm'
+                    ? 'bg-slate-200 text-slate-950 font-bold shadow-sm'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                <span>Annual Billing</span>
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500 text-slate-950">
-                  SAVE 20%
+                <span>ANNUAL</span>
+                <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-500 text-slate-950">
+                  -20%
                 </span>
               </button>
             </div>
           </div>
 
-          {/* Pricing Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Bento Pricing Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Tier 1: Founder */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-7 space-y-6 flex flex-col justify-between hover:border-slate-700 transition-all">
+            <div className="bento-card p-6 sm:p-7 space-y-6 flex flex-col justify-between">
               <div className="space-y-4">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                    Tier 1: Founder
-                  </span>
-                  <h4 className="text-2xl font-bold text-white mt-1">Aspiring Founder</h4>
+                  <div className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400">
+                    TIER 01 / ASPIRING FOUNDER
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mt-1">Founder Launchpad</h3>
                   <p className="text-xs text-slate-400 mt-1">
                     Launch your first verified business with zero technical overwhelm.
                   </p>
                 </div>
 
-                <div className="flex items-baseline space-x-2">
+                <div className="flex items-baseline space-x-2 font-mono">
                   <span className="text-4xl font-extrabold text-white">
                     ${billingInterval === 'monthly' ? '49' : '39'}
                   </span>
                   <span className="text-xs text-slate-400">/ month</span>
                   {billingInterval === 'annual' && (
-                    <span className="text-[11px] text-emerald-400 font-mono">($470 billed annually)</span>
+                    <span className="text-[11px] text-emerald-400">($470 billed annually)</span>
                   )}
                 </div>
 
-                <div className="pt-4 border-t border-slate-800 space-y-2.5 text-xs text-slate-300">
-                  <div className="font-semibold text-slate-200">Includes Quotas:</div>
+                <div className="pt-4 border-t border-slate-800/80 space-y-2.5 text-xs text-slate-300">
+                  <div className="font-mono text-slate-400 text-[11px]">INCLUDED CAPACITIES:</div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <Check className="w-4 h-4 text-emerald-400 shrink-0" />
                     <span><strong>3 verified deployments</strong> / month</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <Check className="w-4 h-4 text-emerald-400 shrink-0" />
                     <span><strong>10 minor iterations</strong> / month</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <Check className="w-4 h-4 text-emerald-400 shrink-0" />
                     <span>1 active ephemeral preview sandbox</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <Check className="w-4 h-4 text-emerald-400 shrink-0" />
                     <span>Deterministic Gates 1–5 Verification</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Zero-Charge Failure Guarantee (2PC Escrow)</span>
+                    <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>Zero-Charge Failure Escrow (2PC)</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <Check className="w-4 h-4 text-emerald-400 shrink-0" />
                     <span>1-Click Git Ejection to personal GitHub</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span><strong>0% Perpetual Revenue Tax</strong></span>
+                  <div className="flex items-center space-x-2 text-emerald-400 font-semibold">
+                    <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>0.0% Perpetual Revenue Tax</span>
                   </div>
                 </div>
               </div>
 
               <button
                 onClick={() => onNavigate(`/checkout?plan=founder&billing=${billingInterval}`)}
-                className="w-full py-3 rounded-xl text-xs font-bold text-emerald-300 bg-emerald-950/50 hover:bg-emerald-900/60 border border-emerald-700/50 transition-all text-center"
+                className="w-full py-2.5 rounded-lg text-xs font-mono font-semibold text-emerald-300 bg-emerald-950/40 hover:bg-emerald-900/60 border border-emerald-700/50 transition-all text-center"
               >
-                Get Started with Founder
+                SELECT FOUNDER ($49/MO)
               </button>
             </div>
 
-            {/* Tier 2: Serial Entrepreneur (Featured) */}
-            <div className="rounded-2xl border-2 border-indigo-500 bg-slate-900/90 p-7 space-y-6 flex flex-col justify-between shadow-glow-indigo relative">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-500 text-white text-[10px] font-bold uppercase tracking-wider shadow-md">
-                MOST POPULAR / BUILDER CHOICE
+            {/* Tier 2: Serial Entrepreneur (Featured Bento Highlight) */}
+            <div className="rounded-xl border border-indigo-500/70 bg-[#0d1424] p-6 sm:p-7 space-y-6 flex flex-col justify-between relative shadow-lg">
+              <div className="absolute -top-3 left-6 px-2.5 py-0.5 rounded bg-indigo-600 text-white text-[10px] font-mono font-bold uppercase tracking-wider">
+                RECOMMENDED ARCHITECTURE
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-4 pt-1">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">
-                    Tier 2: Serial
-                  </span>
-                  <h4 className="text-2xl font-bold text-white mt-1">Serial Entrepreneur</h4>
+                  <div className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-400">
+                    TIER 02 / SERIAL HACKER
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mt-1">Serial Entrepreneur</h3>
                   <p className="text-xs text-slate-400 mt-1">
                     High-velocity multi-venture operations with wholesale token economics.
                   </p>
                 </div>
 
-                <div className="flex items-baseline space-x-2">
+                <div className="flex items-baseline space-x-2 font-mono">
                   <span className="text-4xl font-extrabold text-white">
                     ${billingInterval === 'monthly' ? '149' : '119'}
                   </span>
                   <span className="text-xs text-slate-400">/ month</span>
                   {billingInterval === 'annual' && (
-                    <span className="text-[11px] text-indigo-400 font-mono">($1,430 billed annually)</span>
+                    <span className="text-[11px] text-indigo-400">($1,430 billed annually)</span>
                   )}
                 </div>
 
                 <div className="pt-4 border-t border-slate-800 space-y-2.5 text-xs text-slate-300">
-                  <div className="font-semibold text-slate-200">Everything in Founder, PLUS:</div>
+                  <div className="font-mono text-slate-400 text-[11px]">EVERYTHING IN FOUNDER, PLUS:</div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />
+                    <Check className="w-4 h-4 text-indigo-400 shrink-0" />
                     <span><strong>15 verified deployments</strong> / month</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />
+                    <Check className="w-4 h-4 text-indigo-400 shrink-0" />
                     <span><strong>50 minor iterations</strong> / month</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />
+                    <Check className="w-4 h-4 text-indigo-400 shrink-0" />
                     <span>Up to 5 concurrent active preview sandboxes</span>
                   </div>
-                  <div className="flex items-center space-x-2 font-semibold text-indigo-300">
-                    <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />
+                  <div className="flex items-center space-x-2 text-indigo-300 font-semibold font-mono">
+                    <Check className="w-4 h-4 text-indigo-400 shrink-0" />
                     <span>BYOK Mode: Wholesale 0% token markup</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />
+                  <div className="flex items-center space-x-2 font-mono text-[11px]">
+                    <Check className="w-4 h-4 text-indigo-400 shrink-0" />
                     <span>Headless CLI (<code>stagegate-cli</code>) & REST API triggers</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />
+                    <Check className="w-4 h-4 text-indigo-400 shrink-0" />
                     <span>Multi-Venture Portfolio Cockpit (Aggregated MRR)</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0" />
+                    <Check className="w-4 h-4 text-indigo-400 shrink-0" />
                     <span>Continuous dual-push to GitHub/GitLab orgs</span>
                   </div>
                 </div>
@@ -804,103 +873,104 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
               <button
                 onClick={() => onNavigate(`/checkout?plan=serial&billing=${billingInterval}`)}
-                className="w-full py-3.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 shadow-glow-indigo transition-all text-center"
+                className="w-full py-3 rounded-lg text-xs font-mono font-bold text-slate-950 bg-white hover:bg-slate-200 transition-all text-center"
               >
-                Launch Serial Tier ($149/mo)
+                LAUNCH SERIAL TIER ($149/MO)
               </button>
             </div>
 
             {/* Tier 3: Enterprise Studio */}
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-7 space-y-6 flex flex-col justify-between hover:border-slate-700 transition-all">
+            <div className="bento-card p-6 sm:p-7 space-y-6 flex flex-col justify-between">
               <div className="space-y-4">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-cyan-400">
-                    Tier 3: Enterprise
-                  </span>
-                  <h4 className="text-2xl font-bold text-white mt-1">Enterprise Studio</h4>
+                  <div className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400">
+                    TIER 03 / CORPORATE STUDIO
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mt-1">Enterprise Studio</h3>
                   <p className="text-xs text-slate-400 mt-1">
                     Institutional intrapreneurship sandbox with capital tranche governance.
                   </p>
                 </div>
 
-                <div className="flex items-baseline space-x-2">
+                <div className="flex items-baseline space-x-2 font-mono">
                   <span className="text-4xl font-extrabold text-white">
                     ${billingInterval === 'monthly' ? '999' : '799'}
                   </span>
                   <span className="text-xs text-slate-400">/ month</span>
                   {billingInterval === 'annual' && (
-                    <span className="text-[11px] text-cyan-400 font-mono">($9,590 billed annually)</span>
+                    <span className="text-[11px] text-cyan-400">($9,590 billed annually)</span>
                   )}
                 </div>
 
                 <div className="pt-4 border-t border-slate-800 space-y-2.5 text-xs text-slate-300">
-                  <div className="font-semibold text-slate-200">Everything in Serial, PLUS:</div>
+                  <div className="font-mono text-slate-400 text-[11px]">EVERYTHING IN SERIAL, PLUS:</div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <Check className="w-4 h-4 text-cyan-400 shrink-0" />
                     <span><strong>50 complete deployments</strong> (pooled across team)</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <Check className="w-4 h-4 text-cyan-400 shrink-0" />
                     <span><strong>250 iterations</strong> / month pooled</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <Check className="w-4 h-4 text-cyan-400 shrink-0" />
                     <span>Unlimited concurrent preview sandboxes</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                    <span><strong>Capital Tranche Budget Governance</strong></span>
+                  <div className="flex items-center space-x-2 font-semibold text-cyan-300">
+                    <Check className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <span>Capital Tranche Budget Governance</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <Check className="w-4 h-4 text-cyan-400 shrink-0" />
                     <span>Okta SAML 2.0 SSO & granular RBAC</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                    <span>SOC 2 Type II audit logs & cryptographic receipts</span>
+                    <Check className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <span>SOC 2 Type II audit logs & receipts</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                    <span>Dedicated single-tenant VPC with ZDR guarantee</span>
+                    <Check className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <span>Dedicated single-tenant VPC (ZDR)</span>
                   </div>
                 </div>
               </div>
 
               <button
                 onClick={() => onNavigate(`/checkout?plan=enterprise&billing=${billingInterval}`)}
-                className="w-full py-3 rounded-xl text-xs font-bold text-cyan-300 bg-cyan-950/50 hover:bg-cyan-900/60 border border-cyan-700/50 transition-all text-center"
+                className="w-full py-2.5 rounded-lg text-xs font-mono font-semibold text-cyan-300 bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-700/50 transition-all text-center"
               >
-                Contact Enterprise Sales
+                CONTACT SALES ($999/MO)
               </button>
             </div>
 
           </div>
         </section>
 
-        {/* VIRAL BADGE & SOCIAL PROOF */}
+        {/* VIRAL BADGE & REPO VERIFICATION SECTION */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-t border-slate-800/80">
-          <div className="p-8 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-indigo-900/40 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="p-6 sm:p-8 rounded-xl bg-[#080d19] border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-2 max-w-xl">
-              <div className="flex items-center space-x-2">
-                <Award className="w-5 h-5 text-indigo-400" />
-                <h4 className="text-base font-bold text-white">The Verified by Stage Gate OS README Badge</h4>
+              <div className="flex items-center space-x-2 font-mono text-xs text-indigo-400">
+                <Award className="w-4 h-4 text-indigo-400" />
+                <span className="font-bold">README VERIFICATION BADGE</span>
               </div>
+              <h4 className="text-base font-bold text-white">Cryptographic Provenance for Your GitHub Repo</h4>
               <p className="text-xs text-slate-400 leading-relaxed">
                 Every venture built through Stage Gate OS includes an unencumbered cryptographic verification badge embedded into your GitHub README. Prove to investors and users that your codebase passed synthetic Playwright checks and zero-lock-in clean-room audits.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-3">
-              <div className="px-4 py-2 rounded-lg bg-slate-950 border border-slate-700 text-xs font-mono text-indigo-300 flex items-center space-x-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>[![Verified by Stage Gate OS](...)]</span>
+            <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+              <div className="px-3.5 py-2 rounded-lg bg-[#060911] border border-slate-800 text-xs font-mono text-slate-300 flex items-center space-x-2 w-full sm:w-auto justify-center">
+                <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span className="truncate">[![Verified by Stage Gate OS](...)]</span>
               </div>
               <button
                 onClick={copyBadgeMarkdown}
-                className="px-4 py-2 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white flex items-center space-x-1.5 transition-colors"
+                className="w-full sm:w-auto px-4 py-2 rounded-lg text-xs font-mono font-semibold bg-slate-200 hover:bg-white text-slate-950 flex items-center justify-center space-x-1.5 transition-colors shrink-0"
               >
                 {copiedBadge ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copiedBadge ? 'Copied Markdown' : 'Copy Badge'}</span>
+                <span>{copiedBadge ? 'COPIED_MD' : 'COPY_BADGE'}</span>
               </button>
             </div>
           </div>

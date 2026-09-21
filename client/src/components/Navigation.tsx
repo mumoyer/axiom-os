@@ -75,10 +75,10 @@ export const Navigation: React.FC<NavigationProps> = ({
           
           {/* Logo & Tri-Plane Glyph */}
           <div className="flex items-center space-x-3 cursor-pointer" onClick={() => onNavigate('/')}>
-            <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-cyan-500 shadow-glow-indigo">
-              <Cpu className="w-5 h-5 text-white" />
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-slate-950 flex items-center justify-center">
-                <ShieldCheck className="w-2.5 h-2.5 text-slate-950 stroke-[3]" />
+            <div className="relative flex items-center justify-center w-9 h-9 rounded-lg bg-[#0e1628] border border-slate-700/80">
+              <Cpu className="w-4 h-4 text-indigo-400" />
+              <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-slate-950 flex items-center justify-center">
+                <ShieldCheck className="w-2 h-2 text-slate-950 stroke-[3]" />
               </div>
             </div>
             <div>
