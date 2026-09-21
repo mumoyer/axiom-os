@@ -13,7 +13,12 @@ import {
   Building2,
   RefreshCw,
 } from 'lucide-react';
-import { createCheckoutSession, CheckoutSessionResponse } from '../services/api.js';
+import {
+  createCheckoutSession,
+  getCheckoutConfig,
+  CheckoutSessionResponse,
+  CheckoutConfigResponse,
+} from '../services/api.js';
 
 interface CheckoutPageProps {
   onNavigate?: (path: string) => void;
@@ -27,6 +32,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'annual'>('monthly');
   const [customerEmail, setCustomerEmail] = useState('founder@venture.com');
   const [copiedCard, setCopiedCard] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<'shoppay' | 'card'>('shoppay');
+  const [checkoutConfig, setCheckoutConfig] = useState<CheckoutConfigResponse | null>(null);
 
   // Checkout process state
   const [processing, setProcessing] = useState(false);
@@ -50,6 +57,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     } catch {
       // Graceful fallback
     }
+
+    // Fetch live checkout config for Moyer Ventures LLC
+    getCheckoutConfig()
+      .then((cfg) => setCheckoutConfig(cfg))
+      .catch(() => {});
   }, []);
 
   const plans = {
@@ -119,9 +131,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     setErrorMsg('');
 
     try {
+      const provider = paymentMethod === 'shoppay' ? 'Shopify / Shop Pay' : 'Stripe';
       const session = await createCheckoutSession({
         plan: selectedPlan,
         email: customerEmail,
+        paymentProvider: provider,
         successUrl: `${window.location.origin}/#dashboard?session_id={CHECKOUT_SESSION_ID}`,
         cancelUrl: `${window.location.origin}/#checkout?canceled=true`,
       });
@@ -137,6 +151,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
           email: customerEmail,
         },
         plan: selectedPlan,
+        organization: checkoutConfig?.organization || 'Moyer Ventures LLC',
+        paymentProvider: paymentMethod === 'shoppay' ? 'Shopify / Shop Pay' : 'Stripe',
       };
       setCompletedSession(mockSession);
     } finally {
@@ -325,129 +341,239 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
             </div>
 
-            {/* Right Column: Sandbox Payment Form & Test Card Helper */}
-            <div className="lg:col-span-6 space-y-6">
+            {/* Right Column: Payment Form & Gateway Selection */}
+            <div className="lg:col-span-6 space-y-5">
               
-              {/* Sandbox Test Card Helper Panel */}
-              <div className="p-4 rounded-xl bg-indigo-950/40 border border-indigo-700/50 space-y-3 text-xs">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-indigo-300 flex items-center space-x-1.5">
-                    <CreditCard className="w-4 h-4 text-indigo-400" />
-                    <span>Stripe Sandbox Test Card</span>
-                  </span>
-                  <span className="text-[10px] text-indigo-400 font-mono">TEST-MODE ONLY</span>
-                </div>
-
-                <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-between font-mono text-slate-200">
-                  <span>4242 •••• •••• 4242</span>
-                  <button
-                    type="button"
-                    onClick={copyTestCard}
-                    className="px-2 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] flex items-center space-x-1"
-                  >
-                    {copiedCard ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                    <span>{copiedCard ? 'Copied' : 'Copy'}</span>
-                  </button>
-                </div>
-
-                <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
-                  <span>Exp: 12/28</span>
-                  <span>CVC: 123</span>
-                  <span>Zip: 94103</span>
-                </div>
+              {/* Payment Gateway Toggle: Shop Pay (Moyer Ventures LLC) vs Sandbox */}
+              <div className="grid grid-cols-2 gap-2 p-1 rounded-xl bg-slate-950 border border-slate-800 text-xs font-semibold">
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod('shoppay')}
+                  className={`py-2.5 px-3 rounded-lg flex items-center justify-center gap-2 transition-all ${
+                    paymentMethod === 'shoppay'
+                      ? 'bg-gradient-to-r from-purple-700 to-indigo-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-purple-300" />
+                  <span>Shop Pay (1-Click)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod('card')}
+                  className={`py-2.5 px-3 rounded-lg flex items-center justify-center gap-2 transition-all ${
+                    paymentMethod === 'card'
+                      ? 'bg-indigo-600 text-white shadow-md'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <CreditCard className="w-3.5 h-3.5 text-indigo-300" />
+                  <span>Test Card Sandbox</span>
+                </button>
               </div>
 
-              {/* Payment Submission Form */}
-              <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 sm:p-7 space-y-5 shadow-xl">
-                <div className="pb-3 border-b border-slate-800 flex items-center justify-between">
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
-                    Payment Method
-                  </h3>
-                  <span className="text-xs text-slate-400">Sandbox Test Clock Ready</span>
-                </div>
-
-                {errorMsg && (
-                  <div className="p-3 rounded-lg bg-rose-950/80 border border-rose-700 text-rose-300 text-xs">
-                    {errorMsg}
-                  </div>
-                )}
-
-                <form onSubmit={handleCheckoutSubmit} className="space-y-4 text-xs">
-                  <div>
-                    <label className="block text-slate-300 font-semibold mb-1">Subscriber / Founder Email</label>
-                    <input
-                      type="email"
-                      required
-                      value={customerEmail}
-                      onChange={(e) => setCustomerEmail(e.target.value)}
-                      placeholder="founder@venture.com"
-                      className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-indigo-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-slate-300 font-semibold mb-1">Card Number (Sandbox)</label>
-                    <input
-                      type="text"
-                      readOnly
-                      value="4242 •••• •••• 4242"
-                      className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 font-mono select-none"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-slate-300 font-semibold mb-1">Expires</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="12 / 28"
-                        className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 font-mono select-none"
-                      />
+              {paymentMethod === 'shoppay' ? (
+                /* Path B: Shopify Checkout & Shop Pay for Moyer Ventures LLC */
+                <div className="rounded-2xl border border-purple-800/40 bg-gradient-to-b from-purple-950/30 via-slate-900/90 to-slate-900/95 p-6 sm:p-7 space-y-5 shadow-xl text-xs">
+                  <div className="flex items-center justify-between pb-3 border-b border-purple-800/30">
+                    <div className="flex items-center space-x-2">
+                      <div className="px-2.5 py-1 rounded bg-[#5A31F4] text-white font-black text-xs tracking-tight font-sans shadow-sm">
+                        shop<span className="text-purple-200">Pay</span>
+                      </div>
+                      <span className="font-semibold text-purple-200">1-Click Accelerated Checkout</span>
                     </div>
-                    <div>
-                      <label className="block text-slate-300 font-semibold mb-1">CVC</label>
-                      <input
-                        type="text"
-                        readOnly
-                        value="123"
-                        className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 font-mono select-none"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Summary Line */}
-                  <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                    <span className="text-slate-400">Total Billed Today:</span>
-                    <span className="text-lg font-bold text-white font-mono">
-                      ${price}.00 {billingInterval === 'annual' ? '/ yr' : '/ mo'}
+                    <span className="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <span>{checkoutConfig?.organization || 'Moyer Ventures LLC'}</span>
                     </span>
                   </div>
 
-                  <button
-                    type="submit"
-                    disabled={processing}
-                    className="w-full py-3.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 shadow-glow-indigo transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
-                  >
-                    {processing ? (
-                      <>
-                        <RefreshCw className="w-4 h-4 animate-spin text-white" />
-                        <span>Provisioning Stripe Sandbox Session...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Lock className="w-3.5 h-3.5" />
-                        <span>Authorize Subscription (${price}.00)</span>
-                      </>
+                  <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
+                    <div className="flex items-center justify-between text-slate-300">
+                      <span className="text-slate-400">Merchant Organization:</span>
+                      <span className="font-bold text-white font-mono">
+                        {checkoutConfig?.organization || 'Moyer Ventures LLC'}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-slate-300">
+                      <span className="text-slate-400">Payment Processor:</span>
+                      <span className="font-semibold text-purple-300">Shopify Payments & Shop Pay</span>
+                    </div>
+                    <div className="flex items-center justify-between text-slate-300">
+                      <span className="text-slate-400">Subscription Tier:</span>
+                      <span className="font-semibold text-indigo-300">{currentPlan.name}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-slate-300">
+                      <span className="text-slate-400">Total Billed Today:</span>
+                      <span className="font-bold text-emerald-400 font-mono text-sm">${price}.00 {billingInterval === 'annual' ? '/ yr' : '/ mo'}</span>
+                    </div>
+                  </div>
+
+                  {errorMsg && (
+                    <div className="p-3 rounded-lg bg-rose-950/80 border border-rose-700 text-rose-300 text-xs">
+                      {errorMsg}
+                    </div>
+                  )}
+
+                  <form onSubmit={handleCheckoutSubmit} className="space-y-4 pt-1">
+                    <div>
+                      <label className="block text-slate-300 font-semibold mb-1">Subscriber / Founder Email</label>
+                      <input
+                        type="email"
+                        required
+                        value={customerEmail}
+                        onChange={(e) => setCustomerEmail(e.target.value)}
+                        placeholder="founder@venture.com"
+                        className="w-full px-3 py-2.5 rounded-lg bg-slate-950 border border-purple-700/50 text-white focus:outline-none focus:border-purple-400"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={processing}
+                      className="w-full py-4 rounded-xl text-sm font-bold text-white bg-[#5A31F4] hover:bg-[#4d28d6] shadow-lg shadow-purple-950/50 transition-all flex items-center justify-center space-x-2 disabled:opacity-50 group cursor-pointer"
+                    >
+                      {processing ? (
+                        <>
+                          <RefreshCw className="w-4 h-4 animate-spin text-white" />
+                          <span>Routing to Shop Pay (Moyer Ventures LLC)...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Pay with</span>
+                          <span className="font-black tracking-tight text-white bg-white/20 px-1.5 py-0.5 rounded">
+                            shop<span className="text-purple-200">Pay</span>
+                          </span>
+                          <span>• ${price}.00</span>
+                        </>
+                      )}
+                    </button>
+                    <p className="text-[10px] text-center text-slate-400">
+                      Zero card typing required. Encrypted 1-click SMS verification via Shop Pay.
+                    </p>
+                  </form>
+                </div>
+              ) : (
+                /* Card Sandbox Panel */
+                <div className="space-y-5">
+                  <div className="p-4 rounded-xl bg-indigo-950/40 border border-indigo-700/50 space-y-3 text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-indigo-300 flex items-center space-x-1.5">
+                        <CreditCard className="w-4 h-4 text-indigo-400" />
+                        <span>Stripe Sandbox Test Card</span>
+                      </span>
+                      <span className="text-[10px] text-indigo-400 font-mono">TEST-MODE ONLY</span>
+                    </div>
+
+                    <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-between font-mono text-slate-200">
+                      <span>4242 •••• •••• 4242</span>
+                      <button
+                        type="button"
+                        onClick={copyTestCard}
+                        className="px-2 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] flex items-center space-x-1"
+                      >
+                        {copiedCard ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                        <span>{copiedCard ? 'Copied' : 'Copy'}</span>
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                      <span>Exp: 12/28</span>
+                      <span>CVC: 123</span>
+                      <span>Zip: 94103</span>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 sm:p-7 space-y-5 shadow-xl">
+                    <div className="pb-3 border-b border-slate-800 flex items-center justify-between">
+                      <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+                        Payment Method
+                      </h3>
+                      <span className="text-xs text-slate-400">Sandbox Test Clock Ready</span>
+                    </div>
+
+                    {errorMsg && (
+                      <div className="p-3 rounded-lg bg-rose-950/80 border border-rose-700 text-rose-300 text-xs">
+                        {errorMsg}
+                      </div>
                     )}
-                  </button>
 
-                  <p className="text-[10px] text-center text-slate-500">
-                    256-Bit Encrypted • Instant Provisioning • 100% 2PC Escrow Invariant Guarantee
-                  </p>
-                </form>
-              </div>
+                    <form onSubmit={handleCheckoutSubmit} className="space-y-4 text-xs">
+                      <div>
+                        <label className="block text-slate-300 font-semibold mb-1">Subscriber / Founder Email</label>
+                        <input
+                          type="email"
+                          required
+                          value={customerEmail}
+                          onChange={(e) => setCustomerEmail(e.target.value)}
+                          placeholder="founder@venture.com"
+                          className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-indigo-500"
+                        />
+                      </div>
 
+                      <div>
+                        <label className="block text-slate-300 font-semibold mb-1">Card Number (Sandbox)</label>
+                        <input
+                          type="text"
+                          readOnly
+                          value="4242 •••• •••• 4242"
+                          className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 font-mono select-none"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-slate-300 font-semibold mb-1">Expires</label>
+                          <input
+                            type="text"
+                            readOnly
+                            value="12 / 28"
+                            className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 font-mono select-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-slate-300 font-semibold mb-1">CVC</label>
+                          <input
+                            type="text"
+                            readOnly
+                            value="123"
+                            className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 font-mono select-none"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                        <span className="text-slate-400">Total Billed Today:</span>
+                        <span className="text-lg font-bold text-white font-mono">
+                          ${price}.00 {billingInterval === 'annual' ? '/ yr' : '/ mo'}
+                        </span>
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={processing}
+                        className="w-full py-3.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 shadow-glow-indigo transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
+                      >
+                        {processing ? (
+                          <>
+                            <RefreshCw className="w-4 h-4 animate-spin text-white" />
+                            <span>Provisioning Stripe Sandbox Session...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Lock className="w-3.5 h-3.5" />
+                            <span>Authorize Subscription (${price}.00)</span>
+                          </>
+                        )}
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              )}
+
+              <p className="text-[10px] text-center text-slate-500">
+                256-Bit Encrypted • Instant Provisioning • 100% 2PC Escrow Invariant Guarantee
+              </p>
             </div>
 
           </div>

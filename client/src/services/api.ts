@@ -30,6 +30,13 @@ export interface CheckoutTier {
 export interface CheckoutConfigResponse {
   sandboxMode: boolean;
   publishableKey: string;
+  organization?: string;
+  shopifyIntegration?: {
+    enabled: boolean;
+    shopDomain: string;
+    shopPayEnabled: boolean;
+    checkoutMode: string;
+  };
   supportedTiers: CheckoutTier[];
 }
 
@@ -39,6 +46,7 @@ export interface CreateCheckoutSessionPayload {
   successUrl?: string;
   cancelUrl?: string;
   ventureId?: string;
+  paymentProvider?: 'Shopify / Shop Pay' | 'Stripe' | 'Sandbox';
 }
 
 export interface CheckoutSessionResponse {
@@ -184,4 +192,34 @@ export async function getSystemHealth(): Promise<HealthResponse> {
       engine: 'Stage Gate OS Stage-Gate Orchestrator v1.0',
     };
   }
+}
+
+/**
+ * In-Product Messaging: Types and API calls
+ */
+export interface ApiProjectMessage {
+  id: string;
+  ventureId: string;
+  sender: 'customer' | 'admin';
+  senderName: string;
+  senderEmail: string;
+  text: string;
+  timestamp: string;
+  read: boolean;
+}
+
+export async function fetchProjectMessages(ventureId: string): Promise<ApiProjectMessage[]> {
+  const data = await apiFetch<{ ventureId: string; messages: ApiProjectMessage[] }>(`/messages/${ventureId}`);
+  return data.messages || [];
+}
+
+export async function sendProjectMessage(
+  ventureId: string,
+  payload: { text: string; sender: 'customer' | 'admin'; senderName?: string; senderEmail?: string }
+): Promise<ApiProjectMessage> {
+  const res = await apiFetch<{ message: string; data: ApiProjectMessage }>(`/messages/${ventureId}`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+  return res.data;
 }
