@@ -13,6 +13,7 @@ import { graderRoutes } from './routes/grader_routes.js';
 import { checkoutRoutes } from './routes/checkout_routes.js';
 import { byokRoutes } from './routes/byok_routes.js';
 import { messagingRoutes } from './routes/messaging_routes.js';
+import { authRoutes } from './routes/auth_routes.js';
 
 export function createApp(): Express {
   const app = express();
@@ -40,6 +41,7 @@ export function createApp(): Express {
   app.use('/api/checkout', checkoutRoutes);
   app.use('/api/byok', byokRoutes);
   app.use('/api/messages', messagingRoutes);
+  app.use('/api/auth', authRoutes);
 
   // Clean Customer-Facing Vanity Checkout Redirects
   app.get('/subscribe/founder', (_req: Request, res: Response) => {

@@ -8,13 +8,73 @@ import { NewbieWizardPage } from './pages/NewbieWizardPage.js';
 import { SerialDashboardPage } from './pages/SerialDashboardPage.js';
 import { LiveVenturePage } from './pages/LiveVenturePage.js';
 import { ProjectMessengerModal } from './components/ProjectMessengerModal.js';
+import { AuthModal } from './components/AuthModal.js';
 import { MessageSquare } from 'lucide-react';
+import { getAuthProfile, verifyAuthToken, logoutAuth, AuthSessionData } from './services/api.js';
 
 export function App() {
   const [currentPath, setCurrentPath] = useState<string>('/');
   const [selectedPersona, setSelectedPersona] = useState<'newbie' | 'serial' | 'enterprise'>('serial');
   const [currentVentureId, setCurrentVentureId] = useState<string>('ven_docuflow_02');
   const [messengerOpen, setMessengerOpen] = useState<boolean>(false);
+  const [authModalOpen, setAuthModalOpen] = useState<boolean>(false);
+  const [authUser, setAuthUser] = useState<{ email: string; tenantId: string; role?: string } | null>(null);
+
+  // Load existing session or verify URL magic token
+  useEffect(() => {
+    const initAuth = async () => {
+      // 1. Check for token in URL hash / query: /#verify?token=...
+      const hash = window.location.hash;
+      const search = window.location.search;
+      const params = new URLSearchParams(hash.includes('?') ? hash.split('?')[1] : search.slice(1));
+      const token = params.get('token');
+
+      if (token) {
+        try {
+          const res = await verifyAuthToken(token);
+          if (res.success && res.session) {
+            localStorage.setItem('stagegate_auth_session', JSON.stringify(res.session));
+            setAuthUser(res.session);
+            // Clean URL and redirect to dashboard
+            window.location.hash = '/dashboard';
+            return;
+          }
+        } catch {}
+      }
+
+      // 2. Check localStorage
+      try {
+        const stored = localStorage.getItem('stagegate_auth_session');
+        if (stored) {
+          const parsed: AuthSessionData = JSON.parse(stored);
+          if (parsed.sessionToken) {
+            const profile = await getAuthProfile(parsed.sessionToken);
+            if (profile.authenticated && profile.user) {
+              setAuthUser(profile.user);
+            } else {
+              localStorage.removeItem('stagegate_auth_session');
+            }
+          }
+        }
+      } catch {}
+    };
+
+    initAuth();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      const stored = localStorage.getItem('stagegate_auth_session');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed.sessionToken) {
+          await logoutAuth(parsed.sessionToken);
+        }
+      }
+    } catch {}
+    localStorage.removeItem('stagegate_auth_session');
+    setAuthUser(null);
+  };
 
   // Parse path and query/hash
   const resolveRoute = (rawPath: string) => {
@@ -89,6 +149,9 @@ export function App() {
         onNavigate={navigateTo}
         selectedPersona={selectedPersona}
         onSelectPersona={handlePersonaChange}
+        authUser={authUser}
+        onOpenAuth={() => setAuthModalOpen(true)}
+        onLogout={handleLogout}
       />
 
       <main className="flex-1">
@@ -127,6 +190,15 @@ export function App() {
         isOpen={messengerOpen}
         onClose={() => setMessengerOpen(false)}
         ventureId={currentVentureId}
+      />
+
+      {/* Passwordless Auth Modal */}
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        onSuccess={(session) => {
+          setAuthUser(session);
+        }}
       />
 
       <Footer onNavigate={navigateTo} />

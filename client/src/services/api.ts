@@ -244,3 +244,76 @@ export async function sendProjectMessage(
   });
   return res.data;
 }
+
+/**
+ * Passwordless Authentication Types & Methods
+ */
+export interface AuthUser {
+  email: string;
+  tenantId: string;
+  role: 'founder' | 'admin';
+  createdAt: string;
+}
+
+export interface AuthSessionData {
+  sessionToken: string;
+  email: string;
+  tenantId: string;
+  role: 'founder' | 'admin';
+  createdAt: string;
+  expiresAt: string;
+}
+
+export interface MagicLinkResponse {
+  success: boolean;
+  message: string;
+  email: string;
+  previewOtp?: string;
+  magicLinkUrl?: string;
+  expiresAt: string;
+}
+
+export interface VerifyAuthResponse {
+  success: boolean;
+  session?: AuthSessionData;
+  error?: string;
+  remainingAttempts?: number;
+}
+
+export async function requestMagicLink(email: string): Promise<MagicLinkResponse> {
+  return await apiFetch<MagicLinkResponse>('/auth/magic-link', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+  });
+}
+
+export async function verifyAuthOtp(email: string, otp: string): Promise<VerifyAuthResponse> {
+  return await apiFetch<VerifyAuthResponse>('/auth/verify', {
+    method: 'POST',
+    body: JSON.stringify({ email, otp }),
+  });
+}
+
+export async function verifyAuthToken(token: string): Promise<VerifyAuthResponse> {
+  return await apiFetch<VerifyAuthResponse>('/auth/verify', {
+    method: 'POST',
+    body: JSON.stringify({ token }),
+  });
+}
+
+export async function getAuthProfile(token: string): Promise<{ authenticated: boolean; user: AuthUser }> {
+  return await apiFetch<{ authenticated: boolean; user: AuthUser }>('/auth/me', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function logoutAuth(token: string): Promise<{ success: boolean }> {
+  return await apiFetch<{ success: boolean }>('/auth/logout', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
