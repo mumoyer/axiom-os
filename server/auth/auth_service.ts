@@ -67,7 +67,7 @@ export class AuthService {
   constructor(options?: AuthServiceOptions) {
     this.otpTtlMinutes = options?.otpTtlMinutes ?? 15;
     this.maxAttempts = options?.maxAttempts ?? 5;
-    this.secretKey = options?.secretKey ?? 'stagegate_auth_master_salt_2026';
+    this.secretKey = options?.secretKey ?? process.env.AUTH_SECRET_KEY ?? 'stagegate_auth_master_salt_2026';
     this.baseUrl = options?.baseUrl ?? 'https://www.stagegateos.com';
   }
 
@@ -76,7 +76,8 @@ export class AuthService {
   }
 
   private generateOtp(): string {
-    return randomInt(100000, 999999).toString();
+    // node:crypto randomInt(min, max) has an exclusive upper bound, so 1000000 ensures 999999 is reachable
+    return randomInt(100000, 1000000).toString();
   }
 
   private generateToken(email: string, expiresAt: number): string {
