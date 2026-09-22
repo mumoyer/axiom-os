@@ -95,10 +95,10 @@ export const Navigation: React.FC<NavigationProps> = ({
           </div>
 
           {/* Persona Switcher Pill */}
-          <div className="hidden xl:relative xl:block shrink-0">
+          <div className="hidden 2xl:relative 2xl:block shrink-0">
             <button
               onClick={() => setPersonaDropdownOpen(!personaDropdownOpen)}
-              className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/70 hover:border-indigo-500/50 transition-colors text-xs text-slate-200 whitespace-nowrap"
+              className="flex items-center space-x-2 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700/70 hover:border-indigo-500/50 transition-colors text-xs text-slate-200 whitespace-nowrap"
             >
               <activePersonaObj.icon className={`w-3.5 h-3.5 ${activePersonaObj.color}`} />
               <span className="text-slate-400 font-normal">Persona:</span>
@@ -136,7 +136,7 @@ export const Navigation: React.FC<NavigationProps> = ({
           </div>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center space-x-3.5 xl:space-x-5 2xl:space-x-6 shrink-0">
+          <nav className="hidden lg:flex items-center space-x-2.5 xl:space-x-4 2xl:space-x-5 shrink-0">
             {navLinks.map((link) => (
               <button
                 key={link.label}
@@ -153,17 +153,17 @@ export const Navigation: React.FC<NavigationProps> = ({
           </nav>
 
           {/* Action CTAs */}
-          <div className="hidden sm:flex items-center space-x-2.5 shrink-0">
+          <div className="hidden sm:flex items-center space-x-2 shrink-0">
             <button
               onClick={() => onNavigate('/grader')}
-              className="hidden xl:inline-flex items-center space-x-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs font-semibold text-indigo-300 bg-indigo-950/50 hover:bg-indigo-900/60 border border-indigo-700/40 rounded-lg transition-all shadow-sm whitespace-nowrap shrink-0"
+              className="hidden 2xl:inline-flex items-center space-x-1 px-2.5 py-1.5 text-xs font-semibold text-indigo-300 bg-indigo-950/50 hover:bg-indigo-900/60 border border-indigo-700/40 rounded-lg transition-all shadow-sm whitespace-nowrap shrink-0"
             >
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Test Grader Free</span>
+              <Sparkles className="w-3 h-3 text-indigo-400" />
+              <span>Grader</span>
             </button>
             <button
               onClick={() => onNavigate('/checkout?plan=serial')}
-              className="flex items-center space-x-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-semibold text-white bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 rounded-lg shadow-glow-indigo transition-all whitespace-nowrap shrink-0"
+              className="flex items-center space-x-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs font-semibold text-white bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 rounded-lg shadow-glow-indigo transition-all whitespace-nowrap shrink-0"
             >
               <span>Get Started</span>
               <ArrowRight className="w-3.5 h-3.5" />
