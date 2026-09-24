@@ -18,193 +18,9 @@ import {
 } from 'lucide-react';
 import { StagingPreviewModal } from './StagingPreviewModal.js';
 
-export interface DummyScenario {
-  id: string;
-  name: string;
-  tagline: string;
-  industry: string;
-  targetSegment: string;
-  planTier: 'FOUNDER' | 'SERIAL' | 'ENTERPRISE';
-  mrr: number;
-  subscribersCount: number;
-  uptime: number;
-  cogsPerUser: number;
-  stagingUrl: string;
-  problem: string;
-  solution: string;
-  unitEconomics: {
-    cac: number;
-    ltv: number;
-    paybackMonths: number;
-    grossMargin: number;
-  };
-  sampleApiPayload: {
-    endpoint: string;
-    method: 'GET' | 'POST';
-    request: Record<string, any>;
-    response: Record<string, any>;
-  };
-  gatesPassed: number;
-  badgeMarkdown: string;
-}
-
-export const DUMMY_SCENARIOS: DummyScenario[] = [
-  {
-    id: 'ven_docuflow_02',
-    name: 'DocuFlow AI',
-    tagline: 'Autonomous HIPAA-compliant clinical documentation pipeline for independent medical practices',
-    industry: 'Healthcare / B2B SaaS',
-    targetSegment: 'Private Clinics & Solo Practitioners',
-    planTier: 'FOUNDER',
-    mrr: 6200,
-    subscribersCount: 42,
-    uptime: 99.99,
-    cogsPerUser: 1.43,
-    stagingUrl: 'https://stage-docuflow.axiomrun.app',
-    problem: 'Physicians spend 15+ hours each week after hours charting patient records into EHR legacy portals.',
-    solution: 'Autonomous voice-to-structured-FHIR extractor running on isolated client microVM with zero data retention.',
-    unitEconomics: {
-      cac: 180,
-      ltv: 2450,
-      paybackMonths: 3.5,
-      grossMargin: 92.4,
-    },
-    sampleApiPayload: {
-      endpoint: '/api/v1/clinical/extract',
-      method: 'POST',
-      request: {
-        audioSampleSeconds: 120,
-        patientId: 'pt_anon_8821',
-        encounterType: 'routine_followup',
-        redactPhi: true,
-      },
-      response: {
-        status: 'extracted_verified',
-        icd10Codes: ['I10', 'E11.9'],
-        cptCodes: ['99213'],
-        fhirResourceBundleId: 'bundle_99182a',
-        gatePassed: 'Gate 1-5 Verified Clean',
-      },
-    },
-    gatesPassed: 5,
-    badgeMarkdown: '[![Verified by Stage Gate OS](https://stagegateos.com/badges/verified.svg)](https://stagegateos.com/ventures/ven_docuflow_02)',
-  },
-  {
-    id: 'ven_scout_03',
-    name: 'ContractScout',
-    tagline: 'Automated indemnification risk & predatory clause scanner for SMB procurement teams',
-    industry: 'LegalTech / B2B Micro-SaaS',
-    targetSegment: 'Small Business Owners & Ops Leads',
-    planTier: 'SERIAL',
-    mrr: 3450,
-    subscribersCount: 35,
-    uptime: 99.95,
-    cogsPerUser: 0.89,
-    stagingUrl: 'https://stage-contractscout.axiomrun.app',
-    problem: 'SMBs sign vendor contracts with uncapped indemnity and auto-renewals because lawyers charge $450/hr.',
-    solution: 'Deterministic AST analysis of MSAs and vendor agreements highlighting high-liability traps in under 8 seconds.',
-    unitEconomics: {
-      cac: 95,
-      ltv: 1890,
-      paybackMonths: 2.1,
-      grossMargin: 94.2,
-    },
-    sampleApiPayload: {
-      endpoint: '/api/v1/contracts/audit',
-      method: 'POST',
-      request: {
-        documentPages: 14,
-        jurisdiction: 'Delaware / US',
-        indemnityCapRequirement: true,
-      },
-      response: {
-        riskScore: 'LOW_RISK_APPROVED',
-        unfavorableClausesCount: 0,
-        indemnityCapFound: '$100,000 max',
-        autoRenewNoticePeriodDays: 60,
-        verifiedReceipt: 'sha256:4f99182a884',
-      },
-    },
-    gatesPassed: 5,
-    badgeMarkdown: '[![Verified by Stage Gate OS](https://stagegateos.com/badges/verified.svg)](https://stagegateos.com/ventures/ven_scout_03)',
-  },
-  {
-    id: 'ven_pulse_01',
-    name: 'MetricPulse Analytics',
-    tagline: 'Real-time subscription dunning, smart retention telemetry & involuntary churn recovery',
-    industry: 'DevTools / FinTech',
-    targetSegment: 'Bootstrapped SaaS & Indie Creators',
-    planTier: 'SERIAL',
-    mrr: 4850,
-    subscribersCount: 68,
-    uptime: 99.98,
-    cogsPerUser: 1.12,
-    stagingUrl: 'https://stage-metricpulse.axiomrun.app',
-    problem: 'SaaS companies lose 4% to 9% of ARR every single year to expired credit cards and silent bank declines.',
-    solution: 'Smart Stripe-connected recovery agents that test renewal clocks and automate multi-channel customer dunning.',
-    unitEconomics: {
-      cac: 120,
-      ltv: 1650,
-      paybackMonths: 2.8,
-      grossMargin: 91.8,
-    },
-    sampleApiPayload: {
-      endpoint: '/api/v1/dunning/simulate-renewal',
-      method: 'POST',
-      request: {
-        subscriptionId: 'sub_992419082',
-        cardExpiryAdvanceMonths: 1,
-        testClockActive: true,
-      },
-      response: {
-        clockAdvancedTimestamp: '2026-10-21T00:00:00Z',
-        involuntaryChurnPrevented: true,
-        recoveredMrrUsd: 149.0,
-        webhookDuplicateEventsIgnored: 2,
-      },
-    },
-    gatesPassed: 5,
-    badgeMarkdown: '[![Verified by Stage Gate OS](https://stagegateos.com/badges/verified.svg)](https://stagegateos.com/ventures/ven_pulse_01)',
-  },
-  {
-    id: 'ven_dental_04',
-    name: 'DentalCompliance',
-    tagline: 'Audit-ready daily OSHA, sharps & radiation regulatory safety compliance copilot',
-    industry: 'Healthcare / Compliance',
-    targetSegment: 'Dental Clinics & Dental Service Orgs (DSOs)',
-    planTier: 'FOUNDER',
-    mrr: 2900,
-    subscribersCount: 22,
-    uptime: 100.0,
-    cogsPerUser: 1.35,
-    stagingUrl: 'https://stage-dentalcompliance.axiomrun.app',
-    problem: 'Dental offices risk state board fines of up to $25,000 for expired sterilization autoclave biological spore logs.',
-    solution: 'Automated equipment spore testing logs with timestamped digital audit certificates dual-pushed to private storage.',
-    unitEconomics: {
-      cac: 140,
-      ltv: 2100,
-      paybackMonths: 3.1,
-      grossMargin: 93.6,
-    },
-    sampleApiPayload: {
-      endpoint: '/api/v1/compliance/spore-test',
-      method: 'POST',
-      request: {
-        autoclaveSerial: 'AC-90812-B',
-        biologicalIndicatorResult: 'NEGATIVE_CLEAN',
-        technicianId: 'tech_7718',
-      },
-      response: {
-        complianceStatus: 'AUDIT_READY',
-        certificateHash: 'sha256:e198bba401',
-        nextInspectionDue: '2026-10-28',
-        storedInPersonalRepo: true,
-      },
-    },
-    gatesPassed: 5,
-    badgeMarkdown: '[![Verified by Stage Gate OS](https://stagegateos.com/badges/verified.svg)](https://stagegateos.com/ventures/ven_dental_04)',
-  },
-];
+import { DummyScenario, DUMMY_SCENARIOS } from '../demo/scenarios.js';
+export type { DummyScenario };
+export { DUMMY_SCENARIOS };
 
 interface ExampleScenarioExplorerProps {
   onNavigate?: (path: string) => void;
@@ -231,7 +47,7 @@ export const ExampleScenarioExplorer: React.FC<ExampleScenarioExplorerProps> = (
             <span className="text-emerald-400">ZERO RISK EXPLORATION</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-            Explore Live Example Ventures &amp; Dummy Data
+            Explore Live Production Benchmarks &amp; Example Ventures
           </h2>
           <p className="text-sm text-slate-300 leading-relaxed">
             See exactly how real software ventures operate inside Stage Gate OS. Test live staging sandboxes, inspect
@@ -305,7 +121,7 @@ export const ExampleScenarioExplorer: React.FC<ExampleScenarioExplorerProps> = (
               <div className="flex items-center space-x-2">
                 <h3 className="text-lg font-bold text-white">{currentScenario.name}</h3>
                 <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-emerald-950/80 text-emerald-300 border border-emerald-700/50">
-                  DUMMY_DATA_ACTIVE
+                  LIVE_BENCHMARK_ACTIVE
                 </span>
                 <span className="text-slate-500 font-mono text-xs hidden sm:inline">({currentScenario.id})</span>
               </div>
@@ -361,7 +177,7 @@ export const ExampleScenarioExplorer: React.FC<ExampleScenarioExplorerProps> = (
                 : 'border-transparent text-slate-400 hover:text-slate-200'
             }`}
           >
-            02. DUMMY UNIT ECONOMICS &amp; P&amp;L
+            02. UNIT ECONOMICS &amp; P&amp;L BENCHMARKS
           </button>
           <button
             onClick={() => setActiveTab('api')}
@@ -499,7 +315,7 @@ export const ExampleScenarioExplorer: React.FC<ExampleScenarioExplorerProps> = (
 
               <div className="p-4 rounded-xl bg-[#060911] border border-slate-800 space-y-3 font-mono text-xs">
                 <div className="text-slate-300 font-bold flex items-center justify-between">
-                  <span>DUMMY P&amp;L BREAKDOWN (30-DAY RUN-RATE)</span>
+                  <span>PROJECTED P&amp;L BREAKDOWN (30-DAY RUN-RATE)</span>
                   <span className="text-[11px] text-slate-500">SAMPLE SIMULATION</span>
                 </div>
                 <div className="space-y-2 text-slate-400">

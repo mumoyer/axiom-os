@@ -10,75 +10,89 @@
 import { Router, Request, Response } from 'express';
 import { stripeSandbox } from '../engine/sandbox_adapters.js';
 import { notificationService } from '../services/notification_service.js';
+import { BETA_CONFIG, PRICING_TIERS, calculatePricing, TierId, BillingInterval } from '../../shared/pricing.js';
 
 export const checkoutRoutes = Router();
 
 // GET /api/checkout/config
 checkoutRoutes.get('/config', (_req: Request, res: Response) => {
+  const supportedTiers = (['FOUNDER', 'SERIAL', 'ENTERPRISE'] as TierId[]).map((tierId) => {
+    const def = PRICING_TIERS[tierId];
+    const monthly = calculatePricing(tierId, 'monthly');
+    const annual = calculatePricing(tierId, 'annual');
+
+    return {
+      id: def.id,
+      name: def.name,
+      priceUsd: monthly.priceUsd,
+      listPriceUsd: monthly.listPriceUsd,
+      billing: 'monthly',
+      shopifyProductId: def.shopifyProductId,
+      shopifyCheckoutUrl: def.shopifyCheckoutUrl,
+      monthly,
+      annual,
+      savingsUsd: monthly.savingsUsd,
+      discountPercent: monthly.discountPercent,
+    };
+  });
+
   res.json({
     sandboxMode: !stripeSandbox.isLiveMode(),
     publishableKey: 'pk_test_stagegate_sandbox_public_key',
     organization: 'Moyer Ventures LLC',
+    beta: BETA_CONFIG,
     shopifyIntegration: {
       enabled: true,
       shopDomain: process.env.SHOPIFY_STORE_DOMAIN || 'z0zt1m-ae.myshopify.com',
       shopPayEnabled: true,
       checkoutMode: 'Shopify / Shop Pay (Moyer Ventures LLC)',
     },
-    supportedTiers: [
-      { 
-        id: 'FOUNDER', 
-        name: 'Founder Plan', 
-        priceUsd: 69.0, 
-        billing: 'monthly',
-        shopifyProductId: '7741406576774',
-        shopifyCheckoutUrl: 'https://www.stagegateos.com/subscribe/founder'
-      },
-      { 
-        id: 'SERIAL', 
-        name: 'Serial Entrepreneur Plan', 
-        priceUsd: 149.0, 
-        billing: 'monthly',
-        shopifyProductId: '7741407199366',
-        shopifyCheckoutUrl: 'https://www.stagegateos.com/subscribe/serial'
-      },
-      { 
-        id: 'ENTERPRISE', 
-        name: 'Enterprise Studio Plan', 
-        priceUsd: 999.0, 
-        billing: 'monthly',
-        shopifyProductId: '7741407723654',
-        shopifyCheckoutUrl: 'https://www.stagegateos.com/subscribe/enterprise'
-      },
-    ],
+    supportedTiers,
   });
 });
 
 // POST /api/checkout/session
 checkoutRoutes.post('/session', async (req: Request, res: Response) => {
   try {
-    const { plan = 'FOUNDER', email = 'founder@example.com', successUrl, cancelUrl, ventureId, paymentProvider = 'Shopify / Shop Pay' } = req.body;
+    const {
+      plan = 'FOUNDER',
+      email = 'founder@example.com',
+      successUrl,
+      cancelUrl,
+      ventureId,
+      paymentProvider = 'Shopify / Shop Pay',
+      billingInterval = 'monthly',
+      agreedToTerms = false,
+      consentTimestamp,
+      disclosureVersion,
+    } = req.body;
+
+    const normalizedPlan = (plan.toUpperCase() as TierId) in PRICING_TIERS ? (plan.toUpperCase() as TierId) : 'FOUNDER';
+    const interval: BillingInterval = billingInterval === 'annual' ? 'annual' : 'monthly';
+    const pricing = calculatePricing(normalizedPlan, interval);
+    const amountUsd = pricing.priceUsd;
+
+    const consentRecord = {
+      agreedToTerms: Boolean(agreedToTerms),
+      consentTimestamp: consentTimestamp || new Date().toISOString(),
+      disclosureVersion: disclosureVersion || '2026-09-PUBLIC-BETA-RATE-LOCK-v1',
+      rateLockedUsd: amountUsd,
+      regularListPriceUsd: pricing.listPriceUsd,
+      billingInterval: interval,
+    };
 
     const session = await stripeSandbox.createCheckoutSession({
-      plan,
+      plan: normalizedPlan,
       email,
       successUrl: successUrl || 'https://www.stagegateos.com/#dashboard?session_id={CHECKOUT_SESSION_ID}',
       cancelUrl: cancelUrl || 'https://www.stagegateos.com/#pricing',
       ventureId,
     });
 
-    const tierPriceMap: Record<string, number> = {
-      FOUNDER: 69,
-      SERIAL: 149,
-      ENTERPRISE: 999,
-    };
-
-    const amountUsd = tierPriceMap[plan] || 149;
-
     // Dispatch real-time alert to jason@moyervllc.com & Google Chat
     notificationService.dispatchAlert({
       type: 'PLAN_SIGNUP',
-      plan,
+      plan: normalizedPlan,
       email,
       amountUsd,
       provider: paymentProvider === 'Shopify / Shop Pay' ? 'Shopify / Shop Pay' : 'Stripe',
@@ -91,6 +105,10 @@ checkoutRoutes.post('/session', async (req: Request, res: Response) => {
       customer: session.customer,
       plan: session.plan,
       amountUsd,
+      listPriceUsd: pricing.listPriceUsd,
+      billingInterval: interval,
+      isBetaDiscountApplied: pricing.isBetaApplied,
+      consentRecord,
       organization: 'Moyer Ventures LLC',
       paymentProvider: paymentProvider === 'Shopify / Shop Pay' ? 'Shopify / Shop Pay' : 'Stripe',
     });

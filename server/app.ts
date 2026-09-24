@@ -14,6 +14,7 @@ import { checkoutRoutes } from './routes/checkout_routes.js';
 import { byokRoutes } from './routes/byok_routes.js';
 import { messagingRoutes } from './routes/messaging_routes.js';
 import { authRoutes } from './routes/auth_routes.js';
+import { feedbackRoutes } from './routes/feedback_routes.js';
 
 export function createApp(): Express {
   const app = express();
@@ -42,6 +43,8 @@ export function createApp(): Express {
   app.use('/api/byok', byokRoutes);
   app.use('/api/messages', messagingRoutes);
   app.use('/api/auth', authRoutes);
+  app.use('/api/feedback', feedbackRoutes);
+  app.use('/api/bugs', feedbackRoutes);
 
   // Clean Customer-Facing Vanity Checkout Redirects
   app.get('/subscribe/founder', (_req: Request, res: Response) => {

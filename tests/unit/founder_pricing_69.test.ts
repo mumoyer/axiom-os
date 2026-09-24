@@ -17,14 +17,15 @@ describe('Founder Plan $69 Pricing Verification Suite', () => {
       assert.ok(Array.isArray(data.supportedTiers), 'Expected supportedTiers array');
       const founder = data.supportedTiers.find((t: any) => t.id === 'FOUNDER');
       assert.ok(founder, 'FOUNDER tier must exist');
-      assert.equal(founder.priceUsd, 69, 'FOUNDER monthly price must be $69');
+      assert.equal(founder.priceUsd, 55, 'FOUNDER monthly beta price must be $55');
+      assert.equal(founder.listPriceUsd, 69, 'FOUNDER regular list price must be preserved at $69');
       assert.equal(founder.name, 'Founder Plan');
     } finally {
       await new Promise<void>((resolve) => server.close(() => resolve()));
     }
   });
 
-  it('POST /api/checkout/session with FOUNDER plan charges $69', async () => {
+  it('POST /api/checkout/session with FOUNDER plan charges $55 during beta', async () => {
     const server = http.createServer(app);
     await new Promise<void>((resolve) => server.listen(0, resolve));
     const address = server.address() as any;
@@ -43,7 +44,8 @@ describe('Founder Plan $69 Pricing Verification Suite', () => {
       assert.equal(res.status, 201);
       const data = await res.json();
       assert.equal(data.plan, 'FOUNDER');
-      assert.equal(data.amountUsd, 69, 'Checkout session amountUsd for FOUNDER must be $69');
+      assert.equal(data.amountUsd, 55, 'Checkout session amountUsd for FOUNDER must be $55 during beta');
+      assert.equal(data.listPriceUsd, 69, 'Regular list price must be $69');
     } finally {
       await new Promise<void>((resolve) => server.close(() => resolve()));
     }

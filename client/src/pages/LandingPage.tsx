@@ -26,17 +26,20 @@ import {
   ExternalLink,
   Sliders,
   Filter,
+  Bug,
 } from 'lucide-react';
 import { ExampleScenarioExplorer } from '../components/ExampleScenarioExplorer.js';
 
 interface LandingPageProps {
   onNavigate?: (path: string) => void;
   selectedPersona?: 'newbie' | 'serial' | 'enterprise';
+  onOpenBugReport?: () => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   onNavigate = (path: string) => { window.location.hash = path; },
   selectedPersona = 'serial',
+  onOpenBugReport = () => {},
 }) => {
   // Billing toggle: monthly vs annual
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'annual'>('monthly');
@@ -140,8 +143,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     {
       id: 3,
       name: 'Monetization & Revenue Share',
-      axiom: { tag: 'OPTIMAL', text: 'Predictable SaaS Tiers ($69 / $149 / $999). Strict 0.0% Perpetual Revenue Tax.' },
-      polsia: { tag: 'CRITICAL', text: 'Exploitative: $49/mo + $1/credit + 20% to 50% perpetual lifetime revenue tax' },
+      axiom: { tag: 'OPTIMAL', text: 'Predictable SaaS Tiers ($55 / $119 / $799 Beta — 20% off list $69 / $149 / $999). Strict 0.0% Perpetual Revenue Tax.' },
+      polsia: { tag: 'CRITICAL', text: 'Tiered pricing + $1/credit + 20% to 50% lifetime revenue royalty model' },
       devtools: { tag: 'OPTIMAL', text: 'Tool subscription ($20-$50/mo); 0% revenue share' },
       studios: { tag: 'CRITICAL', text: '$500K-$2.5M fixed fee + 15% to 40% equity stake' },
     },
@@ -149,7 +152,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       id: 4,
       name: 'Ad-Spend & Growth Economics',
       axiom: { tag: 'OPTIMAL', text: '0% Ad Markup Pass-Through. Direct OAuth to founder Meta/Google Ads' },
-      polsia: { tag: 'CRITICAL', text: 'Predatory 20% platform markup on all managed ad spend' },
+      polsia: { tag: 'CRITICAL', text: 'Variable 20% intermediary ad spend commission' },
       devtools: { tag: 'PARTIAL', text: 'Non-existent (no ad network or marketing automation)' },
       studios: { tag: 'FAIL', text: '$250-$450/hr agency media management fees' },
     },
@@ -157,7 +160,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       id: 5,
       name: 'Billing on Failures (Bug Tax)',
       axiom: { tag: 'OPTIMAL', text: 'Zero-Charge Failure Guarantee. 2PC Escrow: 0 credits debited; ΔB == 0.00' },
-      polsia: { tag: 'CRITICAL', text: 'Predatory "Bug Tax". Debits ~$1.00 per credit on every syntax error & broken loop' },
+      polsia: { tag: 'CRITICAL', text: 'Credit-deducting build failure model (~$1.00 per syntax error & broken loop)' },
       devtools: { tag: 'FAIL', text: 'Metered token consumption regardless of whether code compiles or crashes' },
       studios: { tag: 'FAIL', text: 'Sunk cost retainers regardless of whether MVP works or fails' },
     },
@@ -165,7 +168,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       id: 6,
       name: 'Code & Data Ownership (Portability)',
       axiom: { tag: 'OPTIMAL', text: '100% Dual-Push Full Git Ejection. Clean Next.js + Supabase; zero lock-in' },
-      polsia: { tag: 'CRITICAL', text: 'Walled-garden hostage model. Cancellation wipes DB and terminates hosting' },
+      polsia: { tag: 'CRITICAL', text: 'Walled-garden hosting model; cancellation risks database and service severance' },
       devtools: { tag: 'PARTIAL', text: 'Local git (Cursor) or manual zip export (Lovable); proprietary Nix in Replit' },
       studios: { tag: 'PARTIAL', text: 'Eventual IP transfer, but delivers bespoke agency legacy code' },
     },
@@ -173,7 +176,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       id: 7,
       name: 'Infrastructure Independence',
       axiom: { tag: 'OPTIMAL', text: 'Provider-Agnostic IaC. Deploys to Vercel, Supabase, Cloudflare, Fly.io, or AWS' },
-      polsia: { tag: 'CRITICAL', text: 'Bound to Polsia internal Docker cluster and shared reverse proxies' },
+      polsia: { tag: 'CRITICAL', text: 'Bound to proprietary internal cluster and shared reverse proxies' },
       devtools: { tag: 'PARTIAL', text: 'Bound to provider clouds or manual devops configuration' },
       studios: { tag: 'PARTIAL', text: 'Bespoke, expensive manual Terraform to enterprise clouds' },
     },
@@ -181,7 +184,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       id: 8,
       name: 'Execution Autonomy & Control Bounds',
       axiom: { tag: 'OPTIMAL', text: 'Bounded DAG Orchestration. Autonomous with deterministic gate approval gates' },
-      polsia: { tag: 'CRITICAL', text: 'Unchecked 7-day "God Mode" causing DB table wipes & hallucinated loops' },
+      polsia: { tag: 'CRITICAL', text: 'Unconstrained multi-agent loops risking unintended database migrations & hallucination spirals' },
       devtools: { tag: 'PARTIAL', text: 'Prompt-by-prompt diff approval; severe developer fatigue' },
       studios: { tag: 'FAIL', text: 'Slow 6-12 month human sprints with weekly committee slide decks' },
     },
@@ -197,7 +200,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       id: 10,
       name: 'Target Persona Alignment',
       axiom: { tag: 'OPTIMAL', text: '3 Dedicated Personas: (1) Aspiring Founder, (2) Serial Hacker, (3) Enterprise Studio' },
-      polsia: { tag: 'FAIL', text: 'Low-intent get-rich-quick opportunists; 50%+ monthly churn collapse' },
+      polsia: { tag: 'FAIL', text: 'High consumer churn dynamics in unconstrained autonomous builders' },
       devtools: { tag: 'PARTIAL', text: 'Exclusively technical software engineers and technical PMs' },
       studios: { tag: 'PARTIAL', text: 'Fortune 500 C-suite executives seeking brand safety' },
     },
@@ -205,15 +208,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       id: 11,
       name: 'Retention & Net Revenue Retention',
       axiom: { tag: 'OPTIMAL', text: '116.5% - 142.0% NRR. Multi-venture cockpit & stage-gate CI/CD maintain utility' },
-      polsia: { tag: 'CRITICAL', text: 'Catastrophic churn (>50%/mo); 1.7 Trustpilot score; widespread chargebacks' },
+      polsia: { tag: 'CRITICAL', text: 'Elevated churn dynamics & disputed customer billing across multi-agent loops' },
       devtools: { tag: 'PARTIAL', text: 'Moderate developer retention; high beginner churn at the "Last Mile"' },
       studios: { tag: 'FAIL', text: 'Single-engagement churn (contract ends after 6-12 months)' },
     },
     {
       id: 12,
       name: 'Enterprise Governance & Compliance',
-      axiom: { tag: 'OPTIMAL', text: 'Okta SAML 2.0 SSO, SOC 2 Type II audit logs, capital tranches, Zero Data Retention' },
-      polsia: { tag: 'CRITICAL', text: 'Zero compliance. Shared multi-tenant vector stores risk IP contamination' },
+      axiom: { tag: 'OPTIMAL', text: 'Okta SAML 2.0 SSO (Enterprise), SOC 2 Audit-Ready Architecture, capital tranches, Zero Data Retention' },
+      polsia: { tag: 'CRITICAL', text: 'Standard SaaS terms without enterprise capital tranche controls or audit-ready receipts' },
       devtools: { tag: 'PARTIAL', text: 'Basic team seats; no capital tranche controls or audit receipts' },
       studios: { tag: 'OPTIMAL', text: 'Heavy manual compliance reviews and bespoke enterprise legal contracts' },
     },
@@ -275,7 +278,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <span className="text-slate-300 text-center sm:text-left">
                 {selectedPersona === 'newbie' && 'Busy 9-to-5 Professionals — 15 min/day, no coding, turnkey verification & 0% revenue tax.'}
                 {selectedPersona === 'serial' && 'Serial Indie Hackers — Headless CLI, BYOK wholesale 0% markup & continuous dual-push Git.'}
-                {selectedPersona === 'enterprise' && 'Corporate Innovation Studios — Tranche capital gates ($5k→$25k→$100k), SAML SSO & SOC 2 audit logs.'}
+                {selectedPersona === 'enterprise' && 'Corporate Innovation Studios — Tranche capital gates ($5k→$25k→$100k), SAML SSO & SOC 2 audit-ready architecture.'}
               </span>
             </div>
 
@@ -295,16 +298,24 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 className="w-full sm:w-auto px-6 py-3.5 rounded-lg text-xs font-mono font-semibold text-emerald-300 bg-[#0c1a24] hover:bg-[#112433] border border-emerald-700/80 transition-all flex items-center justify-center space-x-2"
               >
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>START FOUNDER PLAN ($69/MO)</span>
+                <span>START FOUNDER PLAN ($55/MO BETA)</span>
               </button>
 
-              <a
-                href="#scenarios"
+              <button
+                type="button"
+                onClick={() => {
+                  const el = document.getElementById('scenarios');
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth' });
+                  } else {
+                    onNavigate('/');
+                  }
+                }}
                 className="w-full sm:w-auto px-5 py-3.5 rounded-lg text-xs font-mono font-semibold text-indigo-300 bg-indigo-950/40 hover:bg-indigo-900/60 border border-indigo-700/60 transition-all flex items-center justify-center space-x-2"
               >
                 <Sparkles className="w-4 h-4 text-indigo-400" />
                 <span>EXPLORE EXAMPLE SCENARIOS</span>
-              </a>
+              </button>
             </div>
 
             {/* Architectural Trust Indicators */}
@@ -715,17 +726,35 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
         {/* 3 PRICING TIERS SECTION (BENTO CARDS) */}
         <section id="pricing" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-slate-800/80">
-          <div className="space-y-3 mb-12">
-            <div className="text-xs font-mono uppercase tracking-widest text-indigo-400 flex items-center space-x-2">
-              <span className="inline-block w-2 h-2 rounded-full bg-indigo-500"></span>
-              <span>TRANSPARENT UNIT ECONOMICS</span>
+          <div className="space-y-4 mb-10">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-bold tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse inline-block" />
+                PUBLIC BETA PRICING
+              </span>
+              <span className="text-xs font-mono text-emerald-400 font-semibold px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-500/40">
+                20% DISCOUNT APPLIED
+              </span>
+              <span className="text-xs font-mono text-indigo-300 px-2 py-0.5 rounded bg-indigo-950/60 border border-indigo-500/30">
+                LIFETIME RATE LOCK FOR BETA TESTERS
+              </span>
             </div>
+
             <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-              Zero Hidden Taxes. Wholesale Token Pricing.
+              Early Adopter Beta Rates. 20% Off Regular List.
             </h2>
-            <p className="text-sm text-slate-400 max-w-2xl leading-relaxed">
-              Choose the tier calibrated to your venture velocity. Switch or cancel anytime. All plans backed by the strict Zero-Charge Failure Guarantee.
-            </p>
+
+            {/* Why Pricing is Lower Explanatory Callout */}
+            <div className="bg-[#0b101d] border border-indigo-500/30 rounded-xl p-4 sm:p-5 max-w-4xl text-xs sm:text-sm text-slate-300 space-y-2">
+              <div className="flex items-center space-x-2 text-indigo-300 font-semibold font-mono text-xs">
+                <Sparkles className="w-4 h-4 text-indigo-400" />
+                <span>WHY ARE PRICES LOWER DURING BETA?</span>
+              </div>
+              <p className="leading-relaxed text-slate-300 text-xs">
+                Stage Gate OS is currently in <strong>Public Beta</strong>. As an early adopter, you are helping us test our autonomous stage-gate architecture in production. In exchange, <strong>every subscription tier is discounted by 20%</strong> compared to regular list pricing. 
+                When you subscribe during beta, your 20% discount is <strong className="text-emerald-400 font-semibold">permanently locked for the lifetime of your active subscription</strong> — your rate will never increase to regular list price.
+              </p>
+            </div>
 
             {/* Monthly / Annual Toggle */}
             <div className="inline-flex items-center p-1 rounded-lg bg-[#0a0f1d] border border-slate-800 mt-2 font-mono">
@@ -749,7 +778,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               >
                 <span>ANNUAL</span>
                 <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-500 text-slate-950">
-                  -20%
+                  EXTRA 20%
                 </span>
               </button>
             </div>
@@ -759,7 +788,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Tier 1: Founder Plan */}
-            <div className="bento-card p-6 sm:p-7 space-y-6 flex flex-col justify-between">
+            <div className="bento-card p-6 sm:p-7 space-y-6 flex flex-col justify-between border-slate-800 hover:border-emerald-500/50">
               <div className="space-y-4">
                 <div>
                   <div className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400">
@@ -774,14 +803,30 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   </p>
                 </div>
 
-                <div className="flex items-baseline space-x-2 font-mono">
-                  <span className="text-4xl font-extrabold text-white">
-                    ${billingInterval === 'monthly' ? '69' : '55'}
-                  </span>
-                  <span className="text-xs text-slate-400">/ month</span>
-                  {billingInterval === 'annual' && (
-                    <span className="text-[11px] text-emerald-400">($660 billed annually)</span>
-                  )}
+                {/* Price Display with Strikethrough Regular Price */}
+                <div className="space-y-1 font-mono">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs text-slate-400">Regular:</span>
+                    <span className="line-through text-slate-500 font-bold text-sm">
+                      ${billingInterval === 'monthly' ? '69' : '55'}/mo
+                    </span>
+                    <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-500/40">
+                      20% BETA SAVINGS
+                    </span>
+                  </div>
+
+                  <div className="flex items-baseline space-x-2">
+                    <span className="text-4xl font-extrabold text-white">
+                      ${billingInterval === 'monthly' ? '55' : '44'}
+                    </span>
+                    <span className="text-xs text-slate-400">/ month (beta)</span>
+                  </div>
+
+                  <div className="text-[11px] text-emerald-400">
+                    {billingInterval === 'annual'
+                      ? '($528 billed annually, save $132/yr)'
+                      : 'Save $14/month vs $69 list price'}
+                  </div>
                 </div>
 
                 <div className="pt-4 border-t border-slate-800/80 space-y-2.5 text-xs text-slate-300">
@@ -819,9 +864,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
               <button
                 onClick={() => onNavigate(`/checkout?plan=founder&billing=${billingInterval}`)}
-                className="w-full py-3 rounded-lg text-xs font-mono font-semibold text-emerald-300 bg-emerald-950/40 hover:bg-emerald-900/60 border border-emerald-700/50 transition-all text-center cursor-pointer"
+                className="w-full py-3 rounded-lg text-xs font-mono font-semibold text-emerald-300 bg-emerald-950/40 hover:bg-emerald-900/60 border border-emerald-700/50 transition-all text-center cursor-pointer shadow-sm"
               >
-                START FOUNDER PLAN ($69/MO)
+                START FOUNDER PLAN (${billingInterval === 'monthly' ? '55' : '44'}/MO BETA)
               </button>
             </div>
 
@@ -845,14 +890,30 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   </p>
                 </div>
 
-                <div className="flex items-baseline space-x-2 font-mono">
-                  <span className="text-4xl font-extrabold text-white">
-                    ${billingInterval === 'monthly' ? '149' : '119'}
-                  </span>
-                  <span className="text-xs text-slate-400">/ month</span>
-                  {billingInterval === 'annual' && (
-                    <span className="text-[11px] text-indigo-400">($1,430 billed annually)</span>
-                  )}
+                {/* Price Display with Strikethrough Regular Price */}
+                <div className="space-y-1 font-mono">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs text-slate-400">Regular:</span>
+                    <span className="line-through text-slate-500 font-bold text-sm">
+                      ${billingInterval === 'monthly' ? '149' : '119'}/mo
+                    </span>
+                    <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-indigo-950/80 text-indigo-300 border border-indigo-500/40">
+                      20% BETA SAVINGS
+                    </span>
+                  </div>
+
+                  <div className="flex items-baseline space-x-2">
+                    <span className="text-4xl font-extrabold text-white">
+                      ${billingInterval === 'monthly' ? '119' : '95'}
+                    </span>
+                    <span className="text-xs text-slate-400">/ month (beta)</span>
+                  </div>
+
+                  <div className="text-[11px] text-indigo-400">
+                    {billingInterval === 'annual'
+                      ? '($1,140 billed annually, save $290/yr)'
+                      : 'Save $30/month vs $149 list price'}
+                  </div>
                 </div>
 
                 <div className="pt-4 border-t border-slate-800 space-y-2.5 text-xs text-slate-300">
@@ -892,12 +953,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 onClick={() => onNavigate(`/checkout?plan=serial&billing=${billingInterval}`)}
                 className="w-full py-3.5 rounded-lg text-xs font-mono font-bold text-slate-950 bg-white hover:bg-slate-200 transition-all text-center cursor-pointer shadow-md"
               >
-                LAUNCH SERIAL PLAN ($149/MO)
+                LAUNCH SERIAL PLAN (${billingInterval === 'monthly' ? '119' : '95'}/MO BETA)
               </button>
             </div>
 
             {/* Tier 3: Enterprise Studio */}
-            <div className="bento-card p-6 sm:p-7 space-y-6 flex flex-col justify-between">
+            <div className="bento-card p-6 sm:p-7 space-y-6 flex flex-col justify-between border-slate-800 hover:border-cyan-500/50">
               <div className="space-y-4">
                 <div>
                   <div className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400">
@@ -912,14 +973,30 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   </p>
                 </div>
 
-                <div className="flex items-baseline space-x-2 font-mono">
-                  <span className="text-4xl font-extrabold text-white">
-                    ${billingInterval === 'monthly' ? '999' : '799'}
-                  </span>
-                  <span className="text-xs text-slate-400">/ month</span>
-                  {billingInterval === 'annual' && (
-                    <span className="text-[11px] text-cyan-400">($9,590 billed annually)</span>
-                  )}
+                {/* Price Display with Strikethrough Regular Price */}
+                <div className="space-y-1 font-mono">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs text-slate-400">Regular:</span>
+                    <span className="line-through text-slate-500 font-bold text-sm">
+                      ${billingInterval === 'monthly' ? '999' : '799'}/mo
+                    </span>
+                    <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-cyan-950/80 text-cyan-300 border border-cyan-500/40">
+                      20% BETA SAVINGS
+                    </span>
+                  </div>
+
+                  <div className="flex items-baseline space-x-2">
+                    <span className="text-4xl font-extrabold text-white">
+                      ${billingInterval === 'monthly' ? '799' : '639'}
+                    </span>
+                    <span className="text-xs text-slate-400">/ month (beta)</span>
+                  </div>
+
+                  <div className="text-[11px] text-cyan-400">
+                    {billingInterval === 'annual'
+                      ? '($7,668 billed annually, save $1,922/yr)'
+                      : 'Save $200/month vs $999 list price'}
+                  </div>
                 </div>
 
                 <div className="pt-4 border-t border-slate-800 space-y-2.5 text-xs text-slate-300">
@@ -934,7 +1011,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   </div>
                   <div className="flex items-center space-x-2">
                     <Check className="w-4 h-4 text-cyan-400 shrink-0" />
-                    <span>SOC 2 Type II audit logs & cryptographically signed receipts</span>
+                    <span>SOC 2 audit-ready controls &amp; cryptographically signed receipts</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Check className="w-4 h-4 text-cyan-400 shrink-0" />
@@ -953,12 +1030,44 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
               <button
                 onClick={() => onNavigate(`/checkout?plan=enterprise&billing=${billingInterval}`)}
-                className="w-full py-3 rounded-lg text-xs font-mono font-semibold text-cyan-300 bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-700/50 transition-all text-center cursor-pointer"
+                className="w-full py-3 rounded-lg text-xs font-mono font-semibold text-cyan-300 bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-700/50 transition-all text-center cursor-pointer shadow-sm"
               >
-                DEPLOY ENTERPRISE STUDIO ($999/MO)
+                DEPLOY ENTERPRISE STUDIO (${billingInterval === 'monthly' ? '799' : '639'}/MO BETA)
               </button>
             </div>
 
+          </div>
+
+          {/* Bug Bounty Encouragement Banner Under Pricing */}
+          <div className="mt-10 rounded-2xl bg-gradient-to-r from-amber-950/30 via-slate-900 to-amber-950/30 border border-amber-500/40 p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+            <div className="flex items-start space-x-4 max-w-2xl">
+              <div className="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0">
+                <Bug className="w-6 h-6 text-amber-400" />
+              </div>
+              <div className="space-y-1.5">
+                <div className="flex items-center space-x-2">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-500/40">
+                    BETA TESTER INCENTIVE
+                  </span>
+                  <span className="text-xs font-mono text-emerald-400 font-medium">Earn 1–3 Free Months</span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold text-white">
+                  Help Us Break Stage Gate OS — We Reward Every Verified Bug
+                </h3>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  Found a glitch, an unhandled edge case, or a slow stage gate? We want to know immediately. 
+                  Every verified functional or blocking bug report earns up to <strong>3 free months</strong> of subscription credit plus direct advisory contact with founder Jason Moyer. No report is too small.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={onOpenBugReport}
+              className="w-full md:w-auto px-6 py-3.5 rounded-xl font-mono text-xs font-bold text-slate-950 bg-amber-400 hover:bg-amber-300 transition-all flex items-center justify-center space-x-2 cursor-pointer shrink-0 shadow-lg shadow-amber-950/60 hover:scale-102"
+            >
+              <Bug className="w-4 h-4 text-slate-950" />
+              <span>REPORT A BUG &amp; CLAIM REWARD</span>
+            </button>
           </div>
         </section>
 

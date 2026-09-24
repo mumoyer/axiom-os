@@ -9,14 +9,17 @@ import { SerialDashboardPage } from './pages/SerialDashboardPage.js';
 import { LiveVenturePage } from './pages/LiveVenturePage.js';
 import { ProjectMessengerModal } from './components/ProjectMessengerModal.js';
 import { AuthModal } from './components/AuthModal.js';
-import { MessageSquare } from 'lucide-react';
+import { BetaBanner } from './components/BetaBanner.js';
+import { BugReportModal } from './components/BugReportModal.js';
+import { MessageSquare, Bug } from 'lucide-react';
 import { getAuthProfile, verifyAuthToken, logoutAuth, AuthSessionData } from './services/api.js';
 
 export function App() {
   const [currentPath, setCurrentPath] = useState<string>('/');
   const [selectedPersona, setSelectedPersona] = useState<'newbie' | 'serial' | 'enterprise'>('serial');
-  const [currentVentureId, setCurrentVentureId] = useState<string>('ven_docuflow_02');
+  const [currentVentureId, setCurrentVentureId] = useState<string>('');
   const [messengerOpen, setMessengerOpen] = useState<boolean>(false);
+  const [bugReportModalOpen, setBugReportModalOpen] = useState<boolean>(false);
   const [authModalOpen, setAuthModalOpen] = useState<boolean>(false);
   const [authUser, setAuthUser] = useState<{ email: string; tenantId: string; role?: string } | null>(null);
 
@@ -93,7 +96,7 @@ export function App() {
       setSelectedPersona('serial');
     } else if (pathnameOnly.startsWith('/ventures/')) {
       const vid = pathnameOnly.replace('/ventures/', '');
-      setCurrentVentureId(vid || 'ven_docuflow_02');
+      setCurrentVentureId(vid || '');
       setCurrentPath('/ventures');
     } else if (pathnameOnly.startsWith('/grader')) {
       setCurrentPath('/grader');
@@ -144,6 +147,8 @@ export function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#080C14] text-slate-100 antialiased font-sans">
+      <BetaBanner onOpenBugReport={() => setBugReportModalOpen(true)} />
+
       <Navigation
         currentPath={currentPath}
         onNavigate={navigateTo}
@@ -152,6 +157,7 @@ export function App() {
         authUser={authUser}
         onOpenAuth={() => setAuthModalOpen(true)}
         onLogout={handleLogout}
+        onOpenBugReport={() => setBugReportModalOpen(true)}
       />
 
       <main className="flex-1">
@@ -166,12 +172,24 @@ export function App() {
           <LandingPage
             onNavigate={navigateTo}
             selectedPersona={selectedPersona}
+            onOpenBugReport={() => setBugReportModalOpen(true)}
           />
         )}
       </main>
 
-      {/* Floating Project Messenger Launcher */}
-      <div className="fixed bottom-6 right-6 z-40">
+      {/* Floating Action Launchers */}
+      <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2.5">
+        {/* Bug Bounty Floating Quick-Action */}
+        <button
+          onClick={() => setBugReportModalOpen(true)}
+          className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-slate-900/90 hover:bg-slate-800 text-amber-400 hover:text-amber-300 font-medium shadow-xl shadow-black/60 border border-amber-500/40 transition-all hover:scale-105 active:scale-95 text-xs backdrop-blur-sm group"
+          title="Report a bug and earn Bug Bounty subscription credit"
+        >
+          <Bug className="w-4 h-4 text-amber-400 group-hover:rotate-12 transition-transform" />
+          <span className="font-semibold tracking-wide">Report Bug <span className="text-[10px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded-full border border-amber-500/30 ml-1">Bounty</span></span>
+        </button>
+
+        {/* Project Messenger Launcher */}
         <button
           onClick={() => setMessengerOpen(true)}
           className="flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-medium shadow-xl shadow-cyan-950/60 border border-cyan-400/40 transition-all hover:scale-105 active:scale-95 group"
@@ -192,6 +210,12 @@ export function App() {
         ventureId={currentVentureId}
       />
 
+      {/* Bug Report & Bounty Modal */}
+      <BugReportModal
+        isOpen={bugReportModalOpen}
+        onClose={() => setBugReportModalOpen(false)}
+      />
+
       {/* Passwordless Auth Modal */}
       <AuthModal
         isOpen={authModalOpen}
@@ -201,7 +225,7 @@ export function App() {
         }}
       />
 
-      <Footer onNavigate={navigateTo} />
+      <Footer onNavigate={navigateTo} onOpenBugReport={() => setBugReportModalOpen(true)} />
     </div>
   );
 }

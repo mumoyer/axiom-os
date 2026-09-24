@@ -23,6 +23,8 @@ test.describe('Founder Launchpad & Multi-Tier Workflows (Newbie + Serial)', () =
 
       // Step 2: Target Persona & ICP
       await expect(page.locator('text=Step 2: Target Persona')).toBeVisible({ timeout: 5000 });
+      await page.locator('text=SMB & Solo Practice Owners').click();
+      await page.locator('text=Manual repetitive data entry').click();
       const nextBtn2 = page.getByRole('button', { name: /Continue to Business Model/i });
       await nextBtn2.click();
 
@@ -49,7 +51,7 @@ test.describe('Founder Launchpad & Multi-Tier Workflows (Newbie + Serial)', () =
     test('preserves custom data when navigating from step 4 back to step 1 and allows jumping back', async ({ page }) => {
       // Step 1: Ingest custom venture name and problem
       await expect(page.locator('text=Step 1: Venture Concept Ingestion')).toBeVisible();
-      const nameInput = page.locator('input[placeholder="e.g. DocuFlow AI"]');
+      const nameInput = page.locator('input[placeholder*="MetricFlow"]');
       await nameInput.fill('Booking Agent AI');
 
       const problemInput = page.locator('textarea[placeholder*="manual, painful problem"]');
@@ -124,7 +126,7 @@ test.describe('Founder Launchpad & Multi-Tier Workflows (Newbie + Serial)', () =
 
     test('validates multi-venture metrics, BYOK key vault, and 1-click Git ejection', async ({ page }) => {
       // 1. Portfolio Metrics Bar
-      await expect(page.locator('text=Active Ventures')).toBeVisible();
+      await expect(page.getByText('Active Ventures', { exact: true })).toBeVisible();
       await expect(page.locator('text=Aggregated MRR')).toBeVisible();
       await expect(page.locator('text=System Uptime')).toBeVisible();
       await expect(page.locator('text=Incurred Bug Tax')).toBeVisible();

@@ -32,7 +32,21 @@ export interface CustomerMessageAlert {
   timestamp: string;
 }
 
-export type StageGateAlert = LeadAlert | SignupAlert | CustomerMessageAlert;
+export interface BugReportAlert {
+  type: 'BUG_REPORT';
+  bugId: string;
+  title: string;
+  category: string;
+  severity: string;
+  description: string;
+  reporterEmail?: string;
+  ventureId?: string;
+  url?: string;
+  bountyReward: string;
+  timestamp: string;
+}
+
+export type StageGateAlert = LeadAlert | SignupAlert | CustomerMessageAlert | BugReportAlert;
 export type AxiomAlert = StageGateAlert;
 
 class NotificationService {
@@ -54,10 +68,13 @@ class NotificationService {
       cardText = `*${alert.name}* (${alert.email}) evaluated *${alert.ventureName || 'New Venture'}* in *${alert.industry || 'Tech'}*.\nScore: *${alert.score || 'N/A'}/100* (Grade ${alert.gradeBracket || 'N/A'})\nTime: ${alert.timestamp}`;
     } else if (alert.type === 'PLAN_SIGNUP') {
       title = '💰 New Stage Gate OS Subscriber!';
-      cardText = `Founder *${alert.email}* signed up for *${alert.plan}* tier ($${alert.amountUsd}/mo) via *${alert.provider}*.\nTime: ${alert.timestamp}`;
+      cardText = `Founder *${alert.email}* signed up for *${alert.plan}* tier ($${alert.amountUsd}) via *${alert.provider}*.\nTime: ${alert.timestamp}`;
     } else if (alert.type === 'CUSTOMER_MESSAGE') {
       title = `💬 New Customer Message on Venture ${alert.ventureId}`;
       cardText = `*${alert.senderName}* (${alert.senderEmail}) sent a message:\n> "${alert.messageText}"\nTime: ${alert.timestamp}`;
+    } else if (alert.type === 'BUG_REPORT') {
+      title = `🐛 New Beta Bug Report [${alert.bugId}] (${alert.severity.toUpperCase()})`;
+      cardText = `*Title*: ${alert.title}\n*Category*: ${alert.category} | *Severity*: ${alert.severity}\n*Reporter*: ${alert.reporterEmail || 'Anonymous'}\n*Bounty Reward*: ${alert.bountyReward}\n*URL*: ${alert.url || 'N/A'}\n*Description*:\n> ${alert.description}\nTime: ${alert.timestamp}`;
     }
 
     if (this.googleChatWebhookUrl) {
@@ -97,9 +114,15 @@ class NotificationService {
 
         if (res.ok) {
           return { dispatched: true, channel: 'Google Chat Webhook' };
+        } else {
+          const body = await res.text().catch(() => '');
+          console.warn(`[Notification Service] Google Chat Webhook returned HTTP ${res.status}: ${body}`);
         }
       } catch (err: any) {
-        console.warn('[Notification Service] Google Chat Webhook dispatch failed:', err.message);
+        console.warn(
+          '[Notification Service] Google Chat Webhook dispatch failed:',
+          err instanceof Error ? err.message : String(err)
+        );
       }
     }
 

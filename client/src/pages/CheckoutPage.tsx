@@ -12,6 +12,7 @@ import {
   Terminal,
   Building2,
   RefreshCw,
+  X,
 } from 'lucide-react';
 import {
   createCheckoutSession,
@@ -30,10 +31,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   // Parse initial params from URL
   const [selectedPlan, setSelectedPlan] = useState<'FOUNDER' | 'SERIAL' | 'ENTERPRISE'>('SERIAL');
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'annual'>('monthly');
-  const [customerEmail, setCustomerEmail] = useState('founder@venture.com');
-  const [copiedCard, setCopiedCard] = useState(false);
+  const [customerEmail, setCustomerEmail] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'shoppay' | 'card'>('shoppay');
   const [checkoutConfig, setCheckoutConfig] = useState<CheckoutConfigResponse | null>(null);
+
+  // Legal compliance & clickwrap state
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [policyModal, setPolicyModal] = useState<'terms' | 'privacy' | null>(null);
 
   // Checkout process state
   const [processing, setProcessing] = useState(false);
@@ -79,10 +83,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       name: 'Founder Plan',
       persona: 'Busy 9-to-5 Professionals',
       subtitle: 'Turnkey 15 min/day, no coding needed, personal GitHub & Stripe',
-      monthlyPrice: 69,
-      annualPrice: 660,
-      monthlyPerMo: 69,
-      annualPerMo: 55,
+      monthlyPrice: 55,
+      listMonthlyPrice: 69,
+      annualPrice: 528,
+      listAnnualPrice: 660,
+      monthlyPerMo: 55,
+      annualPerMo: 44,
+      listAnnualPerMo: 55,
       credits: 1000,
       deployments: 3,
       iterations: 10,
@@ -96,10 +103,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       name: 'Serial Plan',
       persona: 'Serial Indie Hackers & Builders',
       subtitle: 'Headless CLI, BYOK 0% token markup, multi-venture cockpit',
-      monthlyPrice: 149,
-      annualPrice: 1430,
-      monthlyPerMo: 149,
-      annualPerMo: 119,
+      monthlyPrice: 119,
+      listMonthlyPrice: 149,
+      annualPrice: 1140,
+      listAnnualPrice: 1430,
+      monthlyPerMo: 119,
+      annualPerMo: 95,
+      listAnnualPerMo: 119,
       credits: 5000,
       deployments: 15,
       iterations: 50,
@@ -112,11 +122,14 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       id: 'ENTERPRISE' as const,
       name: 'Enterprise Studio Plan',
       persona: 'Corporate Innovation Studios',
-      subtitle: 'Tranche capital gates ($5k→$25k→$100k), SAML SSO, SOC 2 logs',
-      monthlyPrice: 999,
-      annualPrice: 9590,
-      monthlyPerMo: 999,
-      annualPerMo: 799,
+      subtitle: 'Tranche capital gates ($5k→$25k→$100k), SAML SSO, SOC 2 ready controls',
+      monthlyPrice: 799,
+      listMonthlyPrice: 999,
+      annualPrice: 7668,
+      listAnnualPrice: 9590,
+      monthlyPerMo: 799,
+      annualPerMo: 639,
+      listAnnualPerMo: 799,
       credits: 25000,
       deployments: 50,
       iterations: 250,
@@ -129,16 +142,16 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
   const currentPlan = plans[selectedPlan];
   const price = billingInterval === 'monthly' ? currentPlan.monthlyPrice : currentPlan.annualPrice;
+  const listPrice = billingInterval === 'monthly' ? currentPlan.listMonthlyPrice : currentPlan.listAnnualPrice;
+  const savings = listPrice - price;
   const perMonthPrice = billingInterval === 'monthly' ? currentPlan.monthlyPerMo : currentPlan.annualPerMo;
-
-  const copyTestCard = () => {
-    navigator.clipboard.writeText('4242424242424242');
-    setCopiedCard(true);
-    setTimeout(() => setCopiedCard(false), 2000);
-  };
 
   const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!agreedToTerms) {
+      setErrorMsg('You must review and agree to the Terms of Service, Privacy Policy, and continuous recurring billing terms before proceeding.');
+      return;
+    }
     setProcessing(true);
     setErrorMsg('');
 
@@ -147,26 +160,18 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       const session = await createCheckoutSession({
         plan: selectedPlan,
         email: customerEmail,
+        billingInterval,
         paymentProvider: provider,
+        agreedToTerms: true,
+        consentTimestamp: new Date().toISOString(),
+        disclosureVersion: '2026-09-PUBLIC-BETA-RATE-LOCK-v1',
         successUrl: `${window.location.origin}/#dashboard?session_id={CHECKOUT_SESSION_ID}`,
         cancelUrl: `${window.location.origin}/#checkout?canceled=true`,
       });
 
       setCompletedSession(session);
     } catch (err: any) {
-      // Deterministic client fallback simulation for testing without live backend
-      const mockSession: CheckoutSessionResponse = {
-        sessionId: `cs_test_${Math.random().toString(36).slice(2, 12)}`,
-        url: 'https://checkout.stripe.com/test_session',
-        customer: {
-          id: `cus_${Math.random().toString(36).slice(2, 10)}`,
-          email: customerEmail,
-        },
-        plan: selectedPlan,
-        organization: checkoutConfig?.organization || 'Moyer Ventures LLC',
-        paymentProvider: paymentMethod === 'shoppay' ? 'Shopify / Shop Pay' : 'Stripe',
-      };
-      setCompletedSession(mockSession);
+      setErrorMsg(err.message || 'Unable to initialize checkout session. Please check your network connection and try again.');
     } finally {
       setProcessing(false);
     }
@@ -178,9 +183,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         
         {/* Header */}
         <div className="text-center space-y-3 max-w-2xl mx-auto">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-indigo-500/30 text-xs text-indigo-300">
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-emerald-500/30 text-xs text-emerald-300">
             <Lock className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Stripe Sandbox Test Mode Active</span>
+            <span>256-Bit SSL Encrypted &amp; Secure Checkout</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
             Complete Your Stage Gate OS Subscription
@@ -317,10 +322,18 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                       </div>
 
                       <div className="text-right">
-                        <div className="text-base font-extrabold text-white font-mono">
-                          ${itemPrice}
+                        <div className="flex items-center justify-end space-x-1.5 font-mono">
+                          <span className="line-through text-slate-500 text-xs">
+                            ${billingInterval === 'monthly' ? p.listMonthlyPrice : p.listAnnualPrice}
+                          </span>
+                          <span className="text-base font-extrabold text-white">
+                            ${itemPrice}
+                          </span>
                         </div>
-                        <div className="text-[10px] text-slate-500">
+                        <div className="text-[10px] text-emerald-400 font-mono font-medium">
+                          20% Beta Discount
+                        </div>
+                        <div className="text-[9px] text-slate-500">
                           {billingInterval === 'monthly' ? '/ month' : '/ year'}
                         </div>
                       </div>
@@ -384,7 +397,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                   }`}
                 >
                   <CreditCard className="w-3.5 h-3.5 text-indigo-300" />
-                  <span>Test Card Sandbox</span>
+                  <span>Credit / Debit Card</span>
                 </button>
               </div>
 
@@ -439,15 +452,60 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                         required
                         value={customerEmail}
                         onChange={(e) => setCustomerEmail(e.target.value)}
-                        placeholder="founder@venture.com"
+                        placeholder="founder@yourcompany.com"
                         className="w-full px-3 py-2.5 rounded-lg bg-slate-950 border border-purple-700/50 text-white focus:outline-none focus:border-purple-400"
                       />
                     </div>
 
+                    {/* Automatic Renewal & FTC Negative Option Mandated Disclosures */}
+                    <div className="p-3.5 rounded-xl bg-slate-950/90 border border-purple-800/40 text-[11px] text-slate-300 space-y-2">
+                      <div className="flex items-center space-x-1.5 text-purple-300 font-semibold text-xs">
+                        <RefreshCw className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>Continuous Subscription &amp; Automatic Renewal Terms</span>
+                      </div>
+                      <p className="text-slate-300 leading-relaxed text-[11px]">
+                        By subscribing, your payment method will be charged <strong className="text-white">${price}.00 {billingInterval === 'annual' ? '/ year' : '/ month'}</strong> today (20% off regular list price ${listPrice}.00). <strong className="text-emerald-400">Public Beta Rate Lock:</strong> Your 20% discount is locked for the lifetime of your active subscription and will never increase to regular list price. Subscription automatically renews each {billingInterval === 'annual' ? 'year' : 'month'} at this locked rate unless and until you cancel.
+                      </p>
+                      <div className="text-[10px] text-slate-400 bg-slate-900/60 p-2 rounded-lg border border-slate-800/80">
+                        <strong className="text-slate-200">Click-to-Cancel Guarantee:</strong> You can cancel anytime online in your Founder Settings or by contacting <a href="mailto:jason@moyervllc.com" className="text-purple-300 underline">jason@moyervllc.com</a> with zero cancellation fees. Cancellation takes effect at the conclusion of your current billing cycle.
+                      </div>
+                      <label className="flex items-start space-x-2 pt-1 cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          id="terms-consent-checkbox-shoppay"
+                          data-testid="terms-consent-checkbox"
+                          required
+                          checked={agreedToTerms}
+                          onChange={(e) => setAgreedToTerms(e.target.checked)}
+                          className="mt-0.5 h-4 w-4 rounded border-purple-700 bg-slate-950 text-purple-600 focus:ring-purple-500 cursor-pointer accent-purple-600"
+                        />
+                        <span className="text-[11px] text-slate-300 leading-tight">
+                          I agree to the{' '}
+                          <button
+                            type="button"
+                            onClick={() => setPolicyModal('terms')}
+                            className="text-purple-300 hover:text-purple-200 underline font-medium cursor-pointer"
+                          >
+                            Terms of Service
+                          </button>
+                          ,{' '}
+                          <button
+                            type="button"
+                            onClick={() => setPolicyModal('privacy')}
+                            className="text-purple-300 hover:text-purple-200 underline font-medium cursor-pointer"
+                          >
+                            Privacy Policy
+                          </button>
+                          , and authorize recurring automatic renewal charges under the continuous renewal terms above.
+                        </span>
+                      </label>
+                    </div>
+
                     <button
                       type="submit"
-                      disabled={processing}
-                      className="w-full py-4 rounded-xl text-sm font-bold text-white bg-[#5A31F4] hover:bg-[#4d28d6] shadow-lg shadow-purple-950/50 transition-all flex items-center justify-center space-x-2 disabled:opacity-50 group cursor-pointer"
+                      disabled={processing || !agreedToTerms}
+                      data-testid="shoppay-subscription-btn"
+                      className="w-full py-4 rounded-xl text-sm font-bold text-white bg-[#5A31F4] hover:bg-[#4d28d6] shadow-lg shadow-purple-950/50 transition-all flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed group cursor-pointer"
                     >
                       {processing ? (
                         <>
@@ -470,42 +528,14 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                   </form>
                 </div>
               ) : (
-                /* Card Sandbox Panel */
+                /* Credit / Debit Card Panel */
                 <div className="space-y-5">
-                  <div className="p-4 rounded-xl bg-indigo-950/40 border border-indigo-700/50 space-y-3 text-xs">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-indigo-300 flex items-center space-x-1.5">
-                        <CreditCard className="w-4 h-4 text-indigo-400" />
-                        <span>Stripe Sandbox Test Card</span>
-                      </span>
-                      <span className="text-[10px] text-indigo-400 font-mono">TEST-MODE ONLY</span>
-                    </div>
-
-                    <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-between font-mono text-slate-200">
-                      <span>4242 •••• •••• 4242</span>
-                      <button
-                        type="button"
-                        onClick={copyTestCard}
-                        className="px-2 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] flex items-center space-x-1"
-                      >
-                        {copiedCard ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                        <span>{copiedCard ? 'Copied' : 'Copy'}</span>
-                      </button>
-                    </div>
-
-                    <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
-                      <span>Exp: 12/28</span>
-                      <span>CVC: 123</span>
-                      <span>Zip: 94103</span>
-                    </div>
-                  </div>
-
                   <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 sm:p-7 space-y-5 shadow-xl">
                     <div className="pb-3 border-b border-slate-800 flex items-center justify-between">
                       <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
-                        Payment Method
+                        Credit / Debit Card
                       </h3>
-                      <span className="text-xs text-slate-400">Sandbox Test Clock Ready</span>
+                      <span className="text-xs text-slate-400">256-Bit SSL Encrypted</span>
                     </div>
 
                     {errorMsg && (
@@ -522,58 +552,120 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
                           required
                           value={customerEmail}
                           onChange={(e) => setCustomerEmail(e.target.value)}
-                          placeholder="founder@venture.com"
+                          placeholder="founder@yourcompany.com"
                           className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white focus:outline-none focus:border-indigo-500"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-slate-300 font-semibold mb-1">Card Number (Sandbox)</label>
+                        <label className="block text-slate-300 font-semibold mb-1">Card Number</label>
                         <input
                           type="text"
-                          readOnly
-                          value="4242 •••• •••• 4242"
-                          className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 font-mono select-none"
+                          required
+                          placeholder="•••• •••• •••• ••••"
+                          maxLength={19}
+                          className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-slate-100 font-mono focus:outline-none focus:border-indigo-500"
                         />
                       </div>
 
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <label className="block text-slate-300 font-semibold mb-1">Expires</label>
+                          <label className="block text-slate-300 font-semibold mb-1">Expires (MM/YY)</label>
                           <input
                             type="text"
-                            readOnly
-                            value="12 / 28"
-                            className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 font-mono select-none"
+                            required
+                            placeholder="MM / YY"
+                            maxLength={5}
+                            className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-slate-100 font-mono focus:outline-none focus:border-indigo-500"
                           />
                         </div>
                         <div>
-                          <label className="block text-slate-300 font-semibold mb-1">CVC</label>
+                          <label className="block text-slate-300 font-semibold mb-1">CVC / CVV</label>
                           <input
                             type="text"
-                            readOnly
-                            value="123"
-                            className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 font-mono select-none"
+                            required
+                            placeholder="CVC"
+                            maxLength={4}
+                            className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-slate-100 font-mono focus:outline-none focus:border-indigo-500"
                           />
                         </div>
                       </div>
 
-                      <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                        <span className="text-slate-400">Total Billed Today:</span>
-                        <span className="text-lg font-bold text-white font-mono">
-                          ${price}.00 {billingInterval === 'annual' ? '/ yr' : '/ mo'}
-                        </span>
+                      <div className="pt-3 border-t border-slate-800/80 space-y-1.5 text-xs">
+                        <div className="flex items-center justify-between text-slate-400">
+                          <span>Regular List Price:</span>
+                          <span className="line-through text-slate-500 font-mono">
+                            ${listPrice}.00 {billingInterval === 'annual' ? '/ yr' : '/ mo'}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between text-emerald-400">
+                          <span>Public Beta Savings (20% Off):</span>
+                          <span className="font-mono font-semibold">
+                            -${savings}.00 {billingInterval === 'annual' ? '/ yr' : '/ mo'}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between pt-1 border-t border-slate-800">
+                          <span className="text-slate-300 font-semibold">Total Billed Today:</span>
+                          <span className="text-lg font-bold text-white font-mono">
+                            ${price}.00 {billingInterval === 'annual' ? '/ yr' : '/ mo'}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Automatic Renewal & FTC Negative Option Mandated Disclosures with Beta Rate Lock */}
+                      <div className="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 text-[11px] text-slate-300 space-y-2">
+                        <div className="flex items-center space-x-1.5 text-indigo-400 font-semibold text-xs">
+                          <RefreshCw className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Continuous Subscription &amp; Automatic Renewal Terms</span>
+                        </div>
+                        <p className="text-slate-400 leading-relaxed text-[11px]">
+                          By subscribing, your payment method will be charged <strong className="text-white">${price}.00 {billingInterval === 'annual' ? '/ year' : '/ month'}</strong> today (20% off regular list price ${listPrice}.00). <strong className="text-emerald-400">Public Beta Rate Lock:</strong> Your 20% discount is locked for the lifetime of your active subscription and will never increase to regular list price. Subscription automatically renews each {billingInterval === 'annual' ? 'year' : 'month'} at this locked rate unless and until you cancel.
+                        </p>
+                        <div className="text-[10px] text-slate-400 bg-slate-900/60 p-2 rounded-lg border border-slate-800/80">
+                          <strong className="text-slate-200">Click-to-Cancel Guarantee:</strong> You can cancel anytime online in your Founder Settings or by contacting <a href="mailto:jason@moyervllc.com" className="text-indigo-400 underline">jason@moyervllc.com</a> with zero cancellation fees. Cancellation takes effect at the conclusion of your current billing cycle.
+                        </div>
+                        <label className="flex items-start space-x-2 pt-1 cursor-pointer select-none">
+                          <input
+                            type="checkbox"
+                            id="terms-consent-checkbox-card"
+                            data-testid="terms-consent-checkbox"
+                            required
+                            checked={agreedToTerms}
+                            onChange={(e) => setAgreedToTerms(e.target.checked)}
+                            className="mt-0.5 h-4 w-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500 cursor-pointer accent-indigo-600"
+                          />
+                          <span className="text-[11px] text-slate-300 leading-tight">
+                            I agree to the{' '}
+                            <button
+                              type="button"
+                              onClick={() => setPolicyModal('terms')}
+                              className="text-indigo-400 hover:text-indigo-300 underline font-medium cursor-pointer"
+                            >
+                              Terms of Service
+                            </button>
+                            ,{' '}
+                            <button
+                              type="button"
+                              onClick={() => setPolicyModal('privacy')}
+                              className="text-indigo-400 hover:text-indigo-300 underline font-medium cursor-pointer"
+                            >
+                              Privacy Policy
+                            </button>
+                            , and authorize recurring automatic renewal charges under the continuous renewal terms above.
+                          </span>
+                        </label>
                       </div>
 
                       <button
                         type="submit"
-                        disabled={processing}
-                        className="w-full py-3.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 shadow-glow-indigo transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
+                        disabled={processing || !agreedToTerms}
+                        data-testid="authorize-subscription-btn"
+                        className="w-full py-3.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 shadow-glow-indigo transition-all flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                       >
                         {processing ? (
                           <>
                             <RefreshCw className="w-4 h-4 animate-spin text-white" />
-                            <span>Provisioning Stripe Sandbox Session...</span>
+                            <span>Processing Secure Payment...</span>
                           </>
                         ) : (
                           <>
@@ -592,6 +684,99 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
               </p>
             </div>
 
+          </div>
+        )}
+
+        {/* Informational Policy Modal triggered from Checkout */}
+        {policyModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+            <div className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto p-6 sm:p-8 bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl space-y-5 text-slate-100">
+              <button
+                onClick={() => setPolicyModal(null)}
+                aria-label="Close Policy Dialog"
+                title="Close"
+                className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="flex items-center space-x-2 text-indigo-400 font-mono text-xs font-semibold">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span>MOYER VENTURES LLC • LEGAL POLICIES</span>
+              </div>
+
+              <h3 className="text-xl font-bold text-white">
+                {policyModal === 'terms' ? 'Terms of Service & Subscriber Agreement' : 'Privacy Policy & Data Protection Disclosures'}
+              </h3>
+
+              <div className="text-xs text-slate-300 leading-relaxed space-y-4 font-sans max-h-[55vh] overflow-y-auto pr-2">
+                {policyModal === 'terms' ? (
+                  <>
+                    <div className="p-3 rounded-lg bg-indigo-950/40 border border-indigo-800/50 text-[11px] text-indigo-200">
+                      <strong>Governing Entity:</strong> Stage Gate OS is operated by <strong>Moyer Ventures LLC</strong> (Utah).
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white text-xs uppercase">1. 100% IP Assignment to You</h4>
+                      <p className="mt-1 text-slate-300">
+                        Company irrevocably assigns to you all right, title, and interest in and to all source code, database schemas, and ejected Git repositories generated for your venture. 0.0% perpetual revenue tax and 0 proprietary framework lock-in.
+                      </p>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white text-xs uppercase">2. Recurring Billing &amp; Click-to-Cancel</h4>
+                      <p className="mt-1 text-slate-300">
+                        Subscriptions renew automatically each month or year until cancelled. Cancel anytime online in settings or via email to jason@moyervllc.com with zero cancellation fees.
+                      </p>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white text-xs uppercase">3. Limitation of Liability</h4>
+                      <p className="mt-1 text-slate-400 uppercase text-[10px]">
+                        LIABILITY IS CAPPED AT TOTAL FEES PAID IN THE PRIOR 12 MONTHS. NO CONSEQUENTIAL OR PUNITIVE DAMAGES.
+                      </p>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white text-xs uppercase">4. Binding Individual Arbitration</h4>
+                      <p className="mt-1 text-slate-300">
+                        Governed by the Federal Arbitration Act and Utah law; venue in Salt Lake City, Utah. Class-action waiver applies. 30-day email opt-out to jason@moyervllc.com.
+                      </p>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white text-xs uppercase">5. DMCA Agent</h4>
+                      <p className="mt-1 text-slate-300">
+                        Designated Agent: Jason Moyer, Moyer Ventures LLC, jason@moyervllc.com.
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="p-3 rounded-lg bg-indigo-950/40 border border-indigo-800/50 text-[11px] text-indigo-200">
+                      <strong>Data Controller:</strong> Moyer Ventures LLC (Utah). Contact: jason@moyervllc.com.
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white text-xs uppercase">1. Data Minimization</h4>
+                      <p className="mt-1 text-slate-300">
+                        We collect contact and billing records to deliver services. We do not sell or monetize personal data or venture ideas.
+                      </p>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white text-xs uppercase">2. Consumer Rights (GDPR &amp; CCPA)</h4>
+                      <p className="mt-1 text-slate-300">
+                        You have the right to access, delete, and correct your personal information. Email jason@moyervllc.com to exercise your rights.
+                      </p>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <div className="pt-2 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setPolicyModal(null)}
+                  className="px-6 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-colors cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           </div>
         )}
 

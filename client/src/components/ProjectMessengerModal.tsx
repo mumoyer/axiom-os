@@ -30,22 +30,36 @@ interface ProjectMessengerModalProps {
 }
 
 export const ProjectMessengerModal: React.FC<ProjectMessengerModalProps> = ({
-  ventureId = 'ven_docuflow_02',
+  ventureId = '',
   isOpen,
   onClose,
 }) => {
+  const authSession = (() => {
+    try {
+      const stored = localStorage.getItem('stagegate_auth_session');
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  })();
+  const isAuthorizedAdmin = authSession?.role === 'admin';
+  const resolvedEmail = authSession?.email || localStorage.getItem('axiom_user_email') || 'founder@venture.com';
+  const resolvedName = authSession?.name || authSession?.email?.split('@')[0] || 'Founder';
+
   const [messages, setMessages] = useState<ProjectMessage[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [inputText, setInputText] = useState<string>('');
   const [isAdminMode, setIsAdminMode] = useState<boolean>(false);
-  const [senderName, setSenderName] = useState<string>('Founder');
-  const [senderEmail, setSenderEmail] = useState<string>('founder@venture.com');
+  const [senderName, setSenderName] = useState<string>(resolvedName);
+  const [senderEmail, setSenderEmail] = useState<string>(resolvedEmail);
   const [statusNotice, setStatusNotice] = useState<string>('');
+
+  const targetVentureId = ventureId || 'general';
 
   const fetchMessages = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/messages/${ventureId}`);
+      const res = await fetch(`/api/messages/${targetVentureId}`);
       if (res.ok) {
         const data = await res.json();
         setMessages(data.messages || []);
@@ -60,22 +74,30 @@ export const ProjectMessengerModal: React.FC<ProjectMessengerModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       fetchMessages();
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') onClose();
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
     }
-  }, [isOpen, ventureId]);
+  }, [isOpen, targetVentureId]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputText.trim()) return;
 
+    const useAdmin = isAuthorizedAdmin && isAdminMode;
+
     const payload = {
       text: inputText.trim(),
-      sender: isAdminMode ? 'admin' : 'customer',
-      senderName: isAdminMode ? 'Jason Moyer (Moyer Ventures LLC)' : (senderName || 'Founder'),
-      senderEmail: isAdminMode ? 'jason@moyervllc.com' : (senderEmail || 'founder@venture.com'),
+      sender: useAdmin ? 'admin' : 'customer',
+      senderName: useAdmin ? 'Jason Moyer (Moyer Ventures LLC)' : (senderName || resolvedName),
+      senderEmail: useAdmin ? 'jason@moyervllc.com' : (senderEmail || resolvedEmail),
     };
 
     try {
-      const res = await fetch(`/api/messages/${ventureId}`, {
+      const res = await fetch(`/api/messages/${targetVentureId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -86,7 +108,7 @@ export const ProjectMessengerModal: React.FC<ProjectMessengerModalProps> = ({
         setMessages((prev) => [...prev, result.data]);
         setInputText('');
         setStatusNotice(
-          isAdminMode
+          useAdmin
             ? 'Reply sent to customer!'
             : 'Message sent! Jason Moyer notified via Google Chat (jason@moyervllc.com).'
         );
@@ -113,7 +135,7 @@ export const ProjectMessengerModal: React.FC<ProjectMessengerModalProps> = ({
               <div className="flex items-center space-x-2">
                 <h3 className="text-sm font-semibold text-white">Project Messaging & Collaboration</h3>
                 <span className="px-2 py-0.5 text-[10px] font-mono bg-indigo-950 text-indigo-300 border border-indigo-700/50 rounded-full">
-                  {ventureId}
+                  {ventureId || 'General'}
                 </span>
               </div>
               <p className="text-[11px] text-slate-400">
@@ -123,22 +145,26 @@ export const ProjectMessengerModal: React.FC<ProjectMessengerModalProps> = ({
           </div>
 
           <div className="flex items-center space-x-2">
-            {/* Admin Switcher Toggle */}
-            <button
-              onClick={() => setIsAdminMode(!isAdminMode)}
-              className={`px-2.5 py-1 text-[11px] rounded-lg font-medium transition-colors border ${
-                isAdminMode
-                  ? 'bg-amber-950/70 border-amber-600/60 text-amber-300'
-                  : 'bg-slate-800/80 border-slate-700 text-slate-300 hover:text-white'
-              }`}
-              title="Toggle to view or reply as Jason Moyer (Admin)"
-            >
-              {isAdminMode ? '👑 Admin Mode (Jason)' : 'Switch to Admin'}
-            </button>
+            {/* Admin Switcher Toggle (only for authorized admin sessions) */}
+            {isAuthorizedAdmin && (
+              <button
+                onClick={() => setIsAdminMode(!isAdminMode)}
+                className={`px-2.5 py-1 text-[11px] rounded-lg font-medium transition-colors border ${
+                  isAdminMode
+                    ? 'bg-amber-950/70 border-amber-600/60 text-amber-300'
+                    : 'bg-slate-800/80 border-slate-700 text-slate-300 hover:text-white'
+                }`}
+                title="Toggle to view or reply as Jason Moyer (Admin)"
+              >
+                {isAdminMode ? '👑 Admin Mode (Jason)' : 'Switch to Admin'}
+              </button>
+            )}
 
             <button
               onClick={onClose}
-              className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+              aria-label="Close Project Messenger"
+              title="Close"
+              className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>

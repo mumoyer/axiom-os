@@ -60,77 +60,28 @@ interface ByokProviderState {
   error?: string;
 }
 
-const DEFAULT_VENTURES: VentureItem[] = [
-  {
-    id: 'ven_pulse_01',
-    name: 'MetricPulse Analytics',
-    domain: 'metricpulse.io',
-    stagingUrl: 'https://stage-metricpulse.axiomrun.app',
-    planTier: 'SERIAL',
-    status: 'LIVE',
-    mrr: 4850,
-    uptime: 99.98,
-    gates: { g1: 'PASS', g2: 'PASS', g3: 'PASS', g4: 'PASS', g5: 'PASS' },
-  },
-  {
-    id: 'ven_docuflow_02',
-    name: 'DocuFlow AI',
-    domain: 'docuflow.health',
-    stagingUrl: 'https://stage-docuflow.axiomrun.app',
-    planTier: 'SERIAL',
-    status: 'LIVE',
-    mrr: 6200,
-    uptime: 99.99,
-    gates: { g1: 'PASS', g2: 'PASS', g3: 'PASS', g4: 'PASS', g5: 'PASS' },
-  },
-  {
-    id: 'ven_scout_03',
-    name: 'ContractScout',
-    domain: 'contractscout.legal',
-    stagingUrl: 'https://stage-contractscout.axiomrun.app',
-    planTier: 'SERIAL',
-    status: 'STAGING',
-    mrr: 1800,
-    uptime: 99.95,
-    gates: { g1: 'PASS', g2: 'PASS', g3: 'PASS', g4: 'PASS', g5: 'PENDING' },
-  },
-  {
-    id: 'ven_sub_04',
-    name: 'SubManage SaaS',
-    domain: 'submanage.dev',
-    stagingUrl: 'https://stage-submanage.axiomrun.app',
-    planTier: 'SERIAL',
-    status: 'EJECTED',
-    mrr: 2000,
-    uptime: 100.0,
-    gates: { g1: 'PASS', g2: 'PASS', g3: 'PASS', g4: 'PASS', g5: 'PASS' },
-  },
-];
-
 export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
   onNavigate = (path: string) => { window.location.hash = path; },
 }) => {
   const [activeTab, setActiveTab] = useState<'portfolio' | 'byok' | 'ejection' | 'cli'>('portfolio');
-  const [ventures, setVentures] = useState<VentureItem[]>(DEFAULT_VENTURES);
+  const [ventures, setVentures] = useState<VentureItem[]>([]);
   const [selectedVentureForPreview, setSelectedVentureForPreview] = useState<VentureItem | null>(null);
 
-  // BYOK state
+  // BYOK state - clean unconfigured initial state for real keys
   const [byokKeys, setByokKeys] = useState<Record<string, ByokProviderState>>({
     anthropic: {
       provider: 'anthropic',
       name: 'Anthropic Claude (Sonnet / Haiku)',
       prefix: 'sk-ant-',
-      key: 'sk-ant-api03-live-78392104829104',
-      status: 'valid',
-      latencyMs: 54,
+      key: '',
+      status: 'unconfigured',
     },
     openai: {
       provider: 'openai',
       name: 'OpenAI (GPT-4o / O3-Mini)',
       prefix: 'sk-proj-',
-      key: 'sk-proj-prod-99482910481029',
-      status: 'valid',
-      latencyMs: 62,
+      key: '',
+      status: 'unconfigured',
     },
     deepseek: {
       provider: 'deepseek',
@@ -150,27 +101,25 @@ export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
       provider: 'stripe',
       name: 'Stripe API Secret Key',
       prefix: 'sk_',
-      key: 'sk_test_51Hxyz94820194820',
-      status: 'valid',
-      latencyMs: 38,
+      key: '',
+      status: 'unconfigured',
     },
     github: {
       provider: 'github',
       name: 'GitHub Personal Access Token',
       prefix: 'ghp_',
-      key: 'ghp_live9837482910482019482',
-      status: 'valid',
-      latencyMs: 44,
+      key: '',
+      status: 'unconfigured',
     },
   });
   const [showKeys, setShowKeys] = useState<Record<string, boolean>>({});
   const [byokSaveSuccess, setByokSaveSuccess] = useState(false);
 
   // Ejection state
-  const [selectedVentureToEject, setSelectedVentureToEject] = useState<string>(DEFAULT_VENTURES[0].id);
+  const [selectedVentureToEject, setSelectedVentureToEject] = useState<string>('');
   const [ejectProvider, setEjectProvider] = useState<'github' | 'gitlab'>('github');
-  const [ejectOrg, setEjectOrg] = useState('acme-studios');
-  const [ejectRepo, setEjectRepo] = useState('metricpulse-analytics');
+  const [ejectOrg, setEjectOrg] = useState('');
+  const [ejectRepo, setEjectRepo] = useState('');
   const [ejectVisibility, setEjectVisibility] = useState<'public' | 'private'>('private');
   const [ejectDeployTarget, setEjectDeployTarget] = useState<'vercel' | 'supabase' | 'cloudflare' | 'fly'>('vercel');
   const [isEjecting, setIsEjecting] = useState(false);
@@ -207,27 +156,37 @@ export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
             stagingUrl: item.stagingUrl || `https://stage-${item.id.slice(0, 8)}.axiomrun.app`,
             planTier: item.planTier || 'FOUNDER',
             status: item.status || 'LIVE',
-            mrr: item.mrr || 1990,
-            uptime: item.uptime || 99.98,
-            gates: { g1: 'PASS', g2: 'PASS', g3: 'PASS', g4: 'PASS', g5: 'PASS' },
+            mrr: item.mrr || 0,
+            uptime: item.uptime || 100.0,
+            gates: item.gates || { g1: 'PASS', g2: 'PASS', g3: 'PASS', g4: 'PASS', g5: 'PASS' },
           }));
         }
       }
     } catch {}
 
-    fetch('/api/ventures')
+    const storedTenant = localStorage.getItem('stagegate_auth_session');
+    let tenantParam = '';
+    try {
+      if (storedTenant) {
+        const parsed = JSON.parse(storedTenant);
+        if (parsed?.tenantId) tenantParam = `&tenantId=${encodeURIComponent(parsed.tenantId)}`;
+      }
+    } catch {}
+
+    fetch(`/api/ventures?scope=live${tenantParam}`)
       .then((res) => res.json())
       .then((data) => {
-        if (data?.ventures && Array.isArray(data.ventures) && data.ventures.length > 0) {
-          const mapped: VentureItem[] = data.ventures.map((v: any) => ({
+        if (data?.ventures && Array.isArray(data.ventures)) {
+          const liveList = data.ventures.filter((v: any) => v.id && !v.id.startsWith('seed-') && !v.id.startsWith('ven_docuflow_02') && !v.id.startsWith('ven_scout_03') && !v.id.startsWith('ven_pulse_01') && !v.id.startsWith('ven_dental_04'));
+          const mapped: VentureItem[] = liveList.map((v: any) => ({
             id: v.id,
             name: v.name,
             domain: `${v.id.slice(0, 8)}.axiomrun.app`,
             stagingUrl: `https://stage-${v.id.slice(0, 8)}.axiomrun.app`,
             planTier: v.planTier || 'SERIAL',
             status: v.pipeline?.overallStatus === 'COMPLETED' ? 'LIVE' : 'STAGING',
-            mrr: 2500,
-            uptime: 99.98,
+            mrr: 0,
+            uptime: 100.0,
             gates: {
               g1: v.pipeline?.stages?.[0]?.status === 'PASSED' ? 'PASS' : 'PENDING',
               g2: v.pipeline?.stages?.[1]?.status === 'PASSED' ? 'PASS' : 'PENDING',
@@ -236,38 +195,35 @@ export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
               g5: v.pipeline?.stages?.[4]?.status === 'PASSED' ? 'PASS' : 'PENDING',
             },
           }));
-          setVentures((prev) => {
-            const combined = [...localSaved, ...mapped];
-            for (const item of prev) {
-              if (!combined.some((c) => c.id === item.id)) combined.push(item);
-            }
-            return combined;
-          });
+
+          const combined = [...localSaved];
+          for (const m of mapped) {
+            if (!combined.some((c) => c.id === m.id)) combined.push(m);
+          }
+          setVentures(combined);
         } else if (localSaved.length > 0) {
-          setVentures((prev) => {
-            const combined = [...localSaved];
-            for (const item of prev) {
-              if (!combined.some((c) => c.id === item.id)) combined.push(item);
-            }
-            return combined;
-          });
+          setVentures(localSaved);
+        } else {
+          setVentures([]);
         }
       })
       .catch(() => {
-        if (localSaved.length > 0) {
-          setVentures((prev) => {
-            const combined = [...localSaved];
-            for (const item of prev) {
-              if (!combined.some((c) => c.id === item.id)) combined.push(item);
-            }
-            return combined;
-          });
-        }
+        setVentures(localSaved);
       });
   }, []);
 
   // Total metrics
-  const totalMrr = ventures.reduce((acc, v) => acc + v.mrr, 0);
+  const totalMrr = ventures.reduce((acc, v) => acc + (v.mrr || 0), 0);
+  const totalGatesPassed = ventures.reduce(
+    (acc, v) => acc + Object.values(v.gates || {}).filter((g) => g === 'PASS').length,
+    0
+  );
+  const totalPossibleGates = ventures.length * 5;
+  const verifiedGatesDisplay = ventures.length > 0 ? `${totalGatesPassed} / ${totalPossibleGates}` : '0 / 0';
+  const systemUptimeDisplay =
+    ventures.length > 0
+      ? (ventures.reduce((acc, v) => acc + (v.uptime || 100), 0) / ventures.length).toFixed(2) + '%'
+      : '100.0%';
 
   // BYOK Handlers
   const toggleKeyVisibility = (provider: string) => {
@@ -308,29 +264,42 @@ export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
       return;
     }
 
-    setByokKeys((prev) => ({
-      ...prev,
-      [provider]: { ...prev[provider], status: 'testing', error: undefined },
-    }));
-
-    setTimeout(() => {
-      const simulatedLatency = Math.floor(Math.random() * 40) + 35;
+    if (item.key.length < 20) {
       setByokKeys((prev) => ({
         ...prev,
         [provider]: {
           ...prev[provider],
-          status: 'valid',
-          latencyMs: simulatedLatency,
-          error: undefined,
+          status: 'invalid',
+          error: `Key format is incomplete (minimum 20 characters required)`,
         },
       }));
-    }, 500);
+      return;
+    }
+
+    setByokKeys((prev) => ({
+      ...prev,
+      [provider]: {
+        ...prev[provider],
+        status: 'valid',
+        latencyMs: undefined,
+        error: undefined,
+      },
+    }));
   };
 
   const saveByokKeys = async () => {
     setByokSaveSuccess(false);
+    const storedAuth = localStorage.getItem('stagegate_auth_session');
+    let tenantId = 'tenant-default';
+    try {
+      if (storedAuth) {
+        const parsed = JSON.parse(storedAuth);
+        if (parsed?.tenantId) tenantId = parsed.tenantId;
+      }
+    } catch {}
+
     const payload = {
-      tenantId: 'tenant-default',
+      tenantId,
       openaiKey: byokKeys.openai.key,
       anthropicKey: byokKeys.anthropic.key,
       deepseekKey: byokKeys.deepseek.key,
@@ -473,7 +442,7 @@ export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
               <Server className="w-4 h-4 text-cyan-400" />
               <span>System Uptime</span>
             </div>
-            <div className="text-2xl font-extrabold text-cyan-400 font-mono mt-1">99.98%</div>
+            <div className="text-2xl font-extrabold text-cyan-400 font-mono mt-1">{systemUptimeDisplay}</div>
             <div className="text-[10px] text-slate-500">Quad-DoH DNS Quorum</div>
           </div>
 
@@ -482,7 +451,7 @@ export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
               <ShieldCheck className="w-4 h-4 text-purple-400" />
               <span>Verified Gates</span>
             </div>
-            <div className="text-2xl font-extrabold text-purple-300 font-mono mt-1">20 / 20</div>
+            <div className="text-2xl font-extrabold text-purple-300 font-mono mt-1">{verifiedGatesDisplay}</div>
             <div className="text-[10px] text-slate-500">Zero Hallucinations Passed</div>
           </div>
 
@@ -537,94 +506,124 @@ export const SerialDashboardPage: React.FC<SerialDashboardPageProps> = ({
                 <span className="text-xs font-mono text-slate-500">{ventures.length} ventures registered</span>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse text-xs">
-                  <thead>
-                    <tr className="border-b border-slate-800 bg-slate-900/50 text-slate-400 uppercase tracking-wider font-semibold text-[11px]">
-                      <th className="py-3.5 px-6">Venture & Domain</th>
-                      <th className="py-3.5 px-4">Status</th>
-                      <th className="py-3.5 px-4">Stripe MRR</th>
-                      <th className="py-3.5 px-4">Uptime</th>
-                      <th className="py-3.5 px-4">Deterministic Gates</th>
-                      <th className="py-3.5 px-6 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-800/60">
-                    {ventures.map((v) => (
-                      <tr key={v.id} className="hover:bg-slate-900/40 transition-colors">
-                        <td className="py-4 px-6">
-                          <div className="font-semibold text-white text-sm">{v.name}</div>
-                          <div className="text-indigo-400 font-mono text-xs flex items-center gap-1">
-                            <span>https://{v.domain}</span>
-                          </div>
-                        </td>
-
-                        <td className="py-4 px-4">
-                          <span
-                            className={`inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                              v.status === 'LIVE'
-                                ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40'
-                                : v.status === 'STAGING'
-                                ? 'bg-cyan-950 text-cyan-300 border border-cyan-500/40'
-                                : v.status === 'EJECTED'
-                                ? 'bg-purple-950 text-purple-300 border border-purple-500/40'
-                                : 'bg-amber-950 text-amber-300 border border-amber-500/40'
-                            }`}
-                          >
-                            <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
-                            <span>{v.status}</span>
-                          </span>
-                        </td>
-
-                        <td className="py-4 px-4 font-mono font-semibold text-emerald-400 text-sm">
-                          ${v.mrr.toLocaleString()} / mo
-                        </td>
-
-                        <td className="py-4 px-4 font-mono text-slate-300">
-                          {v.uptime}%
-                        </td>
-
-                        <td className="py-4 px-4">
-                          <div className="flex items-center space-x-1.5" title="Gates 1 through 5 status">
-                            {(['g1', 'g2', 'g3', 'g4', 'g5'] as const).map((gKey, idx) => {
-                              const pass = v.gates[gKey] === 'PASS';
-                              return (
-                                <span
-                                  key={gKey}
-                                  className={`w-5 h-5 rounded flex items-center justify-center font-mono text-[9px] font-bold ${
-                                    pass
-                                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                                      : 'bg-slate-800 text-slate-500 border border-slate-700'
-                                  }`}
-                                  title={`Gate ${idx + 1}: ${pass ? 'PASSED' : 'PENDING'}`}
-                                >
-                                  G{idx + 1}
-                                </span>
-                              );
-                            })}
-                          </div>
-                        </td>
-
-                        <td className="py-4 px-6 text-right space-x-2">
-                          <button
-                            onClick={() => setSelectedVentureForPreview(v)}
-                            className="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 rounded-lg text-xs transition-colors"
-                            title="Open responsive device preview"
-                          >
-                            Preview
-                          </button>
-                          <button
-                            onClick={() => onNavigate(`/ventures/${v.id}`)}
-                            className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg text-xs transition-colors shadow-sm"
-                          >
-                            Dashboard
-                          </button>
-                        </td>
+              {ventures.length === 0 ? (
+                <div className="py-16 px-6 text-center space-y-4 max-w-md mx-auto">
+                  <div className="w-12 h-12 rounded-2xl bg-indigo-950/80 border border-indigo-500/40 flex items-center justify-center mx-auto text-indigo-400 shadow-glow-indigo">
+                    <Layers className="w-6 h-6" />
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="text-base font-bold text-white">No Active Ventures Yet</h4>
+                    <p className="text-xs text-slate-400 leading-relaxed">
+                      You haven&apos;t launched any ventures yet. Scaffold your first verified venture in under 60 seconds, or explore live sample scenarios.
+                    </p>
+                  </div>
+                  <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <button
+                      onClick={() => onNavigate('/launchpad/newbie')}
+                      className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-semibold text-xs transition-all shadow-glow-indigo flex items-center justify-center space-x-1.5"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Scaffold First Venture</span>
+                    </button>
+                    <button
+                      onClick={() => onNavigate('/#scenarios')}
+                      className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-semibold text-xs border border-slate-700/80 transition-all flex items-center justify-center space-x-1.5"
+                    >
+                      <Eye className="w-3.5 h-3.5 text-indigo-400" />
+                      <span>Explore Sample Scenarios</span>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr className="border-b border-slate-800 bg-slate-900/50 text-slate-400 uppercase tracking-wider font-semibold text-[11px]">
+                        <th className="py-3.5 px-6">Venture & Domain</th>
+                        <th className="py-3.5 px-4">Status</th>
+                        <th className="py-3.5 px-4">Stripe MRR</th>
+                        <th className="py-3.5 px-4">Uptime</th>
+                        <th className="py-3.5 px-4">Deterministic Gates</th>
+                        <th className="py-3.5 px-6 text-right">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/60">
+                      {ventures.map((v) => (
+                        <tr key={v.id} className="hover:bg-slate-900/40 transition-colors">
+                          <td className="py-4 px-6">
+                            <div className="font-semibold text-white text-sm">{v.name}</div>
+                            <div className="text-indigo-400 font-mono text-xs flex items-center gap-1">
+                              <span>https://{v.domain}</span>
+                            </div>
+                          </td>
+
+                          <td className="py-4 px-4">
+                            <span
+                              className={`inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                                v.status === 'LIVE'
+                                  ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40'
+                                  : v.status === 'STAGING'
+                                  ? 'bg-cyan-950 text-cyan-300 border border-cyan-500/40'
+                                  : v.status === 'EJECTED'
+                                  ? 'bg-purple-950 text-purple-300 border border-purple-500/40'
+                                  : 'bg-amber-950 text-amber-300 border border-amber-500/40'
+                              }`}
+                            >
+                              <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
+                              <span>{v.status}</span>
+                            </span>
+                          </td>
+
+                          <td className="py-4 px-4 font-mono font-semibold text-emerald-400 text-sm">
+                            ${(v.mrr || 0).toLocaleString()} / mo
+                          </td>
+
+                          <td className="py-4 px-4 font-mono text-slate-300">
+                            {v.uptime || 100}%
+                          </td>
+
+                          <td className="py-4 px-4">
+                            <div className="flex items-center space-x-1.5" title="Gates 1 through 5 status">
+                              {(['g1', 'g2', 'g3', 'g4', 'g5'] as const).map((gKey, idx) => {
+                                const pass = v.gates[gKey] === 'PASS';
+                                return (
+                                  <span
+                                    key={gKey}
+                                    className={`w-5 h-5 rounded flex items-center justify-center font-mono text-[9px] font-bold ${
+                                      pass
+                                        ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                                        : 'bg-slate-800 text-slate-500 border border-slate-700'
+                                    }`}
+                                    title={`Gate ${idx + 1}: ${pass ? 'PASSED' : 'PENDING'}`}
+                                  >
+                                    G{idx + 1}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          </td>
+
+                          <td className="py-4 px-6 text-right space-x-2">
+                            <button
+                              onClick={() => setSelectedVentureForPreview(v)}
+                              className="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 rounded-lg text-xs transition-colors"
+                              title="Open responsive device preview"
+                            >
+                              Preview
+                            </button>
+                            <button
+                              onClick={() => onNavigate(`/ventures/${v.id}`)}
+                              className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg text-xs transition-colors shadow-sm"
+                            >
+                              Dashboard
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -977,7 +976,7 @@ stagegate stage-gate run --all --ci`}
   -H "Authorization: Bearer sg_live_..." \\
   -H "Content-Type: application/json" \\
   -d '{
-    "name": "DocuFlow AI",
+    "name": "My Next SaaS",
     "tier": "SERIAL",
     "byok": true
   }'`}

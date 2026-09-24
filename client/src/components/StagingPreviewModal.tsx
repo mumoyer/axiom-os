@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Monitor,
   Tablet,
@@ -40,6 +40,17 @@ export const StagingPreviewModal: React.FC<StagingPreviewModalProps> = ({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const [activeInteractiveTab, setActiveInteractiveTab] = useState<'app' | 'billing' | 'docs'>('app');
+  const [paymentSimulated, setPaymentSimulated] = useState(false);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') onClose();
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -96,13 +107,15 @@ export const StagingPreviewModal: React.FC<StagingPreviewModalProps> = ({
             <div className="flex items-center space-x-1.5">
               <button
                 onClick={onClose}
-                className="w-3 h-3 rounded-full bg-rose-500/80 hover:bg-rose-500 transition-colors"
+                aria-label="Close Preview"
+                className="w-3 h-3 rounded-full bg-rose-500/80 hover:bg-rose-500 transition-colors cursor-pointer"
                 title="Close Preview"
               />
               <div className="w-3 h-3 rounded-full bg-amber-500/80" />
               <button
                 onClick={() => setIsFullscreen(!isFullscreen)}
-                className="w-3 h-3 rounded-full bg-emerald-500/80 hover:bg-emerald-500 transition-colors"
+                aria-label="Fullscreen Toggle"
+                className="w-3 h-3 rounded-full bg-emerald-500/80 hover:bg-emerald-500 transition-colors cursor-pointer"
                 title="Fullscreen Toggle"
               />
             </div>
@@ -158,14 +171,16 @@ export const StagingPreviewModal: React.FC<StagingPreviewModalProps> = ({
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setIsFullscreen(!isFullscreen)}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              aria-label={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
               title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
             >
               {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              aria-label="Close Staging Preview"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
               title="Close modal"
             >
               <X className="w-4 h-4" />
@@ -374,12 +389,19 @@ export const StagingPreviewModal: React.FC<StagingPreviewModalProps> = ({
                         </div>
                       </div>
 
-                      <button
-                        onClick={() => alert('Simulated Stripe Sandbox Checkout test completed successfully!')}
-                        className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition-colors shadow-sm"
-                      >
-                        Simulate Payment Confirmation ($69.00)
-                      </button>
+                      {paymentSimulated ? (
+                        <div className="p-3 rounded-lg bg-emerald-950/80 border border-emerald-700 text-emerald-300 text-center font-semibold text-xs animate-in fade-in flex items-center justify-center space-x-2">
+                          <Check className="w-4 h-4 text-emerald-400" />
+                          <span>Simulated Stripe Sandbox Checkout test completed successfully!</span>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => setPaymentSimulated(true)}
+                          className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition-colors shadow-sm cursor-pointer"
+                        >
+                          Simulate Payment Confirmation ($69.00)
+                        </button>
+                      )}
                     </div>
                   </div>
                 )}

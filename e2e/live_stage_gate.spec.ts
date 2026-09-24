@@ -81,7 +81,7 @@ test.describe('Live Stage-Gate Telemetry & Audit Stream Suite', () => {
       }
 
       // Close modal
-      const closeBtn = page.locator('button[title="Close modal"]').or(page.locator('button:has(svg.lucide-x)'));
+      const closeBtn = page.locator('button[aria-label="Close Staging Preview"]').or(page.locator('button[title="Close modal"]'));
       if (await closeBtn.first().isVisible()) {
         await closeBtn.first().click();
       }

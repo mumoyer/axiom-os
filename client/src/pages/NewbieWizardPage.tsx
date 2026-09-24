@@ -21,6 +21,8 @@ import {
   RotateCcw,
 } from 'lucide-react';
 
+import { CONCEPT_PRESETS } from '../demo/scenarios.js';
+
 export interface NewbieWizardPageProps {
   onNavigate?: (path: string) => void;
 }
@@ -42,64 +44,7 @@ export interface WizardState {
   pricingArchetype: 'subscription' | 'usage' | 'freemium' | 'enterprise';
   targetArpu: number;
   estimatedCac: number;
-  // Step 4
-  simulateFailure?: 'none' | 'gate1' | 'gate2';
 }
-
-const CONCEPT_PRESETS = [
-  {
-    name: 'DocuFlow AI',
-    tagline: 'Automated HIPAA-compliant document intelligence for medical practices',
-    problem: 'Medical staff spend 15+ hours weekly manually reviewing patient intake charts and compliance records.',
-    solution: 'Autonomous AI extractor that validates, indexes, and syncs patient records into EHR systems with zero human latency.',
-    industry: 'Healthcare',
-    targetSegment: 'SMB & Solo Practice Owners',
-    painPoints: ['Manual repetitive data entry', 'High compliance audit risk', 'Slow patient turnaround'],
-    valueVector: 'compliance',
-    pricingArchetype: 'subscription' as const,
-    targetArpu: 149,
-    estimatedCac: 120,
-  },
-  {
-    name: 'DentalCompliance',
-    tagline: 'Audit-ready OSHA & HIPAA compliance copilot for dentists',
-    problem: 'Independent dental practices face catastrophic fines due to out-of-date chemical disposal and safety logs.',
-    solution: 'Automated daily compliance checks with instant digital audit certificates and inspection checklists.',
-    industry: 'Healthcare',
-    targetSegment: 'SMB & Solo Practice Owners',
-    painPoints: ['High compliance audit risk', 'Fragmented legacy tooling', 'Lack of dedicated compliance officer'],
-    valueVector: 'compliance',
-    pricingArchetype: 'subscription' as const,
-    targetArpu: 199,
-    estimatedCac: 150,
-  },
-  {
-    name: 'SubManage SaaS',
-    tagline: 'Proactive churn prevention and failed payment recovery for micro-SaaS',
-    problem: 'Bootstrapped founders lose 4-8% of MRR every month to avoidable involuntary credit card churn.',
-    solution: 'Smart smart-dunning workflows and customer retention telemetry connected directly to Stripe.',
-    industry: 'DevTools',
-    targetSegment: 'SaaS Founders & Solo Creators',
-    painPoints: ['Lost revenue from churn', 'No automated dunning', 'Lack of visibility into customer drop-off'],
-    valueVector: 'revenue',
-    pricingArchetype: 'subscription' as const,
-    targetArpu: 79,
-    estimatedCac: 60,
-  },
-  {
-    name: 'ContractScout',
-    tagline: 'Instant contract risk and indemnity liability scanner for SMBs',
-    problem: 'Small businesses sign vendor contracts without legal counsel because attorney reviews cost $500/hour.',
-    solution: 'Deterministic clause scanner highlighting unfavorable indemnities, auto-renewals, and non-competes in 10 seconds.',
-    industry: 'LegalTech',
-    targetSegment: 'B2B Mid-Market Teams',
-    painPoints: ['Expensive legal counsel fees', 'Slow 2-week contract turnaround', 'Hidden predatory clauses'],
-    valueVector: 'speed',
-    pricingArchetype: 'usage' as const,
-    targetArpu: 99,
-    estimatedCac: 75,
-  },
-];
 
 const INDUSTRIES = [
   'Healthcare',
@@ -134,27 +79,31 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Wizard state with sensible defaults
+  // Wizard state: clean live defaults (never pre-filled with demo data)
   const [formData, setFormData] = useState<WizardState>(() => {
     const saved = localStorage.getItem('stagegate_wizard_state') || localStorage.getItem('axiom_wizard_state');
     if (saved) {
-      try { return JSON.parse(saved); } catch {}
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.name !== 'DocuFlow AI') {
+          return parsed;
+        }
+      } catch {}
     }
     return {
-      name: 'DocuFlow AI',
-      slug: 'docuflow-ai',
-      tagline: 'Automated HIPAA-compliant document intelligence for medical practices',
-      problem: 'Medical staff spend 15+ hours weekly manually reviewing patient intake charts and compliance records.',
-      solution: 'Autonomous AI extractor that validates, indexes, and syncs patient records into EHR systems with zero human latency.',
-      industry: 'Healthcare',
-      targetSegment: 'SMB & Solo Practice Owners',
-      selectedPainPoints: ['Manual repetitive data entry', 'High compliance audit risk'],
+      name: '',
+      slug: '',
+      tagline: '',
+      problem: '',
+      solution: '',
+      industry: 'B2B SaaS & Automation',
+      targetSegment: '',
+      selectedPainPoints: [],
       customPainPoint: '',
-      valueVector: 'compliance',
+      valueVector: 'revenue',
       pricingArchetype: 'subscription',
-      targetArpu: 149,
-      estimatedCac: 120,
-      simulateFailure: 'none',
+      targetArpu: 99,
+      estimatedCac: 75,
     };
   });
 
@@ -213,8 +162,8 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
   };
 
   const handlePresetClick = (preset: typeof CONCEPT_PRESETS[0]) => {
-    // Quick Inspiration on Step 1 applies concept details while safely preserving any custom steps 2-4
-    applyPreset(preset, false);
+    // Quick Inspiration on Step 1 applies full concept template on fresh form, or preserves custom steps 2-4 if already visited
+    applyPreset(preset, maxVisitedStep <= 1);
   };
 
   const togglePainPoint = (painPoint: string) => {
@@ -315,19 +264,11 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
     setIsSubmitting(true);
     setErrorMessage(null);
 
-    const failureSimulations =
-      formData.simulateFailure === 'gate1'
-        ? { failGate1Type: true }
-        : formData.simulateFailure === 'gate2'
-        ? { failGate2Health: true }
-        : {};
-
     const payload = {
       name: formData.name,
       tenantId: 'tenant-default',
       planTier: 'FOUNDER',
       description: `${formData.tagline} - ${formData.problem}`,
-      failureSimulations,
     };
 
     try {
@@ -338,16 +279,19 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
         body: JSON.stringify(payload),
       });
 
-      // Clear wizard drafts from local storage on launch
-      try {
-        localStorage.removeItem('stagegate_wizard_state');
-        localStorage.removeItem('stagegate_wizard_max_step');
-      } catch {}
-
       if (res.ok) {
         const data = await res.json();
-        const ventureId = data.venture?.id || `ven_${Math.random().toString(36).slice(2, 10)}`;
-        
+        const ventureId = data.venture?.id;
+        if (!ventureId) {
+          throw new Error('Server returned successful status without a venture ID.');
+        }
+
+        // Clear wizard drafts from local storage on successful launch
+        try {
+          localStorage.removeItem('stagegate_wizard_state');
+          localStorage.removeItem('stagegate_wizard_max_step');
+        } catch {}
+
         // Save venture to user local storage portfolio registry
         try {
           const userVentures = JSON.parse(localStorage.getItem('stagegate_user_ventures') || '[]');
@@ -357,9 +301,9 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
             domain: `${ventureId.slice(0, 8)}.axiomrun.app`,
             stagingUrl: `https://stage-${ventureId.slice(0, 8)}.axiomrun.app`,
             planTier: 'FOUNDER',
-            status: 'LIVE',
-            mrr: formData.targetArpu * 10,
-            uptime: 99.98,
+            status: 'INITIALIZING',
+            mrr: 0,
+            uptime: 100.0,
             createdAt: new Date().toISOString(),
           };
           localStorage.setItem('stagegate_user_ventures', JSON.stringify([newVenture, ...userVentures]));
@@ -368,14 +312,15 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
         // Navigate to live dashboard
         onNavigate(`/ventures/${ventureId}`);
       } else {
-        // Fallback simulated session
-        const fallbackId = `ven_${Math.random().toString(36).slice(2, 10)}`;
-        onNavigate(`/ventures/${fallbackId}`);
+        const errData = await res.json().catch(() => ({}));
+        setErrorMessage(
+          errData.error || errData.message || 'Failed to initialize venture execution pipeline. Please try again.'
+        );
       }
-    } catch {
-      // Local fallback in case server endpoint is unavailable in sandbox
-      const fallbackId = `ven_${Math.random().toString(36).slice(2, 10)}`;
-      onNavigate(`/ventures/${fallbackId}`);
+    } catch (err: any) {
+      setErrorMessage(
+        err?.message || 'Network error: Unable to reach venture provisioning service. Please check your connection.'
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -512,7 +457,7 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
                   type="text"
                   value={formData.name}
                   onChange={(e) => updateField('name', e.target.value)}
-                  placeholder="e.g. DocuFlow AI"
+                  placeholder="e.g. MetricFlow, TaskSync, PulseAI"
                   className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
                 />
                 <div className="text-[11px] font-mono text-slate-500 flex items-center gap-1 mt-1">
@@ -1054,19 +999,6 @@ export const NewbieWizardPage: React.FC<NewbieWizardPageProps> = ({
               </div>
             </div>
 
-            {/* Developer simulation toggle */}
-            <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between text-xs">
-              <span className="text-slate-400 font-mono">Stage-Gate Execution Mode:</span>
-              <select
-                value={formData.simulateFailure || 'none'}
-                onChange={(e) => updateField('simulateFailure', e.target.value as any)}
-                className="bg-slate-950 border border-slate-700 rounded px-2.5 py-1 text-xs text-slate-200"
-              >
-                <option value="none">Normal Clean Run (All 5 Gates PASS)</option>
-                <option value="gate1">Simulate Gate 1 AST Build Failure (Test 2PC Refund)</option>
-                <option value="gate2">Simulate Gate 2 TLS Failure (Test Self-Healing)</option>
-              </select>
-            </div>
 
             {/* Bottom Actions */}
             <div className="flex items-center justify-between pt-4 border-t border-slate-800">

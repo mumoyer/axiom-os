@@ -71,17 +71,48 @@ const SEED_VENTURES: VentureMetadata[] = [
   },
 ];
 
+const SEED_VENTURE_IDS = new Set(SEED_VENTURES.map((v) => v.id));
+
 for (const v of SEED_VENTURES) {
   ventures.set(v.id, v);
 }
 
-// GET /api/ventures
-ventureRoutes.get('/', (_req: Request, res: Response) => {
+// GET /api/ventures/explore - Dedicated explore scenarios endpoint
+ventureRoutes.get('/explore', (_req: Request, res: Response) => {
   const executions = stageGateRunner.getAllExecutions();
-  const list = Array.from(ventures.values()).map((v) => {
+  const list = SEED_VENTURES.map((v) => {
     const exec = executions.find((e) => e.ventureId === v.id);
     return {
       ...v,
+      isExplore: true,
+      pipeline: exec || null,
+    };
+  });
+  res.json({ ventures: list });
+});
+
+// GET /api/ventures
+ventureRoutes.get('/', (req: Request, res: Response) => {
+  const executions = stageGateRunner.getAllExecutions();
+  const scope = req.query.scope as string | undefined;
+  const tenantId = req.query.tenantId as string | undefined;
+
+  let allVentures = Array.from(ventures.values());
+
+  if (scope === 'live') {
+    // Purge all seed dummy ventures from live customer queries
+    allVentures = allVentures.filter((v) => !SEED_VENTURE_IDS.has(v.id));
+  }
+
+  if (tenantId) {
+    allVentures = allVentures.filter((v) => v.tenantId === tenantId);
+  }
+
+  const list = allVentures.map((v) => {
+    const exec = executions.find((e) => e.ventureId === v.id);
+    return {
+      ...v,
+      isExplore: SEED_VENTURE_IDS.has(v.id),
       pipeline: exec || null,
     };
   });
@@ -100,7 +131,9 @@ ventureRoutes.get('/:id', (req: Request, res: Response) => {
   }
 
   res.json({
-    venture: venture || { id, name: pipeline?.ventureName, tenantId: pipeline?.tenantId },
+    venture: venture
+      ? { ...venture, isExplore: SEED_VENTURE_IDS.has(venture.id) }
+      : { id, name: pipeline?.ventureName, tenantId: pipeline?.tenantId, isExplore: false },
     pipeline: pipeline || null,
   });
 });

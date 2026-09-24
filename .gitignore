@@ -5,3 +5,7 @@ test-results/
 .agents/
 *.log
 .env
+verification_*.png
+e2e-screenshots/
+scratch_*.json
+__pycache__/

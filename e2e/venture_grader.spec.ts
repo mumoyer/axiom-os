@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Venture Validation Grader (VVG) & Lead Capture Funnel', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/#/grader');
-    await expect(page.locator('text=Autonomous Venture Validation Grader')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('text=Free 9-to-5 Feasibility & Time-Commitment Grader')).toBeVisible({ timeout: 10000 });
   });
 
   test('VVG Engine: displays 4-factor breakdown and reacts to metric inputs', async ({ page }) => {
@@ -18,7 +18,7 @@ test.describe('Venture Validation Grader (VVG) & Lead Capture Funnel', () => {
     await expect(scoreText).toBeVisible();
 
     // Change Venture Name input
-    const nameInput = page.locator('input[placeholder="e.g. DocuPulse AI"]');
+    const nameInput = page.locator('input[placeholder*="DocuPulse AI"]');
     if (await nameInput.isVisible()) {
       await nameInput.fill('FinTech Flow Pro');
       await expect(nameInput).toHaveValue('FinTech Flow Pro');
@@ -93,4 +93,3 @@ test.describe('Venture Validation Grader (VVG) & Lead Capture Funnel', () => {
     await expect(page.locator('text=Page 3: Competitive Density')).toBeVisible();
   });
 });
-

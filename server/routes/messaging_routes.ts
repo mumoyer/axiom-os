@@ -38,6 +38,16 @@ const messagesStore: ProjectMessage[] = [
 
 export const messagingRoutes = Router();
 
+function checkAdminAuth(req: Request): boolean {
+  const adminKey = req.headers['x-admin-key'] as string;
+  const authHeader = req.headers.authorization || '';
+  const expectedAdminKey = process.env.ADMIN_API_KEY || 'stagegate_admin_key_2026';
+
+  if (adminKey && adminKey === expectedAdminKey) return true;
+  if (authHeader.startsWith('Bearer ') && authHeader.slice(7).trim() === expectedAdminKey) return true;
+  return false;
+}
+
 // GET /api/messages/:ventureId - Fetch message history for a venture
 messagingRoutes.get('/:ventureId', (req: Request, res: Response) => {
   const ventureId = String(req.params.ventureId);
@@ -45,8 +55,14 @@ messagingRoutes.get('/:ventureId', (req: Request, res: Response) => {
   res.json({ ventureId, messages: thread });
 });
 
-// GET /api/messages - Admin view: list all threads across all ventures
-messagingRoutes.get('/', (_req: Request, res: Response) => {
+// GET /api/messages - Admin view: list all threads across all ventures (Protected by Admin Auth)
+messagingRoutes.get('/', (req: Request, res: Response) => {
+  if (!checkAdminAuth(req)) {
+    res.status(401).json({
+      error: 'Unauthorized: Admin authentication required via x-admin-key header to view customer message archives (CCPA § 1798.150 / GDPR Art. 32).'
+    });
+    return;
+  }
   res.json({ total: messagesStore.length, messages: messagesStore });
 });
 

@@ -908,6 +908,11 @@ export const GraderPage: React.FC<GraderPageProps> = ({
                 </select>
               </div>
 
+              {/* CCPA Notice at Collection & CAN-SPAM Notice */}
+              <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800/80 text-[10px] text-slate-400 leading-relaxed">
+                <span className="font-semibold text-slate-300">Notice at Collection:</span> We collect your name and email solely to generate and deliver your customized venture feasibility analysis. By unlocking, you acknowledge our Privacy Policy and agree to receive periodic venture insights from Moyer Ventures LLC. You can unsubscribe at any time via 1-click.
+              </div>
+
               <div className="pt-2 flex items-center space-x-3">
                 <button
                   type="button"

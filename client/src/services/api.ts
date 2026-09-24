@@ -24,13 +24,37 @@ export interface CheckoutTier {
   id: string;
   name: string;
   priceUsd: number;
+  listPriceUsd?: number;
   billing: string;
+  savingsUsd?: number;
+  discountPercent?: number;
+  monthly?: any;
+  annual?: any;
 }
 
 export interface CheckoutConfigResponse {
   sandboxMode: boolean;
   publishableKey: string;
   organization?: string;
+  beta?: {
+    active: boolean;
+    label: string;
+    badgeText: string;
+    discountPercent: number;
+    endsOn: string;
+    lifetimeLockIn: boolean;
+    explanation: string;
+    bugBounty: {
+      rewards: {
+        cosmetic: string;
+        functional: string;
+        blocking: string;
+        security: string;
+      };
+      promise: string;
+      encouragement: string;
+    };
+  };
   shopifyIntegration?: {
     enabled: boolean;
     shopDomain: string;
@@ -43,10 +67,14 @@ export interface CheckoutConfigResponse {
 export interface CreateCheckoutSessionPayload {
   plan: 'FOUNDER' | 'SERIAL' | 'ENTERPRISE';
   email: string;
+  billingInterval?: 'monthly' | 'annual';
   successUrl?: string;
   cancelUrl?: string;
   ventureId?: string;
   paymentProvider?: 'Shopify / Shop Pay' | 'Stripe' | 'Sandbox';
+  agreedToTerms?: boolean;
+  consentTimestamp?: string;
+  disclosureVersion?: string;
 }
 
 export interface CheckoutSessionResponse {
@@ -57,6 +85,27 @@ export interface CheckoutSessionResponse {
     email: string;
   };
   plan: string;
+  amountUsd?: number;
+  listPriceUsd?: number;
+  isBetaDiscountApplied?: boolean;
+}
+
+export interface SubmitBugPayload {
+  title: string;
+  description: string;
+  category: string;
+  severity: string;
+  reporterEmail?: string;
+  ventureId?: string;
+  url?: string;
+  systemInfo?: Record<string, any>;
+}
+
+export interface SubmitBugResponse {
+  success: boolean;
+  bugId: string;
+  bountyReward: string;
+  message: string;
 }
 
 export interface HealthResponse {
@@ -123,20 +172,10 @@ export async function calculateGraderScoreRemote(input: GraderInput): Promise<{ 
  * Grader: Capture prospective founder lead
  */
 export async function captureLead(payload: LeadCapturePayload): Promise<LeadCaptureResponse> {
-  try {
-    return await apiFetch<LeadCaptureResponse>('/grader/leads', {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    });
-  } catch {
-    // Standalone fallback for UI persistence
-    const simulatedId = `lead_${Math.random().toString(36).slice(2, 10)}`;
-    return {
-      message: 'Lead captured successfully (local session)',
-      leadId: simulatedId,
-      reportDownloadUrl: `/api/grader/reports/${simulatedId}`,
-    };
-  }
+  return await apiFetch<LeadCaptureResponse>('/grader/leads', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
 }
 
 /**
@@ -150,6 +189,26 @@ export async function getCheckoutConfig(): Promise<CheckoutConfigResponse> {
       sandboxMode: true,
       publishableKey: 'pk_test_stagegate_sandbox_public_key',
       organization: 'Moyer Ventures LLC',
+      beta: {
+        active: true,
+        label: 'BETA',
+        badgeText: '20% BETA DISCOUNT',
+        discountPercent: 20,
+        endsOn: '2026-12-31',
+        lifetimeLockIn: true,
+        explanation:
+          'You are an early adopter. Beta pricing is our trade: you get 20% off regular list price, and in return we ask you to report any bugs or rough edges you encounter. Subscribe during beta and your rate is locked for life.',
+        bugBounty: {
+          rewards: {
+            cosmetic: 'Beta Tester Credit in Release Notes',
+            functional: '1 Free Month',
+            blocking: '2 Free Months',
+            security: '3 Free Months + Direct Founder Advisory Line',
+          },
+          promise: 'Every report is reviewed within 24 hours.',
+          encouragement: 'Help us make Stage Gate OS unbreakable! Found an error or edge case? Report it and get rewarded.',
+        },
+      },
       shopifyIntegration: {
         enabled: true,
         shopDomain: 'z0zt1m-ae.myshopify.com',
@@ -160,7 +219,10 @@ export async function getCheckoutConfig(): Promise<CheckoutConfigResponse> {
         {
           id: 'FOUNDER',
           name: 'Founder Plan',
-          priceUsd: 69.0,
+          priceUsd: 55.0,
+          listPriceUsd: 69.0,
+          savingsUsd: 14.0,
+          discountPercent: 20,
           billing: 'monthly',
           shopifyProductId: '7741406576774',
           shopifyCheckoutUrl: 'https://www.stagegateos.com/subscribe/founder',
@@ -168,7 +230,10 @@ export async function getCheckoutConfig(): Promise<CheckoutConfigResponse> {
         {
           id: 'SERIAL',
           name: 'Serial Entrepreneur Plan',
-          priceUsd: 149.0,
+          priceUsd: 119.0,
+          listPriceUsd: 149.0,
+          savingsUsd: 30.0,
+          discountPercent: 20,
           billing: 'monthly',
           shopifyProductId: '7741407199366',
           shopifyCheckoutUrl: 'https://www.stagegateos.com/subscribe/serial',
@@ -176,7 +241,10 @@ export async function getCheckoutConfig(): Promise<CheckoutConfigResponse> {
         {
           id: 'ENTERPRISE',
           name: 'Enterprise Studio Plan',
-          priceUsd: 999.0,
+          priceUsd: 799.0,
+          listPriceUsd: 999.0,
+          savingsUsd: 200.0,
+          discountPercent: 20,
           billing: 'monthly',
           shopifyProductId: '7741407723654',
           shopifyCheckoutUrl: 'https://www.stagegateos.com/subscribe/enterprise',
@@ -199,6 +267,23 @@ export async function createCheckoutSession(
 }
 
 /**
+ * Feedback: Submit a bug report for beta bounty
+ */
+export async function submitBugReport(payload: SubmitBugPayload): Promise<SubmitBugResponse> {
+  return await apiFetch<SubmitBugResponse>('/feedback/bug', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+/**
+ * Feedback: Get bug bounty terms and rewards config
+ */
+export async function getFeedbackConfig(): Promise<any> {
+  return await apiFetch<any>('/feedback/config');
+}
+
+/**
  * Health: Query container & gate health status
  */
 export async function getSystemHealth(): Promise<HealthResponse> {
@@ -206,11 +291,11 @@ export async function getSystemHealth(): Promise<HealthResponse> {
     return await apiFetch<HealthResponse>('/healthz');
   } catch {
     return {
-      status: 'healthy',
-      uptime: 4200,
-      database: 'connected (sandbox)',
+      status: 'offline',
+      uptime: 0,
+      database: 'disconnected',
       timestamp: new Date().toISOString(),
-      engine: 'Stage Gate OS Stage-Gate Orchestrator v1.0',
+      engine: 'Stage Gate OS (Offline)',
     };
   }
 }

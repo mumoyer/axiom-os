@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Mail,
   KeyRound,
@@ -36,6 +36,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [linkInfo, setLinkInfo] = useState<MagicLinkResponse | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') onClose();
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -110,7 +120,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+          aria-label="Close Authentication Dialog"
+          title="Close"
+          className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -172,6 +184,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </>
               )}
             </button>
+            <p className="text-[10px] text-center text-slate-400 pt-1">
+              By continuing, you agree to Stage Gate OS <span className="text-slate-300 font-medium">Terms of Service</span> and <span className="text-slate-300 font-medium">Privacy Policy</span>.
+            </p>
           </form>
         ) : (
           /* STEP 2: 6-DIGIT OTP */

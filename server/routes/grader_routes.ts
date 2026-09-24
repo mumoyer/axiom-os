@@ -235,7 +235,22 @@ graderRoutes.post('/leads', (req: Request, res: Response) => {
   });
 });
 
-// GET /api/grader/leads
-graderRoutes.get('/leads', (_req: Request, res: Response) => {
+// GET /api/grader/leads - Protected by Admin Auth
+graderRoutes.get('/leads', (req: Request, res: Response) => {
+  const adminKey = req.headers['x-admin-key'] as string;
+  const authHeader = req.headers.authorization || '';
+  const expectedAdminKey = process.env.ADMIN_API_KEY || 'stagegate_admin_key_2026';
+
+  const isAuthorized =
+    (adminKey && adminKey === expectedAdminKey) ||
+    (authHeader.startsWith('Bearer ') && authHeader.slice(7).trim() === expectedAdminKey);
+
+  if (!isAuthorized) {
+    res.status(401).json({
+      error: 'Unauthorized: Admin authentication required via x-admin-key header to view founder lead records (CCPA § 1798.150 / GDPR Art. 32).'
+    });
+    return;
+  }
+
   res.json({ leads });
 });

@@ -19,6 +19,8 @@ import { StageGateTimeline, StageGateResult, GateStatus } from '../components/St
 import { AuditLogTerminal, AuditLogEntry } from '../components/AuditLogTerminal.js';
 import { StagingPreviewModal } from '../components/StagingPreviewModal.js';
 
+import { DUMMY_SCENARIOS, EXPLORE_SCENARIO_STAGES } from '../demo/scenarios.js';
+
 export interface LiveVenturePageProps {
   ventureId?: string;
   onNavigate?: (path: string) => void;
@@ -34,270 +36,122 @@ interface VentureDetails {
   createdAt: string;
 }
 
-const DEFAULT_STAGES: StageGateResult[] = [
+const INITIAL_PENDING_STAGES: StageGateResult[] = [
   {
     gateId: 1,
     gateName: 'Build & Strict TypeScript Check',
-    status: 'PASSED',
-    startTime: Date.now() - 3200,
-    durationMs: 245,
-    metrics: { bundleSizeKb: 184, tsErrors: 0 },
-    diagnosticLogs: [
-      '[AST Scan] Initializing Next.js 15 App Router type-checker...',
-      '[Bundle Check] Client bundle: 184KB (< 250KB limit) - PASS',
-      '[Zod Schema] .env schema validated against strict runtime definition - PASS',
-      '[Gate 1 Result] TypeScript strict AST validated cleanly. 0 errors.',
-    ],
-    assertionsPassed: 3,
+    status: 'PENDING',
+    diagnosticLogs: ['Waiting for build worker dispatch...'],
+    assertionsPassed: 0,
     assertionsFailed: 0,
-    receipt: {
-      gateNumber: 1,
-      ventureId: 'ven_active',
-      timestamp: new Date(Date.now() - 3000).toISOString(),
-      status: 'PASS',
-      executionTimeMs: 245,
-      remediationAttempts: 0,
-      signature: 'sha256:d8b2e1f49a837482019482710482019482019482019482019482019482019482',
-      assertions: [
-        {
-          assertionId: 'ast-strict-check',
-          name: 'Strict TypeScript AST Compilation',
-          status: 'PASS',
-          latencyMs: 140,
-          expected: '0 compiler errors',
-          actual: '0 compiler errors',
-        },
-        {
-          assertionId: 'bundle-budget-check',
-          name: 'Bundle Size Budget (< 250KB)',
-          status: 'PASS',
-          latencyMs: 65,
-          expected: '< 250KB',
-          actual: '184KB',
-        },
-        {
-          assertionId: 'zod-env-check',
-          name: 'Environment Variable Zod Schema Validation',
-          status: 'PASS',
-          latencyMs: 40,
-          expected: 'Zod.valid',
-          actual: 'Zod.valid',
-        },
-      ],
-    },
   },
   {
     gateId: 2,
     gateName: 'Infrastructure & Container Health Probe',
-    status: 'PASSED',
-    startTime: Date.now() - 2800,
-    durationMs: 312,
-    metrics: { p95LatencyMs: 48, probesPassed: 15 },
-    diagnosticLogs: [
-      '[Socket Probe] Connecting to ephemeral container socket at TLS 1.3...',
-      '[RFC 6125] Validating SAN wildcard and dual DNS/IP SAN entries - PASS',
-      '[Probe Burst] 15 consecutive /api/healthz probes executed. True p95: 48ms (< 300ms threshold) - PASS',
-    ],
-    assertionsPassed: 2,
+    status: 'PENDING',
+    diagnosticLogs: ['Waiting for container provisioning...'],
+    assertionsPassed: 0,
     assertionsFailed: 0,
-    receipt: {
-      gateNumber: 2,
-      ventureId: 'ven_active',
-      timestamp: new Date(Date.now() - 2500).toISOString(),
-      status: 'PASS',
-      executionTimeMs: 312,
-      remediationAttempts: 0,
-      signature: 'sha256:9f83a21b48201948201948201948201948201948201948201948201948201948',
-      assertions: [
-        {
-          assertionId: 'rfc6125-san-check',
-          name: 'RFC 6125 SAN Wildcard Verification',
-          status: 'PASS',
-          latencyMs: 110,
-          expected: 'Valid SAN *.axiomrun.app',
-          actual: 'Valid SAN *.axiomrun.app',
-        },
-        {
-          assertionId: 'healthz-probe-p95',
-          name: '15x HTTP Healthz Probes (p95 < 300ms)',
-          status: 'PASS',
-          latencyMs: 202,
-          expected: '< 300ms',
-          actual: '48ms',
-        },
-      ],
-    },
   },
   {
     gateId: 3,
     gateName: 'RFC 6125 SSL & Quad-DoH DNS Quorum',
-    status: 'PASSED',
-    startTime: Date.now() - 2300,
-    durationMs: 188,
-    metrics: { dohConsensus: '4/4', cnameNormalized: true },
-    diagnosticLogs: [
-      '[Quad-DoH] Querying Cloudflare, Google, AliDNS, and AdGuard over HTTPS...',
-      '[Consensus] 4 of 4 resolvers reached quorum match for Anycast CIDR - PASS',
-      '[CNAME Check] Wireformat trailing dot stripped. Subdomain takeover prevented - PASS',
-      '[Redirects] Canonical HTTP -> HTTPS 301 and HSTS header verified - PASS',
-    ],
-    assertionsPassed: 3,
+    status: 'PENDING',
+    diagnosticLogs: ['Waiting for DNS routing propagation...'],
+    assertionsPassed: 0,
     assertionsFailed: 0,
-    receipt: {
-      gateNumber: 3,
-      ventureId: 'ven_active',
-      timestamp: new Date(Date.now() - 2100).toISOString(),
-      status: 'PASS',
-      executionTimeMs: 188,
-      remediationAttempts: 0,
-      signature: 'sha256:3a71bc9842019482019482019482019482019482019482019482019482019482',
-      assertions: [
-        {
-          assertionId: 'quad-doh-consensus',
-          name: 'Quad-DoH 3-of-4 Multi-Resolver Quorum',
-          status: 'PASS',
-          latencyMs: 95,
-          expected: '>= 3 consensus matches',
-          actual: '4 consensus matches',
-        },
-        {
-          assertionId: 'cname-trailing-dot',
-          name: 'CNAME Wireformat Trailing Dot Normalization',
-          status: 'PASS',
-          latencyMs: 45,
-          expected: 'cname.axiomrun.app (dot stripped)',
-          actual: 'cname.axiomrun.app (dot stripped)',
-        },
-        {
-          assertionId: 'hsts-301-redirect',
-          name: 'Canonical 301 & HSTS Enforcer',
-          status: 'PASS',
-          latencyMs: 48,
-          expected: '301 Moved Permanently with HSTS',
-          actual: '301 Moved Permanently with HSTS',
-        },
-      ],
-    },
   },
   {
     gateId: 4,
     gateName: 'Stripe Checkout & Webhook Idempotency',
-    status: 'PASSED',
-    startTime: Date.now() - 1900,
-    durationMs: 275,
-    metrics: { testClockAdvancedDays: 30, duplicateEventsHandled: 0 },
-    diagnosticLogs: [
-      '[Stripe Test Clock] Simulated clock advanced +30 days with tolerance override - PASS',
-      '[Webhook Flood] Dispatched 3 concurrent identical webhook payloads under mutex lock...',
-      '[Idempotency Mutex] Exactly 1 record inserted; 2 redundant events absorbed cleanly - PASS',
-    ],
-    assertionsPassed: 2,
+    status: 'PENDING',
+    diagnosticLogs: ['Waiting for billing webhook initialization...'],
+    assertionsPassed: 0,
     assertionsFailed: 0,
-    receipt: {
-      gateNumber: 4,
-      ventureId: 'ven_active',
-      timestamp: new Date(Date.now() - 1600).toISOString(),
-      status: 'PASS',
-      executionTimeMs: 275,
-      remediationAttempts: 0,
-      signature: 'sha256:6e18f0a738201948201948201948201948201948201948201948201948201948',
-      assertions: [
-        {
-          assertionId: 'stripe-clock-sim',
-          name: 'Stripe Test Clock (+30d Advance)',
-          status: 'PASS',
-          latencyMs: 125,
-          expected: '+30 days subscription active',
-          actual: '+30 days subscription active',
-        },
-        {
-          assertionId: 'webhook-mutex-lock',
-          name: 'Concurrent Webhook Flood Mutex Lock (0 Duplicates)',
-          status: 'PASS',
-          latencyMs: 150,
-          expected: 'Single DB row inserted (mutex hold)',
-          actual: 'Single DB row inserted (mutex hold)',
-        },
-      ],
-    },
   },
   {
     gateId: 5,
     gateName: 'Git Ejection & 100% Repository Portability',
-    status: 'PASSED',
-    startTime: Date.now() - 1400,
-    durationMs: 210,
-    metrics: { proprietaryImportsCount: 0, gitPushStatus: 'OK' },
-    diagnosticLogs: [
-      '[Clean-Room AST Scan] Inspecting all imports across client and server packages...',
-      '[Zero Lock-In] Verified 0 proprietary Stage Gate OS framework dependencies - PASS',
-      '[GitHub Dual-Push] Continuous push to user remote repository complete - PASS',
-      '[Viral Badge] Injected verified README badge and signed cryptographic pass receipt.',
-    ],
-    assertionsPassed: 2,
+    status: 'PENDING',
+    diagnosticLogs: ['Waiting for upstream git branch sync...'],
+    assertionsPassed: 0,
     assertionsFailed: 0,
-    receipt: {
-      gateNumber: 5,
-      ventureId: 'ven_active',
-      timestamp: new Date(Date.now() - 1100).toISOString(),
-      status: 'PASS',
-      executionTimeMs: 210,
-      remediationAttempts: 0,
-      signature: 'sha256:7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069',
-      assertions: [
-        {
-          assertionId: 'clean-room-zero-lockin',
-          name: 'Zero-Lock-In Clean-Room Import Scan',
-          status: 'PASS',
-          latencyMs: 110,
-          expected: '0 proprietary dependencies',
-          actual: '0 proprietary dependencies',
-        },
-        {
-          assertionId: 'dual-push-git-sync',
-          name: '100% Continuous Dual-Push Git Sync',
-          status: 'PASS',
-          latencyMs: 100,
-          expected: 'Remote Git push 200 OK',
-          actual: 'Remote Git push 200 OK',
-        },
-      ],
-    },
   },
 ];
 
 export const LiveVenturePage: React.FC<LiveVenturePageProps> = ({
-  ventureId = 'ven_active_01',
+  ventureId: rawVentureId = '',
   onNavigate = (path: string) => { window.location.hash = path; },
 }) => {
-  const MOCK_NAMES: Record<string, { name: string; domain: string; tier: 'FOUNDER' | 'SERIAL' | 'ENTERPRISE' }> = {
-    ven_docuflow_02: { name: 'DocuFlow AI', domain: 'docuflow.health', tier: 'FOUNDER' },
-    ven_scout_03: { name: 'ContractScout', domain: 'contractscout.legal', tier: 'SERIAL' },
-    ven_pulse_01: { name: 'MetricPulse Analytics', domain: 'metricpulse.io', tier: 'SERIAL' },
-    ven_dental_04: { name: 'DentalCompliance', domain: 'dentalcompliance.app', tier: 'FOUNDER' },
-    ven_sub_04: { name: 'SubManage SaaS', domain: 'submanage.dev', tier: 'SERIAL' },
+  // Check if this venture is one of the designated interactive explore scenarios
+  const exploreScenario = DUMMY_SCENARIOS.find((s) => s.id === rawVentureId);
+  const isExplore = !!exploreScenario;
+
+  // Resolve target venture ID (if none passed, look up latest user venture)
+  const getUserVentures = (): any[] => {
+    try {
+      return JSON.parse(localStorage.getItem('stagegate_user_ventures') || '[]');
+    } catch {
+      return [];
+    }
   };
 
-  const cleanSubdomain = ventureId.slice(0, 8).replace(/_/g, '-');
-  const initialMock = MOCK_NAMES[ventureId] || {
-    name: 'DocuFlow AI',
-    domain: `${cleanSubdomain}.axiomrun.app`,
-    tier: 'SERIAL' as const,
-  };
+  const userVentures = getUserVentures();
+  const activeVentureId = rawVentureId || userVentures[0]?.id || '';
+  const localVenture = userVentures.find((v: any) => v.id === activeVentureId);
 
-  const [venture, setVenture] = useState<VentureDetails>({
-    id: ventureId,
-    name: initialMock.name,
-    tenantId: 'tenant-default',
-    planTier: initialMock.tier,
-    domain: initialMock.domain,
-    stagingUrl: `https://stage-${cleanSubdomain}.axiomrun.app`,
-    createdAt: new Date().toISOString(),
+  const cleanSubdomain = activeVentureId ? activeVentureId.slice(0, 8).replace(/_/g, '-') : 'live';
+
+  const [notFound, setNotFound] = useState<boolean>(!isExplore && !localVenture && !activeVentureId);
+  const [isLoading, setIsLoading] = useState<boolean>(!isExplore && !localVenture && !!activeVentureId);
+
+  const [venture, setVenture] = useState<VentureDetails>(() => {
+    if (isExplore && exploreScenario) {
+      return {
+        id: exploreScenario.id,
+        name: exploreScenario.name,
+        tenantId: 'tenant-demo',
+        planTier: exploreScenario.planTier,
+        domain: `${cleanSubdomain}.axiomrun.app`,
+        stagingUrl: exploreScenario.stagingUrl,
+        createdAt: new Date().toISOString(),
+      };
+    }
+    if (localVenture) {
+      return {
+        id: localVenture.id,
+        name: localVenture.name,
+        tenantId: localVenture.tenantId || 'tenant-default',
+        planTier: localVenture.planTier || 'FOUNDER',
+        domain: localVenture.domain || `${cleanSubdomain}.axiomrun.app`,
+        stagingUrl: localVenture.stagingUrl || `https://stage-${cleanSubdomain}.axiomrun.app`,
+        createdAt: localVenture.createdAt || new Date().toISOString(),
+      };
+    }
+    return {
+      id: activeVentureId || 'uninitialized',
+      name: activeVentureId ? 'Active Pipeline' : 'Uninitialized Venture',
+      tenantId: 'tenant-default',
+      planTier: 'FOUNDER',
+      domain: `${cleanSubdomain}.axiomrun.app`,
+      stagingUrl: `https://stage-${cleanSubdomain}.axiomrun.app`,
+      createdAt: new Date().toISOString(),
+    };
   });
 
-  const [stages, setStages] = useState<StageGateResult[]>(DEFAULT_STAGES);
-  const [overallStatus, setOverallStatus] = useState<'INITIALIZING' | 'IN_PROGRESS' | 'COMPLETED' | 'ABORTED_ZERO_CHARGE'>('COMPLETED');
-  const [escrowStatus, setEscrowStatus] = useState<'HELD' | 'COMMITTED' | 'REFUNDED_ZERO_CHARGE'>('COMMITTED');
+  const [stages, setStages] = useState<StageGateResult[]>(() => {
+    if (isExplore) return EXPLORE_SCENARIO_STAGES;
+    return INITIAL_PENDING_STAGES;
+  });
+  const [overallStatus, setOverallStatus] = useState<'INITIALIZING' | 'IN_PROGRESS' | 'COMPLETED' | 'ABORTED_ZERO_CHARGE'>(() => {
+    if (isExplore) return 'COMPLETED';
+    if (localVenture?.status === 'LIVE') return 'COMPLETED';
+    return 'INITIALIZING';
+  });
+  const [escrowStatus, setEscrowStatus] = useState<'HELD' | 'COMMITTED' | 'REFUNDED_ZERO_CHARGE'>(() => {
+    if (isExplore) return 'COMMITTED';
+    return 'HELD';
+  });
   const [absorbedCogs, setAbsorbedCogs] = useState<number>(0.0);
   const [connectionStatus, setConnectionStatus] = useState<'CONNECTED' | 'STREAMING' | 'DISCONNECTED'>('STREAMING');
   const [logs, setLogs] = useState<AuditLogEntry[]>([]);
@@ -306,19 +160,35 @@ export const LiveVenturePage: React.FC<LiveVenturePageProps> = ({
 
   // Load venture metadata & pipeline execution from backend
   useEffect(() => {
-    fetch(`/api/ventures/${ventureId}`)
+    if (isExplore) {
+      setNotFound(false);
+      setIsLoading(false);
+      return;
+    }
+
+    if (!activeVentureId) {
+      if (!localVenture) {
+        setNotFound(true);
+      }
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    fetch(`/api/ventures/${activeVentureId}`)
       .then((res) => {
         if (!res.ok) throw new Error('Venture not found');
         return res.json();
       })
       .then((data) => {
+        setNotFound(false);
         if (data.venture) {
-          const sub = (data.venture.id || ventureId).slice(0, 8).replace(/_/g, '-');
+          const sub = (data.venture.id || activeVentureId).slice(0, 8).replace(/_/g, '-');
           setVenture({
             id: data.venture.id,
-            name: data.venture.name || 'DocuFlow AI',
+            name: data.venture.name || 'Live Venture',
             tenantId: data.venture.tenantId || 'tenant-default',
-            planTier: data.venture.planTier || 'SERIAL',
+            planTier: data.venture.planTier || 'FOUNDER',
             domain: `${sub}.axiomrun.app`,
             stagingUrl: `https://stage-${sub}.axiomrun.app`,
             createdAt: data.venture.createdAt || new Date().toISOString(),
@@ -334,15 +204,25 @@ export const LiveVenturePage: React.FC<LiveVenturePageProps> = ({
         }
       })
       .catch(() => {
-        // Fallback to initial defaults
+        if (!localVenture) {
+          setNotFound(true);
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
-  }, [ventureId]);
+  }, [activeVentureId, isExplore]);
 
   // Connect to SSE Telemetry Stream
   useEffect(() => {
+    if (isExplore || !activeVentureId || notFound) {
+      setConnectionStatus('DISCONNECTED');
+      return;
+    }
+
     let eventSource: EventSource | null = null;
     try {
-      eventSource = new EventSource(`/api/telemetry/stream/${ventureId}`);
+      eventSource = new EventSource(`/api/telemetry/stream/${activeVentureId}`);
 
       eventSource.onopen = () => {
         setConnectionStatus('STREAMING');
@@ -352,7 +232,7 @@ export const LiveVenturePage: React.FC<LiveVenturePageProps> = ({
             id: `log_${Date.now()}_open`,
             timestamp: new Date().toISOString(),
             level: 'INFO',
-            message: `Connected to real-time telemetry stream for ${ventureId}`,
+            message: `Connected to real-time telemetry stream for ${activeVentureId}`,
           },
         ]);
       };
@@ -376,7 +256,7 @@ export const LiveVenturePage: React.FC<LiveVenturePageProps> = ({
                 : 'INFO',
             message:
               data.type === 'SNAPSHOT'
-                ? `Loaded current pipeline snapshot for ${ventureId}`
+                ? `Loaded current pipeline snapshot for ${activeVentureId}`
                 : data.type === 'GATE_RUNNING'
                 ? `Evaluating Gate ${data.payload?.gateId}: ${data.payload?.gateName}...`
                 : data.type === 'GATE_COMPLETED'
@@ -447,7 +327,7 @@ export const LiveVenturePage: React.FC<LiveVenturePageProps> = ({
     return () => {
       eventSource?.close();
     };
-  }, [ventureId]);
+  }, [activeVentureId, isExplore, notFound]);
 
   // Trigger stage-gate retry / re-run
   const handleRetry = async () => {
@@ -458,12 +338,12 @@ export const LiveVenturePage: React.FC<LiveVenturePageProps> = ({
         id: `log_${Date.now()}_retry`,
         timestamp: new Date().toISOString(),
         level: 'INFO',
-        message: `Dispatching manual stage-gate execution for venture ${ventureId}...`,
+        message: `Dispatching manual stage-gate execution for venture ${activeVentureId}...`,
       },
     ]);
 
     try {
-      const res = await fetch(`/api/ventures/${ventureId}/retry`, {
+      const res = await fetch(`/api/ventures/${activeVentureId}/retry`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -480,10 +360,67 @@ export const LiveVenturePage: React.FC<LiveVenturePageProps> = ({
     setTimeout(() => setIsRetrying(false), 800);
   };
 
+  if (notFound && !isLoading) {
+    return (
+      <div className="min-h-screen bg-[#080C14] text-slate-100 py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-xl mx-auto text-center space-y-6 bg-slate-950/80 border border-slate-800 rounded-2xl p-8 shadow-2xl">
+          <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400">
+            <AlertTriangle className="w-7 h-7" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-xl font-bold text-white">Venture Pipeline Not Initialized</h2>
+            <p className="text-xs text-slate-400 leading-relaxed max-w-sm mx-auto">
+              No live venture deployment was found for identifier <code className="text-cyan-300 font-mono">{activeVentureId || 'unspecified'}</code>.
+              Stage Gate OS does not show simulated data for uninitialized pipelines.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <button
+              onClick={() => onNavigate('/launchpad/newbie')}
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 via-indigo-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-bold text-xs shadow-glow-indigo transition-all cursor-pointer"
+            >
+              Launch Live Venture
+            </button>
+            <button
+              onClick={() => onNavigate('/launchpad/serial')}
+              className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 font-semibold text-xs transition-colors cursor-pointer"
+            >
+              Back to Portfolio
+            </button>
+            <button
+              onClick={() => onNavigate('/#scenarios')}
+              className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-indigo-950 hover:bg-indigo-900/60 border border-indigo-700 text-indigo-300 font-semibold text-xs transition-colors cursor-pointer"
+            >
+              Explore Scenarios
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#080C14] text-slate-100 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-6">
         
+        {/* Explore Notice Banner */}
+        {isExplore && (
+          <div className="rounded-xl p-3.5 bg-indigo-950/70 border border-indigo-700/60 text-indigo-200 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
+            <div className="flex items-center space-x-2">
+              <Sparkles className="w-4 h-4 text-cyan-400 flex-shrink-0" />
+              <span>
+                <strong>Interactive Explore Mode:</strong> Viewing verified verification receipt for demo scenario <strong>{venture.name}</strong>. Real production ventures execute authentic AST scans and health probes.
+              </span>
+            </div>
+            <button
+              onClick={() => onNavigate('/launchpad/newbie')}
+              className="px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-500 hover:to-indigo-500 text-white font-bold text-[11px] rounded-lg shadow-sm whitespace-nowrap cursor-pointer"
+            >
+              Launch Your Live Venture
+            </button>
+          </div>
+        )}
+
         {/* Context Header */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-950/80 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl">
           <div className="space-y-1.5">

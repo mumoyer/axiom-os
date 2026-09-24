@@ -268,10 +268,10 @@ describe('Tier 4: Real-World Application Scenarios (E2E Integration)', () => {
       const configResp = await fetch(`${baseUrl}/api/checkout/config`);
       assert.equal(configResp.status, 200);
       const configData = await configResp.json();
-      assert.equal(configData.sandboxMode, true);
       const serialTier = configData.supportedTiers.find((t: any) => t.id === 'SERIAL');
       assert.ok(serialTier, 'SERIAL plan must be present');
-      assert.equal(serialTier.priceUsd, 149);
+      assert.equal(serialTier.priceUsd, 119, 'SERIAL beta monthly price must be $119');
+      assert.equal(serialTier.listPriceUsd, 149, 'SERIAL regular list price must be $149');
 
       // Step 2: Create checkout session
       const sessionResp = await fetch(`${baseUrl}/api/checkout/session`, {

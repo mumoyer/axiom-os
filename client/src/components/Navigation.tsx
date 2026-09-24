@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Cpu, ArrowRight, Menu, X, Sparkles, User, Terminal, Building2 } from 'lucide-react';
+import { ShieldCheck, Cpu, ArrowRight, Menu, X, Sparkles, User, Terminal, Building2, Bug } from 'lucide-react';
 
 interface NavigationProps {
   currentPath?: string;
@@ -9,6 +9,7 @@ interface NavigationProps {
   authUser?: { email: string; tenantId: string } | null;
   onOpenAuth?: () => void;
   onLogout?: () => void;
+  onOpenBugReport?: () => void;
 }
 
 export const Navigation: React.FC<NavigationProps> = ({
@@ -19,6 +20,7 @@ export const Navigation: React.FC<NavigationProps> = ({
   authUser = null,
   onOpenAuth = () => {},
   onLogout = () => {},
+  onOpenBugReport = () => {},
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [personaDropdownOpen, setPersonaDropdownOpen] = useState(false);
@@ -51,7 +53,7 @@ export const Navigation: React.FC<NavigationProps> = ({
     {
       id: 'enterprise' as const,
       label: 'Corporate Innovation Studio',
-      subtitle: 'Capital Tranches & SOC 2 Audit',
+      subtitle: 'Capital Tranches & SOC 2 Ready',
       icon: Building2,
       color: 'text-cyan-400',
     },
@@ -93,6 +95,9 @@ export const Navigation: React.FC<NavigationProps> = ({
             <div className="shrink-0">
               <div className="flex items-center space-x-1.5 sm:space-x-2">
                 <span className="text-base sm:text-lg font-bold tracking-tight text-white font-mono whitespace-nowrap">STAGEGATE<span className="text-indigo-400">.OS</span></span>
+                <span className="px-1.5 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded shadow-sm">
+                  BETA
+                </span>
                 <span className="hidden xl:inline-flex px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider bg-indigo-950/80 text-indigo-300 border border-indigo-700/50 rounded-full whitespace-nowrap shrink-0">
                   Autonomous Engine
                 </span>
@@ -169,8 +174,17 @@ export const Navigation: React.FC<NavigationProps> = ({
             )}
 
             <button
+              onClick={onOpenBugReport}
+              className="flex items-center space-x-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs font-mono font-medium text-amber-300 bg-amber-950/40 hover:bg-amber-900/60 border border-amber-500/40 rounded-lg transition-all hover:scale-102 whitespace-nowrap shrink-0 cursor-pointer shadow-sm"
+              title="Report a Bug & Earn 1–3 Free Months"
+            >
+              <Bug className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden xl:inline">Report Bug</span>
+            </button>
+
+            <button
               onClick={() => onNavigate('/checkout?plan=serial')}
-              className="flex items-center space-x-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-semibold text-white bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 rounded-lg shadow-glow-indigo transition-all whitespace-nowrap shrink-0"
+              className="flex items-center space-x-1.5 px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-semibold text-white bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 rounded-lg shadow-glow-indigo transition-all whitespace-nowrap shrink-0 cursor-pointer"
             >
               <span>Get Started</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -181,7 +195,9 @@ export const Navigation: React.FC<NavigationProps> = ({
           <div className="flex md:hidden">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-slate-400 hover:text-white focus:outline-none"
+              aria-label={mobileMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
+              title={mobileMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
+              className="p-2 text-slate-400 hover:text-white focus:outline-none cursor-pointer"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -228,6 +244,16 @@ export const Navigation: React.FC<NavigationProps> = ({
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
+                onOpenBugReport();
+              }}
+              className="w-full py-2.5 text-xs font-mono font-semibold text-amber-300 bg-amber-950/40 border border-amber-500/40 rounded-lg text-center flex items-center justify-center space-x-2"
+            >
+              <Bug className="w-3.5 h-3.5 text-amber-400" />
+              <span>Report Bug (Earn 1–3 Free Months)</span>
+            </button>
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
                 onNavigate('/grader');
               }}
               className="w-full py-2.5 text-xs font-semibold text-indigo-300 bg-indigo-950/60 border border-indigo-700/50 rounded-lg text-center"
@@ -241,7 +267,7 @@ export const Navigation: React.FC<NavigationProps> = ({
               }}
               className="w-full py-2.5 text-xs font-semibold text-white bg-indigo-600 rounded-lg text-center"
             >
-              Launch Venture ($149/mo)
+              Launch Venture ($119/mo Beta)
             </button>
           </div>
         </div>
