@@ -15,9 +15,21 @@ import { byokRoutes } from './routes/byok_routes.js';
 import { messagingRoutes } from './routes/messaging_routes.js';
 import { authRoutes } from './routes/auth_routes.js';
 import { feedbackRoutes } from './routes/feedback_routes.js';
+import { subscriptionRoutes } from './routes/subscription_routes.js';
 
 export function createApp(): Express {
   const app = express();
+
+  // Canonical Apex Domain Redirection: Intercept Host: stagegateos.com -> https://www.stagegateos.com
+  app.use((req: Request, res: Response, next) => {
+    const rawHost = (req.headers['x-forwarded-host'] as string) || req.headers.host || '';
+    const host = rawHost.split(',')[0].split(':')[0].trim().toLowerCase();
+    if (host === 'stagegateos.com') {
+      const statusCode = req.method === 'GET' || req.method === 'HEAD' ? 301 : 308;
+      return res.redirect(statusCode, `https://www.stagegateos.com${req.originalUrl}`);
+    }
+    next();
+  });
 
   // Middleware
   app.use(cors());
@@ -45,6 +57,7 @@ export function createApp(): Express {
   app.use('/api/auth', authRoutes);
   app.use('/api/feedback', feedbackRoutes);
   app.use('/api/bugs', feedbackRoutes);
+  app.use('/api/subscription', subscriptionRoutes);
 
   // Clean Customer-Facing Vanity Checkout Redirects
   app.get('/subscribe/founder', (_req: Request, res: Response) => {

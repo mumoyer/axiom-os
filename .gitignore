@@ -9,3 +9,4 @@ verification_*.png
 e2e-screenshots/
 scratch_*.json
 __pycache__/
+data/

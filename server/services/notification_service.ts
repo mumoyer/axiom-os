@@ -46,7 +46,29 @@ export interface BugReportAlert {
   timestamp: string;
 }
 
-export type StageGateAlert = LeadAlert | SignupAlert | CustomerMessageAlert | BugReportAlert;
+export interface SubscriptionCancelAlert {
+  type: 'SUBSCRIPTION_CANCEL';
+  email: string;
+  plan: string;
+  effectiveDate: string;
+  reason?: string;
+  timestamp: string;
+}
+
+export interface SubscriptionReactivateAlert {
+  type: 'SUBSCRIPTION_REACTIVATE';
+  email: string;
+  plan: string;
+  timestamp: string;
+}
+
+export type StageGateAlert =
+  | LeadAlert
+  | SignupAlert
+  | CustomerMessageAlert
+  | BugReportAlert
+  | SubscriptionCancelAlert
+  | SubscriptionReactivateAlert;
 export type AxiomAlert = StageGateAlert;
 
 class NotificationService {
@@ -75,6 +97,12 @@ class NotificationService {
     } else if (alert.type === 'BUG_REPORT') {
       title = `🐛 New Beta Bug Report [${alert.bugId}] (${alert.severity.toUpperCase()})`;
       cardText = `*Title*: ${alert.title}\n*Category*: ${alert.category} | *Severity*: ${alert.severity}\n*Reporter*: ${alert.reporterEmail || 'Anonymous'}\n*Bounty Reward*: ${alert.bountyReward}\n*URL*: ${alert.url || 'N/A'}\n*Description*:\n> ${alert.description}\nTime: ${alert.timestamp}`;
+    } else if (alert.type === 'SUBSCRIPTION_CANCEL') {
+      title = '⚠️ Subscription Cancellation Scheduled';
+      cardText = `Founder *${alert.email}* scheduled cancellation of *${alert.plan}* tier.\n*Effective End Date*: ${alert.effectiveDate}\n*Reason*: ${alert.reason || 'None provided'}\n*Cancellation Fee*: $0.00\nTime: ${alert.timestamp}`;
+    } else if (alert.type === 'SUBSCRIPTION_REACTIVATE') {
+      title = '🔄 Subscription Reactivated!';
+      cardText = `Founder *${alert.email}* reactivated *${alert.plan}* tier with Public Beta Rate Lock preserved!\nTime: ${alert.timestamp}`;
     }
 
     if (this.googleChatWebhookUrl) {

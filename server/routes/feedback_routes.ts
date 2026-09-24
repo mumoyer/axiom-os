@@ -2,62 +2,31 @@
  * Bug Feedback & Tester Incentive Routes
  * 
  * Endpoints:
- * - GET  /api/feedback/config - Public bug bounty rewards, terms, and encouragement
- * - POST /api/feedback/bug    - Submit bug report, calculate reward tier, dispatch real-time alert
- * - GET  /api/feedback/bugs   - Admin-only list of all submitted bug reports
+ * - GET   /api/feedback/config    - Public bug bounty rewards, terms, and encouragement
+ * - POST  /api/feedback/bug       - Submit bug report, calculate reward tier, dispatch real-time alert
+ * - GET   /api/feedback/bugs      - Admin-only list of all submitted bug reports (from durable feedbackStore)
+ * - PATCH /api/feedback/bugs/:id  - Admin-only update status, verify bug, and officially credit bounty reward
  */
 
 import { Router, Request, Response } from 'express';
-import { randomUUID } from 'node:crypto';
 import { notificationService } from '../services/notification_service.js';
 import { BETA_CONFIG } from '../../shared/pricing.js';
+import { feedbackStore, BugReportRecord } from '../services/feedback_store.js';
 
-export interface BugReport {
-  id: string;
-  title: string;
-  description: string;
-  category: 'stage_gate' | 'ui_ux' | 'checkout_billing' | 'deployment' | 'performance' | 'other' | string;
-  severity: 'cosmetic' | 'functional' | 'blocking' | 'security' | string;
-  reporterEmail?: string;
-  ventureId?: string;
-  url?: string;
-  systemInfo?: {
-    userAgent?: string;
-    screenResolution?: string;
-    [key: string]: any;
-  };
-  bountyReward: string;
-  status: 'open' | 'triaged' | 'resolved';
-  createdAt: string;
-}
-
-// In-memory store for submitted bug reports
-export const bugReportsStore: BugReport[] = [];
+export type BugReport = BugReportRecord;
 
 export const feedbackRoutes = Router();
 
 function checkAdminAuth(req: Request): boolean {
   const adminKey = req.headers['x-admin-key'] as string;
   const authHeader = req.headers.authorization || '';
-  const expectedAdminKey = process.env.ADMIN_API_KEY || 'stagegate_admin_key_2026';
+  const expectedAdminKey =
+    process.env.ADMIN_API_KEY || (process.env.NODE_ENV === 'production' ? '' : 'stagegate_admin_key_2026');
 
+  if (!expectedAdminKey) return false; // Fail closed if ADMIN_API_KEY is not configured in production
   if (adminKey && adminKey === expectedAdminKey) return true;
   if (authHeader.startsWith('Bearer ') && authHeader.slice(7).trim() === expectedAdminKey) return true;
   return false;
-}
-
-function resolveBountyReward(severity: string): string {
-  const norm = (severity || '').toLowerCase();
-  if (norm.includes('security') || norm.includes('data')) {
-    return BETA_CONFIG.bugBounty.rewards.security;
-  }
-  if (norm.includes('block') || norm.includes('critical')) {
-    return BETA_CONFIG.bugBounty.rewards.blocking;
-  }
-  if (norm.includes('function') || norm.includes('major')) {
-    return BETA_CONFIG.bugBounty.rewards.functional;
-  }
-  return BETA_CONFIG.bugBounty.rewards.cosmetic;
 }
 
 // GET /api/feedback/config
@@ -91,25 +60,16 @@ feedbackRoutes.post('/bug', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Description is required (minimum 5 characters)' });
     }
 
-    const bountyReward = resolveBountyReward(severity);
-    const bugId = `bug_${randomUUID().slice(0, 8)}`;
-
-    const report: BugReport = {
-      id: bugId,
-      title: title.trim(),
-      description: description.trim(),
-      category: String(category).trim(),
-      severity: String(severity).trim().toLowerCase(),
-      reporterEmail: reporterEmail ? String(reporterEmail).trim() : undefined,
-      ventureId: ventureId ? String(ventureId).trim() : undefined,
-      url: url ? String(url).trim() : undefined,
+    const report = await feedbackStore.createReport({
+      title,
+      description,
+      category,
+      severity,
+      reporterEmail,
+      ventureId,
+      url,
       systemInfo: typeof systemInfo === 'object' ? systemInfo : undefined,
-      bountyReward,
-      status: 'open',
-      createdAt: new Date().toISOString(),
-    };
-
-    bugReportsStore.push(report);
+    });
 
     // Dispatch real-time notification to Google Chat / admin email
     notificationService
@@ -141,15 +101,54 @@ feedbackRoutes.post('/bug', async (req: Request, res: Response) => {
 });
 
 // GET /api/feedback/bugs (Admin Only)
-feedbackRoutes.get('/bugs', (req: Request, res: Response) => {
+feedbackRoutes.get('/bugs', async (req: Request, res: Response) => {
   if (!checkAdminAuth(req)) {
     return res.status(401).json({
       error: 'Unauthorized: valid x-admin-key header is required to access bug reports',
     });
   }
 
+  const { category, severity, status } = req.query;
+  const bugs = await feedbackStore.getReports({
+    category: category ? String(category) : undefined,
+    severity: severity ? String(severity) : undefined,
+    status: status ? String(status) : undefined,
+  });
+
   res.json({
-    count: bugReportsStore.length,
-    bugs: bugReportsStore,
+    count: bugs.length,
+    bugs,
+  });
+});
+
+// PATCH /api/feedback/bugs/:id (Admin Only)
+feedbackRoutes.patch('/bugs/:id', async (req: Request, res: Response) => {
+  if (!checkAdminAuth(req)) {
+    return res.status(401).json({
+      error: 'Unauthorized: valid x-admin-key header is required to triage bug reports',
+    });
+  }
+
+  const id = String(req.params.id);
+  const { status, verifiedBountyCredit, adminNotes, reviewedBy } = req.body;
+
+  if (!status || !['open', 'triaged', 'rewarded', 'resolved'].includes(status)) {
+    return res.status(400).json({ error: 'Valid status is required: open, triaged, rewarded, resolved' });
+  }
+
+  const updated = await feedbackStore.updateReportStatus(id, {
+    status,
+    verifiedBountyCredit,
+    adminNotes,
+    reviewedBy: reviewedBy || 'jason@moyervllc.com',
+  });
+
+  if (!updated) {
+    return res.status(404).json({ error: `Bug report ${id} not found` });
+  }
+
+  res.json({
+    success: true,
+    bug: updated,
   });
 });

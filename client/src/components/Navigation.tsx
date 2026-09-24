@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Cpu, ArrowRight, Menu, X, Sparkles, User, Terminal, Building2, Bug } from 'lucide-react';
+import { ShieldCheck, Cpu, ArrowRight, Menu, X, Sparkles, User, Terminal, Building2, Bug, Settings, ShieldAlert } from 'lucide-react';
 
 interface NavigationProps {
   currentPath?: string;
@@ -10,6 +10,8 @@ interface NavigationProps {
   onOpenAuth?: () => void;
   onLogout?: () => void;
   onOpenBugReport?: () => void;
+  onOpenSettings?: () => void;
+  onOpenAdminTriage?: () => void;
 }
 
 export const Navigation: React.FC<NavigationProps> = ({
@@ -21,6 +23,8 @@ export const Navigation: React.FC<NavigationProps> = ({
   onOpenAuth = () => {},
   onLogout = () => {},
   onOpenBugReport = () => {},
+  onOpenSettings = () => {},
+  onOpenAdminTriage = () => {},
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [personaDropdownOpen, setPersonaDropdownOpen] = useState(false);
@@ -148,10 +152,33 @@ export const Navigation: React.FC<NavigationProps> = ({
                         setUserDropdownOpen(false);
                         onNavigate('/dashboard');
                       }}
-                      className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:bg-slate-800 rounded-lg"
+                      className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:bg-slate-800 rounded-lg flex items-center gap-2"
                     >
+                      <Terminal className="w-3.5 h-3.5 text-indigo-400" />
                       My Ventures Dashboard
                     </button>
+                    <button
+                      onClick={() => {
+                        setUserDropdownOpen(false);
+                        onOpenSettings();
+                      }}
+                      className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:bg-slate-800 rounded-lg flex items-center gap-2"
+                    >
+                      <Settings className="w-3.5 h-3.5 text-indigo-400" />
+                      Founder Settings & Billing
+                    </button>
+                    {authUser.email.toLowerCase().includes('jason@moyervllc.com') && (
+                      <button
+                        onClick={() => {
+                          setUserDropdownOpen(false);
+                          onOpenAdminTriage();
+                        }}
+                        className="w-full text-left px-3 py-2 text-xs text-amber-300 hover:bg-amber-950/40 rounded-lg flex items-center gap-2"
+                      >
+                        <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
+                        Admin Bug Triage
+                      </button>
+                    )}
                     <button
                       onClick={() => {
                         setUserDropdownOpen(false);
@@ -172,6 +199,16 @@ export const Navigation: React.FC<NavigationProps> = ({
                 Sign In
               </button>
             )}
+
+            {/* Founder Settings Self-Service Launcher */}
+            <button
+              onClick={onOpenSettings}
+              className="flex items-center space-x-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 text-xs font-mono font-medium text-slate-300 bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 rounded-lg transition-all hover:scale-102 whitespace-nowrap shrink-0 cursor-pointer shadow-sm"
+              title="Founder Settings, Continuous Renewal Terms & 1-Click Cancellation"
+            >
+              <Settings className="w-3.5 h-3.5 text-slate-400" />
+              <span className="hidden xl:inline">Founder Settings</span>
+            </button>
 
             <button
               onClick={onOpenBugReport}

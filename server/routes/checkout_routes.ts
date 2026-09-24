@@ -11,6 +11,7 @@ import { Router, Request, Response } from 'express';
 import { stripeSandbox } from '../engine/sandbox_adapters.js';
 import { notificationService } from '../services/notification_service.js';
 import { BETA_CONFIG, PRICING_TIERS, calculatePricing, TierId, BillingInterval } from '../../shared/pricing.js';
+import { subscriptionStore } from '../services/subscription_store.js';
 
 export const checkoutRoutes = Router();
 
@@ -88,6 +89,16 @@ checkoutRoutes.post('/session', async (req: Request, res: Response) => {
       cancelUrl: cancelUrl || 'https://www.stagegateos.com/#pricing',
       ventureId,
     });
+
+    // Provision subscriber in subscriptionStore
+    await subscriptionStore.provisionSubscription({
+      email,
+      plan: normalizedPlan,
+      billingInterval: interval,
+      paymentProvider: paymentProvider === 'Shopify / Shop Pay' ? 'Shopify / Shop Pay' : 'Stripe',
+      sessionId: session.id,
+      consentRecord,
+    }).catch((err) => console.warn('[Checkout] Subscription provisioning warning:', err.message));
 
     // Dispatch real-time alert to jason@moyervllc.com & Google Chat
     notificationService.dispatchAlert({

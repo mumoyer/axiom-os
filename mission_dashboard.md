@@ -18,6 +18,15 @@ Ensure none of the app except explore functions shows demo/simulated data. Prepa
 
 ## 2. Requirements Specification (What, Not How)
 
+### REQ-11. Canonical Apex Domain Redirection
+Ensure all requests hitting the apex domain stagegateos.com issue an immediate HTTP 301 Moved Permanently redirect to https://www.stagegateos.com, preserving full request paths.
+
+### REQ-10. Durable Bug Report Database & Admin Triage Dashboard
+Persist bug reports in durable file-backed storage across container restarts and provide an authenticated Admin Triage cockpit for Jason Moyer to review reports, verify bugs, and officially credit bounties.
+
+### REQ-9. Founder Settings & Self-Service Click-to-Cancel Portal
+Build authenticated self-service subscription management allowing founders to inspect their Public Beta Lifetime Rate Lock, renewal dates, and execute 1-click Click-to-Cancel with zero penalty fees per FTC negative-option compliance.
+
 ### REQ-8. Bug Reporting System & Tester Incentives
 Add prominent Bug Report modal, top beta banner, and floating trigger with genuine encouragement and bounty rewards, backed by server feedback routes and Google Chat notification dispatch.
 
@@ -71,6 +80,26 @@ Confine all simulated demo scenarios to client/src/demo and ExampleScenarioExplo
 
 ## 4. Objective Acceptance Criteria
 
+### Cancellation
+- [x] 1-click self-service cancellation updates subscriber record to cancelAtPeriodEnd: true with zero penalty fees, retains access through current period end, and logs audit notification.
+
+
+### Founder Settings
+- [x] FounderSettingsModal displays authenticated subscriber plan, lifetime rate lock amount, renewal date, and 1-click cancellation / reactivation.
+
+
+### Bug Persistence
+- [x] Bug reports persist across server reboots in durable file-backed storage, surviving service re-instantiation.
+
+
+### Admin Triage
+- [x] Admin bug triage endpoint and UI allow Jason Moyer to filter by severity, verify reports, assign 1-3 free months bounty credits, and save resolution notes.
+
+
+### Apex Redirect
+- [x] HTTP requests with host: stagegateos.com immediately respond with HTTP 301 redirect to https://www.stagegateos.com preserving paths.
+
+
 ### UI
 - [x] Beta banner, BETA nav badge, pricing strikethroughs, and bug report triggers render cleanly across desktop and mobile
 
@@ -121,11 +150,12 @@ Confine all simulated demo scenarios to client/src/demo and ExampleScenarioExplo
 
 | Criterion ID | Verification Command | Exit Code / Result | Evidence Summary | Verified? |
 | :---: | :--- | :---: | :--- | :---: |
-| Init | `node --version` | 0 | Runtime v22.13.1 active | [x] |
+| Init | `node --version` | 0 | Runtime v22.16.0 active | [x] |
 | Build-TS | `npm run build` | 0 | `tsc --noEmit` exited 0 with zero compiler errors | [x] |
-| Build-Vite | `npm run build:client` | 0 | Vite bundled 1,609 client modules into production dist | [x] |
-| Unit-Tests | `npm run test:unit` | 0 | 170 / 170 unit tests passed (including zero demo leaks suite) | [x] |
+| Build-Vite | `npm run build:client` | 0 | Vite bundled 1,612 client modules into production dist | [x] |
+| Unit-Tests | `npm run test:unit` | 0 | 182 / 182 unit tests passed (including subscription, feedback, apex suites) | [x] |
 | Integration | `npm run test:integration` | 0 | 53 / 53 integration tests passed | [x] |
-| E2E-All | `npm run test:synthetic` | 0 | 29 / 29 Playwright E2E tests passed across all 7 specs | [x] |
-| Visual-Audit | `npx tsx tests/generate_clean_screenshots.ts` | 0 | 5 headless browser verification screenshots captured | [x] |
+| Total-Tests | `npm run test` | 0 | 235 / 235 backend tests passed | [x] |
+| E2E-Beta | `npx playwright test e2e/beta_and_bug_reporting.spec.ts e2e/founder_settings_and_bug_triage.spec.ts` | 0 | 7 / 7 Playwright E2E tests passed across all browser suites | [x] |
+| Visual-Artifacts | Headless Browser Verification | 0 | 4 new high-resolution screenshot artifacts captured | [x] |
 

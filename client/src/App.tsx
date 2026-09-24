@@ -11,7 +11,9 @@ import { ProjectMessengerModal } from './components/ProjectMessengerModal.js';
 import { AuthModal } from './components/AuthModal.js';
 import { BetaBanner } from './components/BetaBanner.js';
 import { BugReportModal } from './components/BugReportModal.js';
-import { MessageSquare, Bug } from 'lucide-react';
+import { FounderSettingsModal } from './components/FounderSettingsModal.js';
+import { AdminBugTriageModal } from './components/AdminBugTriageModal.js';
+import { MessageSquare, Bug, Settings } from 'lucide-react';
 import { getAuthProfile, verifyAuthToken, logoutAuth, AuthSessionData } from './services/api.js';
 
 export function App() {
@@ -20,6 +22,8 @@ export function App() {
   const [currentVentureId, setCurrentVentureId] = useState<string>('');
   const [messengerOpen, setMessengerOpen] = useState<boolean>(false);
   const [bugReportModalOpen, setBugReportModalOpen] = useState<boolean>(false);
+  const [founderSettingsOpen, setFounderSettingsOpen] = useState<boolean>(false);
+  const [adminTriageOpen, setAdminTriageOpen] = useState<boolean>(false);
   const [authModalOpen, setAuthModalOpen] = useState<boolean>(false);
   const [authUser, setAuthUser] = useState<{ email: string; tenantId: string; role?: string } | null>(null);
 
@@ -87,6 +91,14 @@ export function App() {
 
     // Remove query params for route matching
     const pathnameOnly = clean.split('?')[0];
+
+    if (pathnameOnly === '/settings' || pathnameOnly === '/founder-settings' || pathnameOnly === '/account') {
+      setFounderSettingsOpen(true);
+      return;
+    } else if (pathnameOnly === '/admin/bugs' || pathnameOnly === '/admin') {
+      setAdminTriageOpen(true);
+      return;
+    }
 
     if (pathnameOnly === '/launchpad/newbie') {
       setCurrentPath('/launchpad/newbie');
@@ -158,6 +170,8 @@ export function App() {
         onOpenAuth={() => setAuthModalOpen(true)}
         onLogout={handleLogout}
         onOpenBugReport={() => setBugReportModalOpen(true)}
+        onOpenSettings={() => setFounderSettingsOpen(true)}
+        onOpenAdminTriage={() => setAdminTriageOpen(true)}
       />
 
       <main className="flex-1">
@@ -179,6 +193,16 @@ export function App() {
 
       {/* Floating Action Launchers */}
       <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2.5">
+        {/* Founder Settings Floating Button */}
+        <button
+          onClick={() => setFounderSettingsOpen(true)}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white font-medium shadow-xl shadow-black/60 border border-slate-700/60 transition-all hover:scale-105 active:scale-95 text-xs backdrop-blur-sm group"
+          title="Manage active subscription, continuous renewal terms & 1-click cancellation"
+        >
+          <Settings className="w-3.5 h-3.5 text-slate-400 group-hover:rotate-45 transition-transform" />
+          <span className="font-semibold tracking-wide">Founder Settings</span>
+        </button>
+
         {/* Bug Bounty Floating Quick-Action */}
         <button
           onClick={() => setBugReportModalOpen(true)}
@@ -214,6 +238,19 @@ export function App() {
       <BugReportModal
         isOpen={bugReportModalOpen}
         onClose={() => setBugReportModalOpen(false)}
+      />
+
+      {/* Founder Settings & Click-to-Cancel Portal */}
+      <FounderSettingsModal
+        isOpen={founderSettingsOpen}
+        onClose={() => setFounderSettingsOpen(false)}
+        initialEmail={authUser?.email}
+      />
+
+      {/* Admin Bug Triage Cockpit (Jason Moyer) */}
+      <AdminBugTriageModal
+        isOpen={adminTriageOpen}
+        onClose={() => setAdminTriageOpen(false)}
       />
 
       {/* Passwordless Auth Modal */}

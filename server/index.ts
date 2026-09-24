@@ -43,6 +43,13 @@ const shutdown = (signal: string) => {
   });
 };
 
+process.on('uncaughtException', (err) => {
+  console.error('[Stage Gate OS Engine] Uncaught Exception:', err);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('[Stage Gate OS Engine] Unhandled Rejection:', reason);
+});
+
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));
 
