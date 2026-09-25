@@ -59,18 +59,22 @@ export function createApp(): Express {
   app.use('/api/bugs', feedbackRoutes);
   app.use('/api/subscription', subscriptionRoutes);
 
-  // Clean Customer-Facing Vanity Checkout Redirects
-  app.get('/subscribe/founder', (_req: Request, res: Response) => {
-    res.redirect(302, '/#checkout?plan=FOUNDER');
+  // Clean Customer-Facing Vanity Checkout Redirects (preserves gclid and query parameters)
+  app.get('/subscribe/founder', (req: Request, res: Response) => {
+    const qs = req.originalUrl.includes('?') ? req.originalUrl.slice(req.originalUrl.indexOf('?')) : '';
+    res.redirect(302, `/#checkout?plan=FOUNDER${qs ? '&' + qs.slice(1) : ''}`);
   });
-  app.get('/subscribe/serial', (_req: Request, res: Response) => {
-    res.redirect(302, '/#checkout?plan=SERIAL');
+  app.get('/subscribe/serial', (req: Request, res: Response) => {
+    const qs = req.originalUrl.includes('?') ? req.originalUrl.slice(req.originalUrl.indexOf('?')) : '';
+    res.redirect(302, `/#checkout?plan=SERIAL${qs ? '&' + qs.slice(1) : ''}`);
   });
-  app.get('/subscribe/enterprise', (_req: Request, res: Response) => {
-    res.redirect(302, '/#checkout?plan=ENTERPRISE');
+  app.get('/subscribe/enterprise', (req: Request, res: Response) => {
+    const qs = req.originalUrl.includes('?') ? req.originalUrl.slice(req.originalUrl.indexOf('?')) : '';
+    res.redirect(302, `/#checkout?plan=ENTERPRISE${qs ? '&' + qs.slice(1) : ''}`);
   });
-  app.get('/subscribe', (_req: Request, res: Response) => {
-    res.redirect(302, '/#checkout');
+  app.get('/subscribe', (req: Request, res: Response) => {
+    const qs = req.originalUrl.includes('?') ? req.originalUrl.slice(req.originalUrl.indexOf('?')) : '';
+    res.redirect(302, `/#checkout${qs}`);
   });
 
   // 404 Handler for unmapped API routes

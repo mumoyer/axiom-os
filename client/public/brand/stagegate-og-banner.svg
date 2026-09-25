@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" fill="none">
+  <defs>
+    <linearGradient id="ogBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080C14"/>
+      <stop offset="60%" stop-color="#05080E"/>
+      <stop offset="100%" stop-color="#020307"/>
+    </linearGradient>
+    <radialGradient id="ogGlow" cx="50%" cy="35%" r="50%">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.22"/>
+      <stop offset="60%" stop-color="#06B6D4" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#080C14" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ogCard" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E1628"/>
+      <stop offset="100%" stop-color="#080C16"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#ogBg)"/>
+  <rect width="1200" height="630" fill="url(#ogGlow)"/>
+
+  <!-- Subtle grid lines -->
+  <g stroke="#1E293B" stroke-width="1" stroke-opacity="0.4">
+    <path d="M0 105h1200"/><path d="M0 210h1200"/><path d="M0 315h1200"/><path d="M0 420h1200"/><path d="M0 525h1200"/>
+    <path d="M200 0v630"/><path d="M400 0v630"/><path d="M600 0v630"/><path d="M800 0v630"/><path d="M1000 0v630"/>
+  </g>
+
+  <!-- Center Content -->
+  <!-- Icon (Scale 0.8, Centered at x: 536, y: 70) -->
+  <g transform="translate(536, 60) scale(0.25)">
+    <!-- Insert embedded icon graphic -->
+    <rect width="512" height="512" rx="110" fill="#0E1628" stroke="#6366F1" stroke-width="8"/>
+    <!-- CPU Socket Pins -->
+    <g fill="none" stroke="#818CF8" stroke-width="14" stroke-linecap="round">
+      <path d="M190 68v44"/><path d="M256 68v44"/><path d="M322 68v44"/>
+      <path d="M190 400v44"/><path d="M256 400v44"/><path d="M322 400v44"/>
+      <path d="M68 190h44"/><path d="M68 256h44"/><path d="M68 322h44"/>
+      <path d="M400 190h44"/><path d="M400 256h44"/><path d="M400 322h44"/>
+    </g>
+    <rect x="110" y="110" width="292" height="292" rx="42" fill="#1E293B" stroke="#475569" stroke-width="4"/>
+    <rect x="176" y="176" width="160" height="160" rx="26" fill="#6366F1" stroke="#A5B4FC" stroke-width="4"/>
+    <rect x="216" y="216" width="80" height="80" rx="14" stroke="#FFFFFF" stroke-width="6"/>
+    <circle cx="256" cy="256" r="8" fill="#FFFFFF"/>
+    <circle cx="390" cy="390" r="70" fill="#080C14"/>
+    <circle cx="390" cy="390" r="58" fill="#10B981"/>
+    <path d="m365 390 18 18 36-36" stroke="#022C22" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Big Brand Heading -->
+  <text x="600" y="260" font-family="'Inter', -apple-system, BlinkMacSystemFont, sans-serif" font-size="76" font-weight="900" text-anchor="middle" letter-spacing="-1.5">
+    <tspan fill="#FFFFFF">STAGEGATE</tspan><tspan fill="#818CF8">.OS</tspan>
+  </text>
+
+  <!-- Tagline -->
+  <text x="600" y="315" font-family="'Inter', sans-serif" font-size="22" font-weight="700" fill="#94A3B8" text-anchor="middle" letter-spacing="4">
+    THE AUTONOMOUS BUSINESS OPERATING SYSTEM
+  </text>
+
+  <text x="600" y="360" font-family="'Inter', sans-serif" font-size="17" font-weight="400" fill="#64748B" text-anchor="middle">
+    From Validated Idea to Live Venture in Hours • 100% Zero-Charge Failure Guarantee
+  </text>
+
+  <!-- 5 Stage Gate Badges Bar -->
+  <g transform="translate(160, 420)">
+    <!-- Stage 1 -->
+    <g transform="translate(0, 0)">
+      <rect width="160" height="48" rx="10" fill="#0F172A" stroke="#10B981" stroke-opacity="0.5" stroke-width="1.5"/>
+      <circle cx="24" cy="24" r="5" fill="#10B981"/>
+      <text x="40" y="29" fill="#F1F5F9" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">G1: Syntax</text>
+    </g>
+    <!-- Stage 2 -->
+    <g transform="translate(180, 0)">
+      <rect width="160" height="48" rx="10" fill="#0F172A" stroke="#10B981" stroke-opacity="0.5" stroke-width="1.5"/>
+      <circle cx="24" cy="24" r="5" fill="#10B981"/>
+      <text x="40" y="29" fill="#F1F5F9" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">G2: TLS 1.3</text>
+    </g>
+    <!-- Stage 3 -->
+    <g transform="translate(360, 0)">
+      <rect width="160" height="48" rx="10" fill="#0F172A" stroke="#10B981" stroke-opacity="0.5" stroke-width="1.5"/>
+      <circle cx="24" cy="24" r="5" fill="#10B981"/>
+      <text x="40" y="29" fill="#F1F5F9" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">G3: DNS Quorum</text>
+    </g>
+    <!-- Stage 4 -->
+    <g transform="translate(540, 0)">
+      <rect width="160" height="48" rx="10" fill="#0F172A" stroke="#10B981" stroke-opacity="0.5" stroke-width="1.5"/>
+      <circle cx="24" cy="24" r="5" fill="#10B981"/>
+      <text x="40" y="29" fill="#F1F5F9" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">G4: Stripe Clock</text>
+    </g>
+    <!-- Stage 5 -->
+    <g transform="translate(720, 0)">
+      <rect width="160" height="48" rx="10" fill="#0F172A" stroke="#10B981" stroke-opacity="0.5" stroke-width="1.5"/>
+      <circle cx="24" cy="24" r="5" fill="#10B981"/>
+      <text x="40" y="29" fill="#F1F5F9" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">G5: Git Eject</text>
+    </g>
+  </g>
+
+  <!-- Bottom Link -->
+  <text x="600" y="550" font-family="'JetBrains Mono', monospace" font-size="15" font-weight="600" fill="#818CF8" text-anchor="middle">
+    https://stagegateos.com
+  </text>
+</svg>

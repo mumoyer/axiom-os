@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+  <defs>
+    <linearGradient id="favBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E1628"/>
+      <stop offset="100%" stop-color="#050811"/>
+    </linearGradient>
+    <linearGradient id="favShield" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#favBg)"/>
+  <rect x="2" y="2" width="60" height="60" rx="14" stroke="#6366F1" stroke-width="2" stroke-opacity="0.8"/>
+
+  <!-- CPU Lines -->
+  <g fill="none" stroke="#818CF8" stroke-width="2" stroke-linecap="round">
+    <path d="M24 6v4"/><path d="M32 6v4"/><path d="M40 6v4"/>
+    <path d="M24 54v4"/><path d="M32 54v4"/><path d="M40 54v4"/>
+    <path d="M6 24h4"/><path d="M6 32h4"/><path d="M6 40h4"/>
+    <path d="M54 24h4"/><path d="M54 32h4"/><path d="M54 40h4"/>
+  </g>
+
+  <!-- CPU Box -->
+  <rect x="14" y="14" width="36" height="36" rx="8" fill="#1E293B" stroke="#6366F1" stroke-width="1.5"/>
+  <rect x="22" y="22" width="20" height="20" rx="4" fill="#6366F1"/>
+
+  <!-- Verification Dot -->
+  <circle cx="48" cy="48" r="10" fill="#080C14"/>
+  <circle cx="48" cy="48" r="8" fill="url(#favShield)"/>
+  <path d="m44 48 3 3 5-5" fill="none" stroke="#022C22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

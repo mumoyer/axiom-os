@@ -13,8 +13,11 @@ import { BetaBanner } from './components/BetaBanner.js';
 import { BugReportModal } from './components/BugReportModal.js';
 import { FounderSettingsModal } from './components/FounderSettingsModal.js';
 import { AdminBugTriageModal } from './components/AdminBugTriageModal.js';
+import { BrandAssetsPage } from './pages/BrandAssetsPage.js';
 import { MessageSquare, Bug, Settings } from 'lucide-react';
 import { getAuthProfile, verifyAuthToken, logoutAuth, AuthSessionData } from './services/api.js';
+import { trackPageView } from './services/gtag.js';
+
 
 export function App() {
   const [currentPath, setCurrentPath] = useState<string>('/');
@@ -112,6 +115,8 @@ export function App() {
       setCurrentPath('/ventures');
     } else if (pathnameOnly.startsWith('/grader')) {
       setCurrentPath('/grader');
+    } else if (pathnameOnly.startsWith('/brand') || pathnameOnly.startsWith('/logo') || pathnameOnly.startsWith('/assets')) {
+      setCurrentPath('/brand');
     } else if (pathnameOnly.startsWith('/checkout') || pathnameOnly.startsWith('/subscribe')) {
       setCurrentPath('/checkout');
     } else {
@@ -139,6 +144,21 @@ export function App() {
       window.removeEventListener('popstate', handleRouteSync);
     };
   }, []);
+
+  // Virtual page view tracking for client-side route changes
+  const entryHitReported = React.useRef(false);
+  useEffect(() => {
+    if (!entryHitReported.current) {
+      entryHitReported.current = true;
+      return;
+    }
+    const routePath =
+      currentPath === '/ventures' && currentVentureId
+        ? `/ventures/${currentVentureId}`
+        : currentPath;
+    trackPageView(routePath);
+  }, [currentPath, currentVentureId]);
+
 
   const navigateTo = (path: string) => {
     window.location.hash = path;
@@ -181,6 +201,7 @@ export function App() {
           <LiveVenturePage ventureId={currentVentureId} onNavigate={navigateTo} />
         )}
         {currentPath === '/grader' && <GraderPage onNavigate={navigateTo} />}
+        {currentPath === '/brand' && <BrandAssetsPage onNavigate={navigateTo} />}
         {currentPath === '/checkout' && <CheckoutPage onNavigate={navigateTo} />}
         {currentPath === '/' && (
           <LandingPage

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" width="1200" height="320" fill="none">
+  <defs>
+    <linearGradient id="logoBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080C14"/>
+      <stop offset="100%" stop-color="#04060B"/>
+    </linearGradient>
+    <linearGradient id="logoIconBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E1628"/>
+      <stop offset="100%" stop-color="#080C16"/>
+    </linearGradient>
+    <linearGradient id="logoBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#06B6D4" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#1E293B" stop-opacity="0.8"/>
+    </linearGradient>
+    <linearGradient id="logoCore" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#4338CA"/>
+    </linearGradient>
+    <linearGradient id="logoShield" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <filter id="logoShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000000" flood-opacity="0.6"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="8" flood-color="#6366F1" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="320" fill="url(#logoBgGrad)" rx="24"/>
+  <rect width="1200" height="320" fill="none" stroke="#1E293B" stroke-width="2" rx="24"/>
+
+  <!-- Logo Glyph on Left (x: 65, y: 60, size: 200x200) -->
+  <g transform="translate(65, 60)" filter="url(#logoShadow)">
+    <rect width="200" height="200" rx="46" fill="url(#logoIconBg)"/>
+    <rect width="200" height="200" rx="46" stroke="url(#logoBorder)" stroke-width="2.5"/>
+
+    <!-- Pins -->
+    <g fill="none" stroke="#818CF8" stroke-width="5" stroke-linecap="round">
+      <path d="M75 22v14"/><path d="M100 22v14"/><path d="M125 22v14"/>
+      <path d="M75 164v14"/><path d="M100 164v14"/><path d="M125 164v14"/>
+      <path d="M22 75h14"/><path d="M22 100h14"/><path d="M22 125h14"/>
+      <path d="M164 75h14"/><path d="M164 100h14"/><path d="M164 125h14"/>
+    </g>
+
+    <!-- Outer chip -->
+    <rect x="48" y="48" width="104" height="104" rx="16" fill="#1E293B" stroke="#334155" stroke-width="2"/>
+    <rect x="54" y="54" width="92" height="92" rx="12" fill="none" stroke="#6366F1" stroke-width="1" stroke-opacity="0.4"/>
+
+    <!-- Core Die -->
+    <rect x="70" y="70" width="60" height="60" rx="10" fill="url(#logoCore)" stroke="#A5B4FC" stroke-width="1.5"/>
+
+    <!-- Circuit core -->
+    <rect x="85" y="85" width="30" height="30" rx="5" fill="none" stroke="#FFFFFF" stroke-width="2.2"/>
+    <circle cx="100" cy="100" r="3" fill="#FFFFFF"/>
+
+    <!-- Verification Badge (bottom-right) -->
+    <g transform="translate(138, 138)">
+      <circle cx="28" cy="28" r="28" fill="#080C14"/>
+      <circle cx="28" cy="28" r="24" fill="url(#logoShield)"/>
+      <circle cx="28" cy="28" r="24" fill="none" stroke="#A7F3D0" stroke-width="1.5"/>
+      <g transform="translate(14, 14) scale(1.16)" fill="none" stroke="#042F2E" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+        <path d="m9 12 2 2 4-4" stroke-width="3" stroke="#022C22"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Typography & Brand Lockup on Right (x: 295) -->
+  <g transform="translate(295, 132)">
+    <!-- STAGEGATE.OS Title -->
+    <text font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="64" font-weight="900" letter-spacing="-1">
+      <tspan fill="#FFFFFF">STAGEGATE</tspan><tspan fill="#818CF8">.OS</tspan>
+    </text>
+
+    <!-- Badges Row alongside Wordmark -->
+    <g transform="translate(500, -44)">
+      <!-- BETA Badge -->
+      <rect x="0" y="8" width="60" height="26" rx="6" fill="#F59E0B" fill-opacity="0.15" stroke="#F59E0B" stroke-opacity="0.45" stroke-width="1.5"/>
+      <text x="30" y="25" fill="#FCD34D" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="800" text-anchor="middle" letter-spacing="1">BETA</text>
+
+      <!-- AUTONOMOUS ENGINE Badge -->
+      <rect x="70" y="8" width="170" height="26" rx="13" fill="#1E1B4B" stroke="#6366F1" stroke-opacity="0.6" stroke-width="1.5"/>
+      <circle cx="86" cy="21" r="3.5" fill="#34D399"/>
+      <text x="162" y="25" fill="#C7D2FE" font-family="'Inter', sans-serif" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="0.8">AUTONOMOUS ENGINE</text>
+    </g>
+  </g>
+
+  <!-- Primary Subtitle / Tagline -->
+  <text x="297" y="184" fill="#94A3B8" font-family="'Inter', -apple-system, BlinkMacSystemFont, sans-serif" font-size="17" font-weight="700" letter-spacing="3.5">
+    THE AUTONOMOUS BUSINESS OPERATING SYSTEM
+  </text>
+
+  <!-- Secondary Pillar Line -->
+  <g transform="translate(297, 222)">
+    <text fill="#64748B" font-family="'Inter', -apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="500" letter-spacing="0.5">
+      Deterministic Stage-Gates <tspan fill="#475569">•</tspan> 100% Full Git Ejection <tspan fill="#475569">•</tspan> Zero-Charge Guarantee
+    </text>
+  </g>
+</svg>

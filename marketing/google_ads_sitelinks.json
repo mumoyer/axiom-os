@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
+  "domain": "https://stagegateos.com",
+  "limits": {
+    "sitelink_text_max": 25,
+    "description_line_1_max": 35,
+    "description_line_2_max": 35
+  },
+  "primary_sitelinks": [
+    {
+      "id": "sitelink-1",
+      "sitelink_text": "Free Venture Grader",
+      "text_char_count": 19,
+      "description_line_1": "Test your side business idea free",
+      "desc1_char_count": 33,
+      "description_line_2": "Get instant 9-to-5 viability score",
+      "desc2_char_count": 34,
+      "final_url": "https://stagegateos.com/grader",
+      "category": "Lead Magnet",
+      "target_persona": "Busy 9-to-5 Professional"
+    },
+    {
+      "id": "sitelink-2",
+      "sitelink_text": "Zero-Charge Guarantee",
+      "text_char_count": 21,
+      "description_line_1": "If our AI errs, your cost is $0.00",
+      "desc1_char_count": 34,
+      "description_line_2": "5 deterministic stage-gate checks",
+      "desc2_char_count": 33,
+      "final_url": "https://stagegateos.com/#guarantees",
+      "category": "Risk Reversal",
+      "target_persona": "All Founders"
+    },
+    {
+      "id": "sitelink-3",
+      "sitelink_text": "Transparent Pricing",
+      "text_char_count": 19,
+      "description_line_1": "Plans from $69/mo. Cancel anytime.",
+      "desc1_char_count": 34,
+      "description_line_2": "0% revenue take-rate. Keep 100%.",
+      "desc2_char_count": 32,
+      "final_url": "https://stagegateos.com/#pricing",
+      "category": "Commercial Intent",
+      "target_persona": "Active Buyers"
+    },
+    {
+      "id": "sitelink-4",
+      "sitelink_text": "15-Min Side Business",
+      "text_char_count": 20,
+      "description_line_1": "Build a software business 9-to-5",
+      "desc1_char_count": 32,
+      "description_line_2": "AI builds & runs it. No coding.",
+      "desc2_char_count": 31,
+      "final_url": "https://stagegateos.com/launchpad/newbie",
+      "category": "Product Flow",
+      "target_persona": "Time-Constrained Professionals"
+    },
+    {
+      "id": "sitelink-5",
+      "sitelink_text": "Live Venture Demos",
+      "text_char_count": 18,
+      "description_line_1": "Explore real verified ventures",
+      "desc1_char_count": 30,
+      "description_line_2": "Inspect Next.js & Stripe stacks",
+      "desc2_char_count": 31,
+      "final_url": "https://stagegateos.com/#scenarios",
+      "category": "Social Proof",
+      "target_persona": "Prospective Evaluators"
+    }
+  ]
+}

@@ -102,6 +102,7 @@ export const Footer: React.FC<FooterProps> = ({
             <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-200">Guarantees & Grader</h4>
             <ul className="space-y-2 text-xs">
               <li><button onClick={() => onNavigate('/grader')} className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">Venture Grader (Free)</button></li>
+              <li><button onClick={() => onNavigate('/brand')} className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">Brand &amp; Logo Kit</button></li>
               <li><button onClick={() => onNavigate('/#guarantees')} className="hover:text-white transition-colors">Zero-Charge Failure</button></li>
               <li><button onClick={() => onNavigate('/#guarantees')} className="hover:text-white transition-colors">0.0% Perpetual Rev Tax</button></li>
               <li><button onClick={() => onNavigate('/#guarantees')} className="hover:text-white transition-colors">0.0% Ad Spend Markup</button></li>
